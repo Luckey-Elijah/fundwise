@@ -5,4 +5,4 @@
 .packages
 build/
 pubspec.lock
-*/**.dart
+**/**.g.dart
