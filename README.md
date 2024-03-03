@@ -1,6 +1,8 @@
-# [`fundwise`](fundwise_dev)
+# [`fundwise`][fundwise_dev]
 
 Open source budgeting at home.
+
+[![MIT license][mit_badge]][mit_license]
 
 > [!WARNING]  
 > 🚧 This project is still in develpoment.
@@ -20,7 +22,9 @@ Open source budgeting at home.
 
 ## [`server`](./server/)
 
-> [`dart_frog`](pub_dev_dart_frog) server.
+> [`dart_frog`][pub_dev_dart_frog] server.
 
 [fundwise_dev]: https://fundwise.dev
 [pub_dev_dart_frog]: https://pub.dev/packages/dart_frog
+[mit_badge]: https://img.shields.io/badge/license-MIT-blue
+[mit_license]: https://opensource.org/licenses/MIT
