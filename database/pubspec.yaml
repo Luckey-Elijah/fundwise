@@ -1,0 +1,19 @@
+name: fundwise_database
+version: 0.0.1
+publish_to: none
+
+environment: { sdk: "^3.3.0" }
+
+dependencies:
+  drift: ^2.16.0
+  fpdart: ^1.1.0
+  fundwise_core: { path: ../core }
+  path: ^1.9.0
+  sqlite3: ^2.4.0
+
+dev_dependencies:
+  build_runner: ^2.4.8
+  drift_dev: ^2.16.0
+  mocktail: ^1.0.3
+  test: ^1.25.2
+  very_good_analysis: ^5.1.0
