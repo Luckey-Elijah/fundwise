@@ -69,7 +69,7 @@ class Budgets extends Table {
   TextColumn get name => text()();
   TextColumn get dateFormat => text()();
   TextColumn get currencyFormat => text()();
-  IntColumn get userId => integer().references(Users, #id)();
+  IntColumn get userId => integer().nullable().references(Users, #id)();
 }
 
 class Accounts extends Table {
