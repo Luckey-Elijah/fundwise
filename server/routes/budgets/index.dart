@@ -45,9 +45,7 @@ HandleRequest _onPost() {
         },
       );
     }
-    return badRequest(
-      hint: '''
-Request must include JSON Object. With the fields: string [currencyFormat], string [dateFormat], string [name]''',
-    );
+
+    return badRequest();
   };
 }

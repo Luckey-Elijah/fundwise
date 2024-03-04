@@ -56,6 +56,9 @@ FutureOr<Response> requestHandler(
     );
   } catch (e, s) {
     Zone.current.errorCallback(e, s);
-    return badRequest(message: '$e');
+    return badRequest(
+      error: e,
+      stackTrace: s,
+    );
   }
 }
