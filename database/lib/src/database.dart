@@ -7,7 +7,15 @@ import 'package:fundwise_core/fundwise_core.dart';
 part 'database.g.dart';
 
 @DriftDatabase(
-  tables: [Budgets, Accounts, Categories, Payees, Transactions, Flags],
+  tables: [
+    Users,
+    Budgets,
+    Accounts,
+    Categories,
+    Payees,
+    Transactions,
+    Flags,
+  ],
 )
 class FundwiseDatabase extends _$FundwiseDatabase {
   FundwiseDatabase()
@@ -24,6 +32,10 @@ class FundwiseDatabase extends _$FundwiseDatabase {
   MigrationStrategy get migration => MigrationStrategy(
         beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),
       );
+
+  Future<User?> getUser(int? id) =>
+      (select(users)..where((table) => table.id.equalsNullable(id)))
+          .getSingleOrNull();
 
   Future<Budget?> getBudget(int? id) =>
       (select(budgets)..where((table) => table.id.equalsNullable(id)))
@@ -79,11 +91,17 @@ class FundwiseDatabase extends _$FundwiseDatabase {
           .get();
 }
 
+class Users extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+}
+
 class Budgets extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get dateFormat => text()();
   TextColumn get currencyFormat => text()();
+  IntColumn get userId => integer().references(Users, #id)();
 }
 
 class Accounts extends Table {
