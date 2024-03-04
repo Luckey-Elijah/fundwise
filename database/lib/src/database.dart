@@ -31,6 +31,7 @@ class FundwiseDatabase extends _$FundwiseDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
+        // https://drift.simonbinder.eu/docs/getting-started/advanced_dart_tables/#references
         beforeOpen: (_) => customStatement('PRAGMA foreign_keys = ON'),
       );
 }
