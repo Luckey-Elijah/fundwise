@@ -6,7 +6,7 @@ import 'package:fundwise_server/bad_request.dart';
 
 typedef HandleRequest = FutureOr<Response> Function(RequestContext context);
 
-FutureOr<Response> requestHandler(
+Future<Response> requestHandler(
   RequestContext context, {
   int version = 1,
   HandleRequest? onDelete,

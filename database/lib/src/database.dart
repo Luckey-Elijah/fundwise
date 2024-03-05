@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:fundwise_core/fundwise_core.dart';
@@ -22,7 +20,8 @@ class FundwiseDatabase extends _$FundwiseDatabase {
   FundwiseDatabase()
       : super(
           LazyDatabase(
-            () => NativeDatabase.createInBackground(File('fundwise-db.sqlite')),
+            NativeDatabase.memory, // for development
+            // () => NativeDatabase.createInBackground(File('fundwise-db.sqlite')),
           ),
         );
 

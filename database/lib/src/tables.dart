@@ -96,7 +96,7 @@ class Categories extends Table {
 
 class Payees extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get next => text()();
+  TextColumn get name => text()();
   IntColumn get budgetId => integer().references(Budgets, #id)();
 }
 

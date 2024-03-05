@@ -7,9 +7,9 @@ Response badRequest({
   String? message,
   Object? error,
   StackTrace? stackTrace,
+  int statusCode = HttpStatus.badRequest,
 }) {
   return Response.json(
-    statusCode: HttpStatus.badRequest,
     body: {
       if (hint != null) ...{'hint': hint},
       if (message != null) ...{'message': message},
