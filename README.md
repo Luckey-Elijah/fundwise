@@ -22,9 +22,9 @@ Open source budgeting at home.
 
 ## [`server`](./server/)
 
-> [`dart_frog`][pub_dev_dart_frog] server.
+> [`pocketbase`][pocketbase] server.
 
 [fundwise_dev]: https://fundwise.dev
-[pub_dev_dart_frog]: https://pub.dev/packages/dart_frog
+[pocketbase]: https://pocketbase.io/
 [mit_badge]: https://img.shields.io/badge/license-MIT-blue
 [mit_license]: https://opensource.org/licenses/MIT

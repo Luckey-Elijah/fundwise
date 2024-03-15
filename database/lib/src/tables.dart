@@ -72,6 +72,12 @@ class Budgets extends Table {
   IntColumn get userId => integer().nullable().references(Users, #id)();
 }
 
+class Payees extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text()();
+  IntColumn get budgetId => integer().references(Budgets, #id)();
+}
+
 class Accounts extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
@@ -91,12 +97,6 @@ class Categories extends Table {
   IntColumn get budgeted => integer()();
   IntColumn get activity => integer()();
   IntColumn get balance => integer()();
-  IntColumn get budgetId => integer().references(Budgets, #id)();
-}
-
-class Payees extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get name => text()();
   IntColumn get budgetId => integer().references(Budgets, #id)();
 }
 
