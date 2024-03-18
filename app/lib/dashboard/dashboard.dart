@@ -22,11 +22,12 @@ class _DashboardState extends State<Dashboard> {
     await navigator.pushReplacementNamed(route);
   }
 
-  static const initialRoute = '/settings';
-  String? currentRoute = initialRoute;
+  String? currentRoute = BudgetRoutes.initialRoute;
+
+  final routes = BudgetRoutes.routes();
 
   Route<void>? onGenerateRoute(RouteSettings settings) {
-    final builder = dashboardRoutes()[settings.name];
+    final builder = routes[settings.name];
     if (builder != null) {
       return MaterialPageRoute<void>(
         settings: settings,
@@ -43,20 +44,20 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.small(
-        child: const Icon(Icons.list_alt_outlined),
+        child: const Icon(Icons.add_task_rounded),
         onPressed: () {},
       ),
       body: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: _Sidebar(sidebarNavigate, currentRoute),
-          ),
+          _Sidebar(sidebarNavigate, currentRoute),
           Expanded(
-            child: Navigator(
-              key: navigatorKey,
-              initialRoute: initialRoute,
-              onGenerateRoute: onGenerateRoute,
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: Navigator(
+                key: navigatorKey,
+                initialRoute: BudgetRoutes.initialRoute,
+                onGenerateRoute: onGenerateRoute,
+              ),
             ),
           ),
         ],

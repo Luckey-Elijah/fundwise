@@ -9,6 +9,11 @@ ThemeData theme(ThemeData theme) {
   final br = BorderRadius.circular(4);
 
   return theme.copyWith(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        // TODO(Luckey-Elijah): add [PageTransitionsTheme.builders]
+      },
+    ),
     appBarTheme: const AppBarTheme(
       toolbarHeight: kToolbarHeight,
     ),
@@ -33,7 +38,9 @@ ThemeData theme(ThemeData theme) {
           borderRadius: br,
         ),
         borderRadius: br,
-        mediumWidth: BoxConstraints.loose(const Size.fromWidth(300)),
+        largeWidth: BoxConstraints.loose(const Size.fromWidth(960)),
+        mediumWidth: BoxConstraints.loose(const Size.fromWidth(640)),
+        smallWidth: BoxConstraints.loose(const Size.fromWidth(320)),
       ),
     ],
   );

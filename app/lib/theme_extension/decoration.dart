@@ -9,12 +9,16 @@ class DecorationTheme extends ThemeExtension<DecorationTheme>
   const DecorationTheme({
     required this.primary,
     required this.error,
+    required this.smallWidth,
     required this.mediumWidth,
+    required this.largeWidth,
     required this.borderRadius,
   });
 
   final BoxDecoration primary;
   final BoxDecoration error;
+  final BoxConstraints smallWidth;
   final BoxConstraints mediumWidth;
+  final BoxConstraints largeWidth;
   final BorderRadius borderRadius;
 }

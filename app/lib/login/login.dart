@@ -14,7 +14,7 @@ class LoginPage extends StatelessWidget {
           child: DecoratedBox(
             decoration: context.decorationTheme.primary,
             child: ConstrainedBox(
-              constraints: context.decorationTheme.mediumWidth,
+              constraints: context.decorationTheme.smallWidth,
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(

@@ -13,7 +13,9 @@ mixin _$ThemeExtensionMixin on ThemeExtension<DecorationTheme> {
   ThemeExtension<DecorationTheme> copyWith({
     BoxDecoration? primary,
     BoxDecoration? error,
+    BoxConstraints? smallWidth,
     BoxConstraints? mediumWidth,
+    BoxConstraints? largeWidth,
     BorderRadius? borderRadius,
   }) {
     final object = this as DecorationTheme;
@@ -21,7 +23,9 @@ mixin _$ThemeExtensionMixin on ThemeExtension<DecorationTheme> {
     return DecorationTheme(
       primary: primary ?? object.primary,
       error: error ?? object.error,
+      smallWidth: smallWidth ?? object.smallWidth,
       mediumWidth: mediumWidth ?? object.mediumWidth,
+      largeWidth: largeWidth ?? object.largeWidth,
       borderRadius: borderRadius ?? object.borderRadius,
     );
   }
@@ -50,9 +54,19 @@ mixin _$ThemeExtensionMixin on ThemeExtension<DecorationTheme> {
         otherValue.error,
         t,
       )!,
+      smallWidth: BoxConstraints.lerp(
+        value.smallWidth,
+        otherValue.smallWidth,
+        t,
+      )!,
       mediumWidth: BoxConstraints.lerp(
         value.mediumWidth,
         otherValue.mediumWidth,
+        t,
+      )!,
+      largeWidth: BoxConstraints.lerp(
+        value.largeWidth,
+        otherValue.largeWidth,
         t,
       )!,
       borderRadius: BorderRadius.lerp(
@@ -72,7 +86,9 @@ mixin _$ThemeExtensionMixin on ThemeExtension<DecorationTheme> {
             other is DecorationTheme &&
             identical(value.primary, other.primary) &&
             identical(value.error, other.error) &&
+            identical(value.smallWidth, other.smallWidth) &&
             identical(value.mediumWidth, other.mediumWidth) &&
+            identical(value.largeWidth, other.largeWidth) &&
             identical(value.borderRadius, other.borderRadius));
   }
 
@@ -84,7 +100,9 @@ mixin _$ThemeExtensionMixin on ThemeExtension<DecorationTheme> {
       runtimeType,
       value.primary,
       value.error,
+      value.smallWidth,
       value.mediumWidth,
+      value.largeWidth,
       value.borderRadius,
     );
   }

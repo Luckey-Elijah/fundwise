@@ -13,7 +13,7 @@ class NotFoundPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: context.decorationTheme.mediumWidth,
+          constraints: context.decorationTheme.smallWidth,
           child: DecoratedBox(
             decoration: context.decorationTheme.primary,
             child: Padding(

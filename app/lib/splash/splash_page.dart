@@ -28,7 +28,7 @@ class _SplashPageState extends State<SplashPage> {
           child: DecoratedBox(
             decoration: context.decorationTheme.primary,
             child: ConstrainedBox(
-              constraints: context.decorationTheme.mediumWidth,
+              constraints: context.decorationTheme.smallWidth,
               child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Column(

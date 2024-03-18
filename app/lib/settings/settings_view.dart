@@ -1,4 +1,5 @@
 import 'package:app/components/primary_header.dart';
+import 'package:app/main.dart';
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,12 @@ class _SettingsContent extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      onPressed: context.pop,
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                          rootNavigator: true,
+                        ).pushReplacementNamed(ApplicationRoutes.login.path);
+                      },
                     ),
                   ],
                 ),
@@ -278,59 +284,62 @@ class _NewBudgetDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('New Budget', style: context.textTheme.bodyLarge),
-                const CloseButton(),
-              ],
-            ),
-          ),
-          const Divider(),
-          Expanded(
-            child: Padding(
+      child: ConstrainedBox(
+        constraints: context.decorationTheme.mediumWidth,
+        child: Column(
+          children: [
+            Padding(
               padding: const EdgeInsets.all(8),
-              child: ListView(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Budget Name'),
-                  context.marginTheme.small.box,
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Budget Name'),
+                  Text('New Budget', style: context.textTheme.bodyLarge),
+                  const CloseButton(),
+                ],
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ListView(
+                  children: [
+                    const Text('Budget Name'),
+                    context.marginTheme.small.box,
+                    const TextField(
+                      decoration: InputDecoration(hintText: 'Budget Name'),
+                    ),
+                    context.marginTheme.large.box,
+                    const Text('Currency'),
+                    context.marginTheme.small.box,
+                    const TextField(
+                      decoration: InputDecoration(hintText: 'Currency'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Wrap(
+                // mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: context.pop,
+                    icon: const Icon(Icons.create_new_folder_rounded),
+                    label: const Text('Create New Budget'),
                   ),
-                  context.marginTheme.large.box,
-                  const Text('Currency'),
-                  context.marginTheme.small.box,
-                  const TextField(
-                    decoration: InputDecoration(hintText: 'Currency'),
+                  TextButton.icon(
+                    onPressed: context.pop,
+                    icon: const Icon(Icons.cancel_rounded),
+                    label: const Text('Cancel'),
                   ),
                 ],
               ),
             ),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton.icon(
-                  onPressed: context.pop,
-                  icon: const Icon(Icons.create_new_folder_rounded),
-                  label: const Text('Create New Budget'),
-                ),
-                TextButton.icon(
-                  onPressed: context.pop,
-                  icon: const Icon(Icons.cancel_rounded),
-                  label: const Text('Cancel'),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
