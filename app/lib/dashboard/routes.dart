@@ -1,5 +1,6 @@
 import 'package:app/components/primary_header.dart';
 import 'package:app/settings/settings_view.dart';
+import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
 Map<String, WidgetBuilder> dashboardRoutes() {
@@ -16,7 +17,7 @@ Map<String, WidgetBuilder> dashboardRoutes() {
               children: [
                 Text(
                   'Budget',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: context.textTheme.headlineSmall,
                 ),
               ],
             ),

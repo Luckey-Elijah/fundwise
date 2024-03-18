@@ -1,6 +1,6 @@
 import 'package:app/dashboard/dashboard.dart';
 import 'package:app/login/login.dart';
-import 'package:app/not_found:not_found_page.dart';
+import 'package:app/not_found/not_found_page.dart';
 import 'package:app/register/register_page.dart';
 import 'package:app/splash/splash_page.dart';
 import 'package:app/theme_extension/theme.dart';
@@ -14,13 +14,14 @@ class FundwiseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const scheme = FlexScheme.espresso;
     return MaterialApp(
       title: 'Fundwise',
-      routes: ApplicationRoutes.routes,
+      routes: ApplicationRoutes.routes(),
       initialRoute: ApplicationRoutes.initialRoute,
       themeMode: ThemeMode.light,
-      theme: themeLight(FlexThemeData.light(scheme: FlexScheme.espresso)),
-      darkTheme: themeDark(FlexThemeData.dark(scheme: FlexScheme.espresso)),
+      theme: theme(FlexThemeData.light(scheme: scheme)),
+      darkTheme: theme(FlexThemeData.dark(scheme: scheme)),
     );
   }
 }
@@ -40,7 +41,7 @@ enum ApplicationRoutes {
 
   static String get initialRoute => ApplicationRoutes.notFound.path;
 
-  static Map<String, WidgetBuilder> get routes => {
+  static Map<String, WidgetBuilder> routes() => {
         for (final route in ApplicationRoutes.values)
           route.path: switch (route) {
             ApplicationRoutes.splash => (_) => const SplashPage(),

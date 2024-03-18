@@ -1,12 +1,12 @@
-import 'package:app/theme_extension/box_decoration.dart';
+import 'package:app/theme_extension/decoration.dart';
 import 'package:app/theme_extension/margin.dart';
 import 'package:flutter/material.dart';
 
-export 'package:app/theme_extension/box_decoration.dart';
+export 'package:app/theme_extension/decoration.dart';
 export 'package:app/theme_extension/margin.dart';
 
-ThemeData themeLight(ThemeData theme) {
-  final scheme = theme.colorScheme;
+ThemeData theme(ThemeData theme) {
+  final br = BorderRadius.circular(4);
 
   return theme.copyWith(
     appBarTheme: const AppBarTheme(
@@ -23,39 +23,17 @@ ThemeData themeLight(ThemeData theme) {
         medium: Size.square(8),
         large: Size.square(16),
       ),
-      BoxDecorationThemeExtension(
-        boxDecoration: BoxDecoration(
-          color: scheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(4),
+      DecorationTheme(
+        primary: BoxDecoration(
+          color: theme.colorScheme.tertiaryContainer,
+          borderRadius: br,
         ),
-      ),
-    ],
-  );
-}
-
-ThemeData themeDark(ThemeData theme) {
-  final scheme = theme.colorScheme;
-
-  return theme.copyWith(
-    appBarTheme: const AppBarTheme(
-      toolbarHeight: kToolbarHeight,
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        alignment: Alignment.centerLeft,
-      ),
-    ),
-    extensions: [
-      const MarginThemeExtension(
-        small: Size.square(4),
-        medium: Size.square(8),
-        large: Size.square(16),
-      ),
-      BoxDecorationThemeExtension(
-        boxDecoration: BoxDecoration(
-          color: scheme.tertiaryContainer,
-          borderRadius: BorderRadius.circular(4),
+        error: BoxDecoration(
+          color: theme.colorScheme.errorContainer,
+          borderRadius: br,
         ),
+        borderRadius: br,
+        mediumWidth: BoxConstraints.loose(const Size.fromWidth(300)),
       ),
     ],
   );

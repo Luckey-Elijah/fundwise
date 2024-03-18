@@ -1,4 +1,4 @@
-import 'package:app/theme_extension/theme.dart';
+import 'package:app/theme_extension/decoration.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
@@ -26,16 +26,14 @@ class _SplashPageState extends State<SplashPage> {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: DecoratedBox(
-            decoration: context.boxDecorationTheme.boxDecoration,
+            decoration: context.decorationTheme.primary,
             child: ConstrainedBox(
-              constraints: BoxConstraints.loose(const Size.fromWidth(300)),
+              constraints: context.decorationTheme.mediumWidth,
               child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator.adaptive(),
-                  ],
+                  children: [CircularProgressIndicator.adaptive()],
                 ),
               ),
             ),

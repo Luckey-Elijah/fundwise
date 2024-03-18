@@ -18,7 +18,7 @@ class PrimaryHeader extends StatelessWidget {
         ),
       ),
       child: DecoratedBox(
-        decoration: context.boxDecorationTheme.boxDecoration,
+        decoration: context.decorationTheme.primary,
         child: Padding(
           padding: const EdgeInsets.all(4),
           child: child,

@@ -25,10 +25,10 @@ class _DashboardState extends State<Dashboard> {
   static const initialRoute = '/settings';
   String? currentRoute = initialRoute;
 
-  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  Route<void>? onGenerateRoute(RouteSettings settings) {
     final builder = dashboardRoutes()[settings.name];
     if (builder != null) {
-      return MaterialPageRoute(
+      return MaterialPageRoute<void>(
         settings: settings,
         builder: (context) => Padding(
           padding: const EdgeInsets.all(4),
@@ -42,10 +42,14 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.small(
+        child: const Icon(Icons.list_alt_outlined),
+        onPressed: () {},
+      ),
       body: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.all(4),
+            padding: const EdgeInsets.only(right: 4),
             child: _Sidebar(sidebarNavigate, currentRoute),
           ),
           Expanded(
@@ -79,7 +83,12 @@ class _SidebarState extends State<_Sidebar> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: context.boxDecorationTheme.boxDecoration,
+      decoration: context.decorationTheme.primary.copyWith(
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(4),
+          bottomRight: Radius.circular(4),
+        ),
+      ),
       child: ConstrainedBox(
         constraints: BoxConstraints.loose(
           Size.fromWidth(expanded ? 240 : 56),

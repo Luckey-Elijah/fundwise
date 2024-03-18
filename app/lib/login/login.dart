@@ -12,9 +12,9 @@ class LoginPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: DecoratedBox(
-            decoration: context.boxDecorationTheme.boxDecoration,
+            decoration: context.decorationTheme.primary,
             child: ConstrainedBox(
-              constraints: BoxConstraints.loose(const Size.fromWidth(300)),
+              constraints: context.decorationTheme.mediumWidth,
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(
