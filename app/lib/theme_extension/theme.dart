@@ -1,9 +1,9 @@
-import 'package:app/theme/box_decoration.dart';
-import 'package:app/theme/margin.dart';
+import 'package:app/theme_extension/box_decoration.dart';
+import 'package:app/theme_extension/margin.dart';
 import 'package:flutter/material.dart';
 
-export 'package:app/theme/box_decoration.dart';
-export 'package:app/theme/margin.dart';
+export 'package:app/theme_extension/box_decoration.dart';
+export 'package:app/theme_extension/margin.dart';
 
 ThemeData themeLight(ThemeData theme) {
   final scheme = theme.colorScheme;

@@ -1,31 +1,8 @@
 import 'dart:async';
 
-import 'package:app/settings_view.dart';
-import 'package:app/theme/theme.dart';
+import 'package:app/dashboard/routes.dart';
+import 'package:app/theme_extension/theme.dart';
 import 'package:flutter/material.dart';
-
-Map<String, WidgetBuilder> _dashboardRoutes() {
-  return {
-    '/settings': (BuildContext context) {
-      return const SettingsView();
-    },
-    '/budget': (BuildContext context) {
-      return const Center(
-        child: Text('budget'),
-      );
-    },
-    '/reports': (BuildContext context) {
-      return const Center(
-        child: Text('reports'),
-      );
-    },
-    '/accounts': (BuildContext context) {
-      return const Center(
-        child: Text('accounts'),
-      );
-    },
-  };
-}
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -49,7 +26,7 @@ class _DashboardState extends State<Dashboard> {
   String? currentRoute = initialRoute;
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    final builder = _dashboardRoutes()[settings.name];
+    final builder = dashboardRoutes()[settings.name];
     if (builder != null) {
       return MaterialPageRoute(
         settings: settings,
@@ -181,24 +158,26 @@ class _SidebarState extends State<_Sidebar> {
               ),
             ),
             Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                label: expanded // fmt
-                    ? const Text('Collapse')
-                    : const SizedBox.shrink(),
-                onPressed: () => setState(() => expanded = !expanded),
-                icon: Icon(
-                  expanded
-                      ? Icons.arrow_left_rounded
-                      : Icons.arrow_right_rounded,
-                ),
-              ),
+              alignment: expanded ? Alignment.centerLeft : Alignment.center,
+              child: expanded
+                  ? TextButton.icon(
+                      label: const Text('Collapse'),
+                      icon: const Icon(Icons.arrow_left_rounded),
+                      onPressed: toggleExpanded,
+                    )
+                  : IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(Icons.arrow_right_rounded),
+                      onPressed: toggleExpanded,
+                    ),
             ),
           ],
         ),
       ),
     );
   }
+
+  void toggleExpanded() => setState(() => expanded = !expanded);
 }
 
 class _DashboardButton extends StatelessWidget {

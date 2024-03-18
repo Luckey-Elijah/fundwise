@@ -1,9 +1,9 @@
-import 'package:app/build_context.extension.dart';
-import 'package:app/theme/theme.dart';
+import 'package:app/theme_extension/theme.dart';
+import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,24 +22,18 @@ class RegisterPage extends StatelessWidget {
                   children: [
                     const TextField(
                       decoration: InputDecoration(hintText: 'username'),
-                      autofillHints: [AutofillHints.newUsername],
+                      autofillHints: [AutofillHints.username],
                     ),
                     context.marginTheme.small.box,
                     const TextField(
                       decoration: InputDecoration(hintText: 'password'),
                       obscureText: true,
-                      autofillHints: [AutofillHints.newPassword],
-                    ),
-                    context.marginTheme.small.box,
-                    const TextField(
-                      decoration: InputDecoration(hintText: 'confirm password'),
-                      obscureText: true,
-                      autofillHints: [AutofillHints.newPassword],
+                      autofillHints: [AutofillHints.password],
                     ),
                     context.marginTheme.small.box,
                     TextButton(
-                      onPressed: () => context.pushReplacementNamed('/login'),
-                      child: const Text('register'),
+                      onPressed: () => context.pushReplacementNamed('/'),
+                      child: const Text('login'),
                     ),
                   ],
                 ),

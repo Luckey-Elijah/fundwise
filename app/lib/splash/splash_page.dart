@@ -1,5 +1,5 @@
-import 'package:app/build_context.extension.dart';
-import 'package:app/theme/theme.dart';
+import 'package:app/theme_extension/theme.dart';
+import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {

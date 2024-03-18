@@ -1,4 +1,6 @@
-import 'package:app/theme/theme.dart';
+import 'package:app/components/primary_header.dart';
+import 'package:app/theme_extension/theme.dart';
+import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
 class SettingsView extends StatelessWidget {
@@ -15,16 +17,33 @@ class SettingsView extends StatelessWidget {
   }
 }
 
+class _SettingsHeader extends StatelessWidget {
+  const _SettingsHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryHeader(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Settings',
+            style: context.textTheme.headlineSmall,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SettingsContent extends StatelessWidget {
   const _SettingsContent();
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return ListView(
       children: [
-        Text('Budget Settings', style: textTheme.bodyMedium),
+        Text('Budget Settings', style: context.textTheme.bodyMedium),
         context.marginTheme.small.box,
         Wrap(
           children: [
@@ -68,7 +87,7 @@ class _SettingsContent extends StatelessWidget {
           ],
         ),
         context.marginTheme.large.box,
-        Text('Accounts Settings', style: textTheme.bodyMedium),
+        Text('Accounts Settings', style: context.textTheme.bodyMedium),
         context.marginTheme.small.box,
         Wrap(
           children: [
@@ -91,7 +110,7 @@ class _SettingsContent extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      onPressed: Navigator.of(context).pop,
+                      onPressed: context.pop,
                     ),
                     TextButton.icon(
                       icon: const Icon(Icons.logout_rounded),
@@ -100,7 +119,7 @@ class _SettingsContent extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      onPressed: Navigator.of(context).pop,
+                      onPressed: context.pop,
                     ),
                   ],
                 ),
@@ -110,7 +129,7 @@ class _SettingsContent extends StatelessWidget {
         ),
         const Divider(),
         context.marginTheme.large.box,
-        Text('Legal', style: textTheme.bodyMedium),
+        Text('Legal', style: context.textTheme.bodyMedium),
         context.marginTheme.small.box,
         Wrap(
           children: [
@@ -139,8 +158,6 @@ class _BudgetPickerDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Dialog(
       child: Column(
         children: [
@@ -149,7 +166,7 @@ class _BudgetPickerDialog extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Open Budget', style: textTheme.bodyLarge),
+                Text('Open Budget', style: context.textTheme.bodyLarge),
                 const CloseButton(),
               ],
             ),
@@ -173,12 +190,12 @@ class _BudgetPickerDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: context.pop,
                   icon: const Icon(Icons.folder_open_rounded),
                   label: const Text('Open'),
                 ),
                 TextButton.icon(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: context.pop,
                   icon: const Icon(Icons.cancel_rounded),
                   label: const Text('Cancel'),
                 ),
@@ -191,42 +208,11 @@ class _BudgetPickerDialog extends StatelessWidget {
   }
 }
 
-class _SettingsHeader extends StatelessWidget {
-  const _SettingsHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final height = AppBarTheme.of(context).toolbarHeight ?? kToolbarHeight;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints.loose(Size.fromHeight(height)),
-      child: DecoratedBox(
-        decoration: context.boxDecorationTheme.boxDecoration,
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Settings',
-                style: textTheme.headlineSmall,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _BudgetSettingsDialog extends StatelessWidget {
   const _BudgetSettingsDialog();
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Dialog(
       child: Column(
         children: [
@@ -235,7 +221,7 @@ class _BudgetSettingsDialog extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Budget Settings', style: textTheme.bodyLarge),
+                Text('Budget Settings', style: context.textTheme.bodyLarge),
                 const CloseButton(),
               ],
             ),
@@ -268,16 +254,12 @@ class _BudgetSettingsDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: context.pop,
                   icon: const Icon(Icons.save_rounded),
                   label: const Text('Save'),
                 ),
                 TextButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: context.pop,
                   icon: const Icon(Icons.cancel_rounded),
                   label: const Text('Cancel'),
                 ),
@@ -295,8 +277,6 @@ class _NewBudgetDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Dialog(
       child: Column(
         children: [
@@ -305,7 +285,7 @@ class _NewBudgetDialog extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('New Budget', style: textTheme.bodyLarge),
+                Text('New Budget', style: context.textTheme.bodyLarge),
                 const CloseButton(),
               ],
             ),
@@ -338,12 +318,12 @@ class _NewBudgetDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton.icon(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: context.pop,
                   icon: const Icon(Icons.create_new_folder_rounded),
                   label: const Text('Create New Budget'),
                 ),
                 TextButton.icon(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: context.pop,
                   icon: const Icon(Icons.cancel_rounded),
                   label: const Text('Cancel'),
                 ),

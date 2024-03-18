@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 extension NavigationBuildContext on BuildContext {
   String? get routeName => ModalRoute.of(this)?.settings.name;
@@ -15,4 +15,10 @@ extension NavigationBuildContext on BuildContext {
         result: result,
         arguments: arguments,
       );
+
+  void pop<T extends Object?>([T? result]) => Navigator.of(this).pop<T>(result);
+}
+
+extension ThemeBuildContext on BuildContext {
+  TextTheme get textTheme => Theme.of(this).textTheme;
 }
