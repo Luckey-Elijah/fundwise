@@ -21,7 +21,7 @@ class FundwiseDatabase extends _$FundwiseDatabase {
       : super(
           LazyDatabase(
             NativeDatabase.memory, // for development
-            // () => NativeDatabase.createInBackground(File('fundwise-db.sqlite')),
+// () => NativeDatabase.createInBackground(File('fundwise-db.sqlite')),
           ),
         );
 
