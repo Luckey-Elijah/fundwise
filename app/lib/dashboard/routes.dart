@@ -1,6 +1,5 @@
-import 'package:app/components/primary_header.dart';
+import 'package:app/budget/budget_view.dart';
 import 'package:app/settings/settings_view.dart';
-import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 
 enum BudgetRoutes {
@@ -19,34 +18,11 @@ enum BudgetRoutes {
   static Map<String, WidgetBuilder> routes() => {
         for (final route in BudgetRoutes.values)
           route.path: switch (route) {
-            BudgetRoutes.settings => (context) => const SettingsView(),
-            BudgetRoutes.budget => (BuildContext context) {
-                return Column(
-                  children: [
-                    PrimaryHeader(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Budget',
-                            style: context.textTheme.headlineSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            BudgetRoutes.reports => (BuildContext context) {
-                return const Center(
-                  child: Text('reports'),
-                );
-              },
-            BudgetRoutes.accounts => (BuildContext context) {
-                return const Center(
-                  child: Text('accounts'),
-                );
-              },
+            BudgetRoutes.settings => (_) => const SettingsView(),
+            BudgetRoutes.budget => (_) => const BudgetView(),
+            BudgetRoutes.reports => (_) => const Center(child: Text('reports')),
+            BudgetRoutes.accounts => (_) =>
+                const Center(child: Text('accounts')),
           },
       };
 }

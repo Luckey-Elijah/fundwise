@@ -32,7 +32,7 @@ class _DashboardState extends State<Dashboard> {
       return MaterialPageRoute<void>(
         settings: settings,
         builder: (context) => Padding(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(8),
           child: builder(context),
         ),
       );
@@ -45,19 +45,23 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.small(
         child: const Icon(Icons.add_task_rounded),
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (context) {
+              return const Placeholder();
+            },
+          );
+        },
       ),
       body: Row(
         children: [
           _Sidebar(sidebarNavigate, currentRoute),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(4),
-              child: Navigator(
-                key: navigatorKey,
-                initialRoute: BudgetRoutes.initialRoute,
-                onGenerateRoute: onGenerateRoute,
-              ),
+            child: Navigator(
+              key: navigatorKey,
+              initialRoute: BudgetRoutes.initialRoute,
+              onGenerateRoute: onGenerateRoute,
             ),
           ),
         ],
