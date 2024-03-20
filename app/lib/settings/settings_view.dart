@@ -1,8 +1,9 @@
+import 'package:app/auth/auth_bloc.dart';
 import 'package:app/components/primary_header.dart';
-import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -114,19 +115,14 @@ class _SettingsContent extends StatelessWidget {
                       onPressed: context.pop,
                     ),
                     TextButton.icon(
+                      onPressed: () =>
+                          context.read<AuthBloc>().add(LogoutEvent()),
                       icon: const Icon(Icons.logout_rounded),
                       label: const Text(
                         'Logout',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      onPressed: () {
-                        context.pocketbase.authStore.clear();
-                        Navigator.of(
-                          context,
-                          rootNavigator: true,
-                        ).pushReplacementNamed(app.Routes.login.path);
-                      },
                     ),
                   ],
                 ),

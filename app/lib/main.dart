@@ -6,13 +6,30 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const FundwiseApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+
+  final store = AsyncAuthStore(
+    save: (data) async => prefs.setString('auth', data),
+    initial: prefs.getString('auth'),
+  );
+
+  final pocketbase = PocketBase('http://127.0.0.1:8090', authStore: store);
+
+  runApp(FundwiseApp(pocketbase: pocketbase));
 }
 
 class FundwiseApp extends StatefulWidget {
-  const FundwiseApp({super.key});
+  const FundwiseApp({
+    required this.pocketbase,
+    super.key,
+  });
+
+  final PocketBase pocketbase;
 
   @override
   State<FundwiseApp> createState() => _FundwiseAppState();
@@ -26,9 +43,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
     const scheme = FlexScheme.espresso;
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => PocketBase('http://127.0.0.1:8090'),
-        ),
+        RepositoryProvider.value(value: widget.pocketbase),
       ],
       child: MultiBlocProvider(
         providers: [

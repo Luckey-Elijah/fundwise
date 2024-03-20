@@ -93,7 +93,7 @@ class RegisterView extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: enabled ? login : null,
-                  child: const Text('login'),
+                  child: const Text('go to login'),
                 ),
               ],
             ),
