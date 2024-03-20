@@ -1,18 +1,18 @@
-import 'package:app/register/register_bloc.dart';
-import 'package:app/register/register_state.dart';
+import 'package:app/login/login_bloc.dart';
+import 'package:app/login/login_state.dart';
 import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (c) => RegisterBloc(pocketbase: c.pocketbase),
+      create: (c) => LoginBloc(pocketbase: c.pocketbase),
       child: Scaffold(
         body: Center(
           child: Padding(
@@ -23,7 +23,7 @@ class RegisterPage extends StatelessWidget {
                 constraints: context.decorationTheme.smallWidth,
                 child: const Padding(
                   padding: EdgeInsets.all(8),
-                  child: RegisterView(),
+                  child: LoginView(),
                 ),
               ),
             ),
@@ -34,66 +34,55 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-class RegisterView extends StatelessWidget {
-  const RegisterView({super.key});
+class LoginView extends StatelessWidget {
+  const LoginView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RegisterBloc, RegisterState>(
+    return BlocConsumer<LoginBloc, LoginState>(
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
-        if (state.status != RegisterStatus.success) return;
-        context.pushReplacementNamed(app.Routes.login.path);
+        if (state.status != LoginStatus.success) return;
+        context.pushReplacementNamed(app.Routes.dashboard.path);
       },
       builder: (context, state) {
-        final add = context.read<RegisterBloc>().add;
-
-        final enabled = state.status != RegisterStatus.loading ||
-            state.status != RegisterStatus.success;
-
-        void register() => add(const RegisterButtonPresed());
-
-        Future<void> login() =>
-            context.pushReplacementNamed(app.Routes.login.path);
-
+        final add = context.read<LoginBloc>().add;
+        final enabled = state.status != LoginStatus.loading ||
+            state.status != LoginStatus.success;
+        Future<void> register() =>
+            context.pushReplacementNamed(app.Routes.register.path);
+        void login() => add(const LoginButtonPressed());
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               enabled: enabled,
-              decoration: const InputDecoration(hintText: 'username'),
-              autofillHints: const [AutofillHints.newUsername],
               onChanged: (value) => add(UpdateUsernameEvent(value)),
+              decoration: const InputDecoration(hintText: 'username'),
+              autofillHints: const [AutofillHints.username],
             ),
             context.marginTheme.small.box,
             TextField(
               enabled: enabled,
+              onChanged: (value) => add(UpdatePasswordEvent(value)),
               decoration: const InputDecoration(hintText: 'password'),
               obscureText: true,
-              autofillHints: const [AutofillHints.newPassword],
-              onChanged: (value) => add(UpdatePasswordEvent(value)),
-            ),
-            context.marginTheme.small.box,
-            TextField(
-              enabled: enabled,
-              onChanged: (value) => add(UpdateConfirmPasswordEvent(value)),
-              decoration: const InputDecoration(
-                hintText: 'confirm password',
-              ),
-              obscureText: true,
-              autofillHints: const [AutofillHints.newPassword],
+              onSubmitted: (_) => login(),
+              autofillHints: const [AutofillHints.password],
             ),
             context.marginTheme.small.box,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: enabled ? register : null,
-                  child: const Text('register'),
-                ),
-                TextButton(
                   onPressed: enabled ? login : null,
                   child: const Text('login'),
+                ),
+                TextButton(
+                  onPressed: enabled ? register : null,
+                  child: const Text('register'),
                 ),
               ],
             ),

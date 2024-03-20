@@ -121,6 +121,7 @@ class _SettingsContent extends StatelessWidget {
                         maxLines: 1,
                       ),
                       onPressed: () {
+                        context.pocketbase.authStore.clear();
                         Navigator.of(
                           context,
                           rootNavigator: true,

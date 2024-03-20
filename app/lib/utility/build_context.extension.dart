@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 extension NavigationBuildContext on BuildContext {
   String? get routeName => ModalRoute.of(this)?.settings.name;
@@ -21,4 +23,8 @@ extension NavigationBuildContext on BuildContext {
 
 extension ThemeBuildContext on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
+}
+
+extension PocketBaseBuildContext on BuildContext {
+  PocketBase get pocketbase => read<PocketBase>();
 }

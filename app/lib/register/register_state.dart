@@ -1,15 +1,36 @@
-part of 'register_bloc.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-final class RegisterState {
+part 'register_state.mapper.dart';
+
+@MappableClass()
+class RegisterState with RegisterStateMappable {
   const RegisterState({
+    required this.email,
+    required this.name,
     required this.username,
     required this.password,
-    required this.confirmPassword,
-    required this.error,
+    required this.passwordConfirm,
+    this.emailVisibility = true,
+    this.status = RegisterStatus.loaded,
   });
 
+  const RegisterState.init()
+      : this(
+          email: '',
+          name: '',
+          username: '',
+          password: '',
+          passwordConfirm: '',
+        );
+
   final String username;
+  final String email;
+  final String name;
+  final bool emailVisibility;
   final String password;
-  final String confirmPassword;
-  final String? error;
+  final String passwordConfirm;
+  final RegisterStatus status;
 }
+
+@MappableEnum()
+enum RegisterStatus { loaded, loading, error, success }
