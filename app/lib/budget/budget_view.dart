@@ -29,7 +29,7 @@ class BudgetView extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: Row(
                       children: [
-                        Checkbox(value: false, onChanged: (_) {}),
+                        Checkbox.adaptive(value: false, onChanged: (_) {}),
                         const Text('<budget item>'),
                         context.marginTheme.large.box,
                         const Flexible(
@@ -63,19 +63,31 @@ class _BudgetMonthHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return PrimaryHeader(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
             onPressed: context.read<MonthCubit>().previous,
             icon: const Icon(Icons.arrow_left_rounded),
           ),
-          BlocBuilder<MonthCubit, DateTime>(
-            builder: (context, state) {
-              return Text(
-                '${state.month}/${state.year}',
-                style: context.textTheme.headlineSmall,
-              );
-            },
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BlocBuilder<MonthCubit, DateTime>(
+                builder: (context, state) {
+                  return Text(
+                    '${state.month}/${state.year}',
+                    style: context.textTheme.bodyLarge,
+                  );
+                },
+              ),
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  textStyle: context.textTheme.bodySmall,
+                ),
+                child: const Text('Enter a note...'),
+              ),
+            ],
           ),
           IconButton(
             onPressed: context.read<MonthCubit>().next,

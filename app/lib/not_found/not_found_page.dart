@@ -1,4 +1,4 @@
-import 'package:app/main.dart';
+import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +47,14 @@ class NotFoundPage extends StatelessWidget {
                     children: [
                       TextButton.icon(
                         onPressed: () => context.pushReplacementNamed(
-                          ApplicationRoutes.login.path,
+                          app.Routes.login.path,
                         ),
                         icon: const Icon(Icons.login_rounded),
                         label: const Text('Login'),
                       ),
                       TextButton.icon(
                         onPressed: () => context.pushReplacementNamed(
-                          ApplicationRoutes.dashboard.path,
+                          app.Routes.dashboard.path,
                         ),
                         icon: const Icon(Icons.wallet_rounded),
                         label: const Text('Budget'),

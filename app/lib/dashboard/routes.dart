@@ -13,7 +13,7 @@ enum BudgetRoutes {
 
   final String path;
 
-  static String get initialRoute => BudgetRoutes.settings.path;
+  static String get initialRoute => BudgetRoutes.budget.path;
 
   static Map<String, WidgetBuilder> routes() => {
         for (final route in BudgetRoutes.values)

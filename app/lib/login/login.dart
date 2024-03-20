@@ -1,3 +1,4 @@
+import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +32,20 @@ class LoginPage extends StatelessWidget {
                       autofillHints: [AutofillHints.password],
                     ),
                     context.marginTheme.small.box,
-                    TextButton(
-                      onPressed: () => context.pushReplacementNamed('/'),
-                      child: const Text('login'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          onPressed: () => context
+                              .pushReplacementNamed(app.Routes.dashboard.path),
+                          child: const Text('login'),
+                        ),
+                        TextButton(
+                          onPressed: () => context
+                              .pushReplacementNamed(app.Routes.register.path),
+                          child: const Text('register'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -1,5 +1,5 @@
 import 'package:app/components/primary_header.dart';
-import 'package:app/main.dart';
+import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +124,7 @@ class _SettingsContent extends StatelessWidget {
                         Navigator.of(
                           context,
                           rootNavigator: true,
-                        ).pushReplacementNamed(ApplicationRoutes.login.path);
+                        ).pushReplacementNamed(app.Routes.login.path);
                       },
                     ),
                   ],

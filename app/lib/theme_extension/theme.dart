@@ -9,6 +9,9 @@ ThemeData theme(ThemeData theme) {
   final br = BorderRadius.circular(4);
 
   return theme.copyWith(
+    checkboxTheme: const CheckboxThemeData(
+      side: BorderSide.none,
+    ),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         // TODO(Luckey-Elijah): add [PageTransitionsTheme.builders]
