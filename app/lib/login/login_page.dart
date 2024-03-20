@@ -11,7 +11,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<LoginBloc>(
       create: (c) => LoginBloc(pocketbase: c.pocketbase),
       child: Scaffold(
         body: Center(
@@ -44,8 +44,8 @@ class LoginView extends StatelessWidget {
     return BlocConsumer<LoginBloc, LoginState>(
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
-        if (state.status != LoginStatus.success) return;
-        context.pushReplacementNamed(app.Routes.dashboard.path);
+        // if (state.status != LoginStatus.success) return;
+        // context.pushReplacementNamed(app.Routes.dashboard.path);
       },
       builder: (context, state) {
         final add = context.read<LoginBloc>().add;

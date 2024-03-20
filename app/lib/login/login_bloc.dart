@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:app/login/login_state.dart';
 import 'package:bloc/bloc.dart';
@@ -26,10 +25,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) async {
     try {
-      final data = await _pb
+      await _pb
           .collection('users')
           .authWithPassword(state.username, state.password);
-      stdout.writeln(data);
       return emit(state.copyWith(status: LoginStatus.success));
     } on Exception catch (e) {
       addError(e);

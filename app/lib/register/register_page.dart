@@ -11,7 +11,7 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<RegisterBloc>(
       create: (c) => RegisterBloc(pocketbase: c.pocketbase),
       child: Scaffold(
         body: Center(

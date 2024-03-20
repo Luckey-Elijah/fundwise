@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:app/register/register_state.dart';
 import 'package:bloc/bloc.dart';
@@ -31,12 +30,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   ) async {
     try {
       emit(state.copyWith(status: RegisterStatus.loading));
-      final record = await _pb.collection('users').create(body: state.toMap());
-      stdout.writeln(record.data);
+      await _pb.collection('users').create(body: state.toMap());
       emit(state.copyWith(status: RegisterStatus.success));
     } on Exception catch (e) {
       addError(e);
-      return emit(state.copyWith(status: RegisterStatus.error));
+      emit(state.copyWith(status: RegisterStatus.error));
     }
   }
 }
