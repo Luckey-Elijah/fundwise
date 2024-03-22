@@ -3,8 +3,6 @@ import 'package:bloc/bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const _key = 'host';
-
 class HostBloc extends Bloc<HostEvent, HostState> {
   HostBloc({required SharedPreferences sharedPreferences})
       : _preferences = sharedPreferences,
@@ -75,9 +73,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         return emit(state.copyWith(status: HostStatus.error));
       }
 
-      final isWebServer = url.isScheme('HTTP') || url.isScheme('HTTPS');
-
-      if (!isWebServer) {
+      if (![_httpScheme, _httpsScheme].any(url.isScheme)) {
         return emit(state.copyWith(url: url, status: HostStatus.error));
       }
 
@@ -87,6 +83,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     });
   }
 
+  static const _httpScheme = 'HTTP';
+  static const _httpsScheme = 'HTTPS';
+  static const _key = 'host';
   final SharedPreferences _preferences;
 }
 
