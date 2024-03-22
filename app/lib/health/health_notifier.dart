@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HealthNotifier extends BlocListener<OnlineBloc, OnlineState> {
+class HealthNotifier extends BlocListener<HealthBloc, HealthState> {
   const HealthNotifier({super.key}) : super(listener: _listener);
 
-  static void _listener(BuildContext context, OnlineState state) {
+  static void _listener(BuildContext context, HealthState state) {
     final err = state.error;
     if (err != null) {
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(

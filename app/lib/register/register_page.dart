@@ -1,3 +1,4 @@
+import 'package:app/host/host_form.dart';
 import 'package:app/register/register_bloc.dart';
 import 'package:app/register/register_state.dart';
 import 'package:app/routes.dart' as app;
@@ -15,18 +16,24 @@ class RegisterPage extends StatelessWidget {
       create: (c) => RegisterBloc(pocketbase: c.pocketbase),
       child: Scaffold(
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: DecoratedBox(
-              decoration: context.decorationTheme.primary,
-              child: ConstrainedBox(
-                constraints: context.decorationTheme.smallWidth,
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: RegisterView(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: DecoratedBox(
+                  decoration: context.decorationTheme.primary,
+                  child: ConstrainedBox(
+                    constraints: context.decorationTheme.smallWidth,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: RegisterView(),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const HostForm(),
+            ],
           ),
         ),
       ),

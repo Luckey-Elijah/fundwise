@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-// class CheckHealth {}
-
-class OnlineState {
-  const OnlineState({
+class HealthState {
+  const HealthState({
     required this.url,
     this.code,
     this.data,
@@ -15,7 +13,7 @@ class OnlineState {
     this.shouldShow = false,
   });
 
-  OnlineState.fromHealthCheck(HealthCheck healthCheck, Uri url)
+  HealthState.fromHealthCheck(HealthCheck healthCheck, Uri url)
       : this(
           url: url,
           code: healthCheck.code,
@@ -31,22 +29,22 @@ class OnlineState {
   final Uri url;
 }
 
-class OnlineBloc extends Bloc<void, OnlineState> {
-  OnlineBloc({required PocketBase pocketbase})
+class HealthBloc extends Bloc<void, HealthState> {
+  HealthBloc({required PocketBase pocketbase})
       : _pb = pocketbase,
-        super(OnlineState(url: Uri.parse(pocketbase.baseUrl))) {
+        super(HealthState(url: Uri.parse(pocketbase.baseUrl))) {
     on<void>(_onCheckHealth);
   }
 
   Future<void> _onCheckHealth(
     void event,
-    Emitter<OnlineState> emit,
+    Emitter<HealthState> emit,
   ) async {
     try {
       final healthCheck = await _pb.health.check();
       if (healthCheck.code case < 200 && > 299) {
         return emit(
-          OnlineState(
+          HealthState(
             code: healthCheck.code,
             data: healthCheck.data,
             error: healthCheck.message,
@@ -55,12 +53,12 @@ class OnlineBloc extends Bloc<void, OnlineState> {
         );
       }
 
-      return emit(OnlineState.fromHealthCheck(healthCheck, state.url));
+      return emit(HealthState.fromHealthCheck(healthCheck, state.url));
     } on ClientException catch (e) {
       addError(e);
       // probably some connectivity error
       return emit(
-        OnlineState(
+        HealthState(
           error: 'url: <${e.url?.authority}> is not online.',
           url: state.url,
         ),
@@ -68,7 +66,7 @@ class OnlineBloc extends Bloc<void, OnlineState> {
     } on Exception catch (e) {
       addError(e);
       return emit(
-        OnlineState(
+        HealthState(
           error: '$e',
           url: state.url,
         ),
