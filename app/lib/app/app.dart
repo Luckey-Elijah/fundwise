@@ -1,7 +1,6 @@
 import 'package:app/auth/auth_bloc.dart';
 import 'package:app/auth/auth_navigator.dart';
 import 'package:app/health/health.dart' as health;
-import 'package:app/host/host_bloc.dart' as host;
 import 'package:app/routes.dart' as app;
 import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
@@ -50,11 +49,6 @@ class _FundwiseAppState extends State<FundwiseApp> {
             create: (c) => health.HealthBloc(
               pocketbase: c.pocketbase,
             )..add(null),
-          ),
-          BlocProvider<host.HostBloc>(
-            create: (c) => host.HostBloc(
-              sharedPreferences: c.read<SharedPreferences>(),
-            )..add(host.InitializeEvent()),
           ),
         ],
         child: MaterialApp(

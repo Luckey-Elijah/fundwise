@@ -1,4 +1,3 @@
-import 'package:app/host/host_form.dart';
 import 'package:app/register/register_bloc.dart';
 import 'package:app/register/register_state.dart';
 import 'package:app/routes.dart' as app;
@@ -32,7 +31,6 @@ class RegisterPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const HostForm(),
             ],
           ),
         ),
