@@ -29,11 +29,15 @@ class HealthState {
   final Uri url;
 }
 
-class HealthBloc extends Bloc<void, HealthState> {
+final class HealthEvent {
+  const HealthEvent();
+}
+
+class HealthBloc extends Bloc<HealthEvent, HealthState> {
   HealthBloc({required PocketBase pocketbase})
       : _pb = pocketbase,
         super(HealthState(url: Uri.parse(pocketbase.baseUrl))) {
-    on<void>(_onCheckHealth);
+    on<HealthEvent>(_onCheckHealth);
   }
 
   Future<void> _onCheckHealth(

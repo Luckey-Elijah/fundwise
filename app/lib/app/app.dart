@@ -48,7 +48,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
           BlocProvider<health.HealthBloc>(
             create: (c) => health.HealthBloc(
               pocketbase: c.pocketbase,
-            )..add(null),
+            )..add(const health.HealthEvent()),
           ),
         ],
         child: MaterialApp(
