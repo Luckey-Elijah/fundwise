@@ -57,8 +57,18 @@ class _FundwiseAppState extends State<FundwiseApp> {
           initialRoute: app.Routes.initialRoute,
           navigatorKey: navigatorKey,
           themeMode: ThemeMode.light,
-          theme: theme(FlexThemeData.light(scheme: scheme)),
-          darkTheme: theme(FlexThemeData.dark(scheme: scheme)),
+          theme: theme(
+            FlexThemeData.light(
+              scheme: scheme,
+              fontFamily: 'Open Sans',
+            ),
+          ),
+          darkTheme: theme(
+            FlexThemeData.dark(
+              scheme: scheme,
+              fontFamily: 'Open Sans',
+            ),
+          ),
           builder: (_, child) {
             if (child == null) {
               throw const FundwiseException(
