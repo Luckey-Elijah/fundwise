@@ -67,7 +67,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
             }
             return MultiBlocListener(
               listeners: [
-                AuthNavigator(navigatorState: navigatorKey.currentState),
+                AuthNavigator(navigatorState: () => navigatorKey.currentState),
                 const health.HealthNotifier(),
               ],
               child: child,

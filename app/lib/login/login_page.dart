@@ -11,21 +11,33 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LoginBloc>(
-      create: (c) => LoginBloc(pocketbase: c.pocketbase),
-      child: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: DecoratedBox(
-              decoration: context.decorationTheme.primary,
-              child: ConstrainedBox(
-                constraints: context.decorationTheme.smallWidth,
-                child: const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: LoginView(),
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: ConstrainedBox(
+            constraints: context.decorationTheme.smallWidth,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'login',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                 ),
-              ),
+                DecoratedBox(
+                  decoration: context.decorationTheme.primary,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: BlocProvider(
+                      create: (c) => LoginBloc(pocketbase: c.pocketbase),
+                      child: const LoginView(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -41,12 +53,7 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
-      listenWhen: (prev, next) => prev.status != next.status,
-      listener: (context, state) {
-        // if (state.status != LoginStatus.success) return;
-        // context.pushReplacementNamed(app.Routes.dashboard.path);
-      },
+    return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
         final add = context.read<LoginBloc>().add;
         final enabled = state.status != LoginStatus.loading ||

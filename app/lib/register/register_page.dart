@@ -15,23 +15,30 @@ class RegisterPage extends StatelessWidget {
       create: (c) => RegisterBloc(pocketbase: c.pocketbase),
       child: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: DecoratedBox(
-                  decoration: context.decorationTheme.primary,
-                  child: ConstrainedBox(
-                    constraints: context.decorationTheme.smallWidth,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: ConstrainedBox(
+              constraints: context.decorationTheme.smallWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'register',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                  DecoratedBox(
+                    decoration: context.decorationTheme.primary,
                     child: const Padding(
                       padding: EdgeInsets.all(8),
                       child: RegisterView(),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

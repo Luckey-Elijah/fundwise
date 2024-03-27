@@ -14,7 +14,10 @@ ThemeData theme(ThemeData theme) {
     ),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        // TODO(Luckey-Elijah): add [PageTransitionsTheme.builders]
+        TargetPlatform.android: ZoomPageTransitionsBuilder(),
+        TargetPlatform.fuchsia: ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
+        TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
       },
     ),
     appBarTheme: const AppBarTheme(

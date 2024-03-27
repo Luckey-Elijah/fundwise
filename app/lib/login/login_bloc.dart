@@ -18,6 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
     on<LoginButtonPressed>(_onLoginButtonPressed);
   }
+
   final PocketBase _pb;
 
   Future<void> _onLoginButtonPressed(
