@@ -18,22 +18,22 @@ class HealthNotifier extends BlocListener<HealthBloc, HealthState> {
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              /* Flexible(
-                child:  */
-              Text('code: ${state.code}'),
-              // ),
-              /* Flexible(
-                child:  */
-              Text('message: ${state.message}'),
-              // ),
-              /* Flexible(
-                child:  */
-              Text('data: ${state.data}'),
-              // ),
-              /* Flexible(
-                child:  */
-              Text('error: ${state.error}'),
-              // ),
+              if (state.code != null)
+                Text(
+                  'code: ${state.code}',
+                ),
+              if (state.message != null)
+                Text(
+                  'message: ${state.message}',
+                ),
+              if (state.data != null)
+                Text(
+                  'data: ${state.data}',
+                ),
+              if (state.error != null)
+                Text(
+                  'error: ${state.error}',
+                ),
             ],
           ),
         ),
