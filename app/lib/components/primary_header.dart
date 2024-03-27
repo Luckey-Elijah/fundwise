@@ -14,7 +14,7 @@ class PrimaryHeader extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints.loose(
         Size.fromHeight(
-          AppBarTheme.of(context).toolbarHeight ?? kToolbarHeight,
+          AppBarTheme.of(context).toolbarHeight ?? kToolbarHeight + 12,
         ),
       ),
       child: DecoratedBox(

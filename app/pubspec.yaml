@@ -4,6 +4,9 @@ version: 0.0.1
 environment: { sdk: ">=3.3.0 <4.0.0" }
 flutter: 
   uses-material-design: true
+  assets:
+    - fonts/Open_Sans/OFL.txt
+    - fonts/Roboto_Mono/LICENSE.txt
   fonts:
     - family: Open Sans
       fonts:
@@ -41,6 +44,26 @@ flutter:
           weight: 800
         - asset: fonts/Open_Sans/static/OpenSans-ExtraBoldItalic.ttf
           weight: 800
+          style: italic
+
+    - family: Roboto Mono
+      fonts:
+        - asset: fonts/Roboto_Mono/static/RobotoMono-Light.ttf
+          weight: 300
+        - asset: fonts/Roboto_Mono/static/RobotoMono-LightItalic.ttf
+          weight: 300
+          style: italic
+
+        - asset: fonts/Roboto_Mono/static/RobotoMono-Regular.ttf
+          weight: 400
+        - asset: fonts/Roboto_Mono/static/RobotoMono-Italic.ttf
+          weight: 400
+          style: italic
+
+        - asset: fonts/Roboto_Mono/static/RobotoMono-Bold.ttf
+          weight: 700
+        - asset: fonts/Roboto_Mono/static/RobotoMono-BoldItalic.ttf
+          weight: 700
           style: italic
 
 

@@ -21,7 +21,7 @@ ThemeData theme(ThemeData theme) {
       },
     ),
     appBarTheme: const AppBarTheme(
-      toolbarHeight: kToolbarHeight,
+      toolbarHeight: kToolbarHeight + 12,
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(

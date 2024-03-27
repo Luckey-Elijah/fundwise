@@ -73,14 +73,19 @@ class _BudgetMonthHeader extends StatelessWidget {
             children: [
               BlocBuilder<MonthCubit, DateTime>(
                 builder: (context, state) {
-                  return Text(
-                    '${state.month}/${state.year}',
-                    style: context.textTheme.bodyLarge,
+                  return TextButton(
+                    onPressed: () => context.read<MonthCubit>().today(),
+                    child: Text(
+                      '${state.month.toString().padLeft(2, '0')}/${state.year}',
+                      style: context.textTheme.bodyLarge,
+                    ),
                   );
                 },
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  showAboutDialog(context: context);
+                },
                 style: TextButton.styleFrom(
                   visualDensity: VisualDensity.compact,
                   textStyle: context.textTheme.bodySmall,
@@ -103,4 +108,5 @@ class MonthCubit extends Cubit<DateTime> {
   MonthCubit() : super(DateTime.now());
   void next() => emit(DateTime(state.year, state.month + 1));
   void previous() => emit(DateTime(state.year, state.month - 1));
+  void today() => emit(DateTime.now());
 }
