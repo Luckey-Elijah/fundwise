@@ -87,6 +87,7 @@ class _SidebarState extends State<_Sidebar> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsActive = active('/settings');
     return DecoratedBox(
       decoration: context.decorationTheme.primary.copyWith(
         borderRadius: const BorderRadius.only(
@@ -105,35 +106,9 @@ class _SidebarState extends State<_Sidebar> {
             Expanded(
               child: ListView(
                 children: [
-                  _DashboardButton(
+                  _BudgetButton(
                     onPressed: () => widget.route('/settings'),
-                    active: active('/settings'),
-                    icon: const Icon(Icons.savings_rounded),
-                    label: '<name of budget>',
-                    labelBuilder: (label) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          label,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'user+fillerspace@fundwise.dev',
-                          style: Theme.of(context)
-                              .primaryTextTheme
-                              .bodySmall
-                              ?.copyWith(
-                                color: active('/settings')
-                                    ? Theme.of(context).colorScheme.onSecondary
-                                    : Theme.of(context).colorScheme.onPrimary,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
+                    settingsActive: settingsActive,
                   ),
                   _DashboardButton(
                     onPressed: () => widget.route('/budget'),
@@ -194,6 +169,54 @@ class _SidebarState extends State<_Sidebar> {
   void toggleExpanded() => setState(() => expanded = !expanded);
 }
 
+class _BudgetButton extends StatelessWidget {
+  const _BudgetButton({
+    required this.onPressed,
+    required this.settingsActive,
+    super.key,
+  });
+
+  final VoidCallback onPressed;
+  final bool settingsActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return _DashboardButton(
+      onPressed: onPressed,
+      active: settingsActive,
+      icon: const Icon(Icons.savings_rounded),
+      label: '<name of budget>',
+      labelBuilder: (label) {
+        final scheme = Theme.of(context).colorScheme;
+        final emailStyle =
+            Theme.of(context).primaryTextTheme.bodySmall?.copyWith(
+                  fontFamily: 'Roboto Mono',
+                  color: settingsActive
+                      ? scheme.onSecondaryContainer
+                      : scheme.onPrimaryContainer,
+                );
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Text(
+              'user+fillerspace@fundwise.dev',
+              style: emailStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _DashboardButton extends StatelessWidget {
   const _DashboardButton({
     required this.onPressed,
@@ -216,14 +239,21 @@ class _DashboardButton extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       child: LayoutBuilder(
         builder: (context, contraints) {
+          final fgColor = active
+              ? Theme.of(context).colorScheme.onSecondaryContainer
+              : Theme.of(context).colorScheme.onPrimaryContainer;
+          final bgColor = active
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).colorScheme.primaryContainer;
+
           if (contraints.maxWidth < (IconTheme.of(context).size ?? 0) + 72) {
-            return IconButton.outlined(
+            return IconButton(
               tooltip: label,
-              visualDensity: VisualDensity.compact,
-              color: active
-                  ? Theme.of(context).colorScheme.onTertiaryContainer
-                  : Theme.of(context).colorScheme.onSecondary,
-              style: IconButton.styleFrom(),
+              color: fgColor,
+              style: IconButton.styleFrom(
+                backgroundColor: bgColor,
+                foregroundColor: fgColor,
+              ),
               onPressed: onPressed,
               icon: icon,
             );
@@ -235,12 +265,8 @@ class _DashboardButton extends StatelessWidget {
             label: labelBuilder(label),
             style: TextButton.styleFrom(
               visualDensity: VisualDensity.standard,
-              backgroundColor: active
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiaryContainer,
-              foregroundColor: active
-                  ? Theme.of(context).colorScheme.onSecondary
-                  : Theme.of(context).colorScheme.onTertiaryContainer,
+              backgroundColor: bgColor,
+              foregroundColor: fgColor,
             ),
           );
         },
