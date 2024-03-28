@@ -21,11 +21,21 @@ class AuthBloc extends Bloc<Object?, AuthState> {
     InitializeEvent event,
     Emitter<AuthState> emit,
   ) {
+    Stream<AuthState> stream() async* {
+      if (_pb.authStore.isValid) {
+        yield AuthState.authenticated;
+      }
+
+      yield* _pb.authStore.onChange.map(
+        (data) => data.token.isNotEmpty && data.model is RecordModel
+            ? AuthState.authenticated
+            : AuthState.unknown,
+      );
+    }
+
     return emit.forEach(
-      _pb.authStore.onChange,
-      onData: (data) => data.token.isNotEmpty && data.model is RecordModel
-          ? AuthState.authenticated
-          : AuthState.unknown,
+      stream(),
+      onData: (data) => data,
     );
   }
 
