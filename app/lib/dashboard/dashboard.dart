@@ -24,16 +24,20 @@ class _DashboardState extends State<Dashboard> {
 
   String? currentRoute = BudgetRoutes.initialRoute;
 
-  final routes = BudgetRoutes.routes();
-
   Route<void>? onGenerateRoute(RouteSettings settings) {
+    final routes = BudgetRoutes.routes();
     final builder = routes[settings.name];
     if (builder != null) {
       return MaterialPageRoute<void>(
         settings: settings,
-        builder: (context) => Padding(
-          padding: const EdgeInsets.all(8),
-          child: builder(context),
+        builder: (context) => DecoratedBox(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: builder(context),
+          ),
         ),
       );
     }
@@ -173,7 +177,6 @@ class _BudgetButton extends StatelessWidget {
   const _BudgetButton({
     required this.onPressed,
     required this.settingsActive,
-    super.key,
   });
 
   final VoidCallback onPressed;

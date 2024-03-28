@@ -14,10 +14,10 @@ ThemeData theme(ThemeData theme) {
     ),
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.fuchsia: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: ZoomPageTransitionsBuilder(),
-        TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+        TargetPlatform.android: FundwiseTransition(),
+        TargetPlatform.fuchsia: FundwiseTransition(),
+        TargetPlatform.iOS: FundwiseTransition(),
+        TargetPlatform.macOS: FundwiseTransition(),
       },
     ),
     appBarTheme: const AppBarTheme(
@@ -50,4 +50,21 @@ ThemeData theme(ThemeData theme) {
       ),
     ],
   );
+}
+
+class FundwiseTransition extends PageTransitionsBuilder {
+  const FundwiseTransition();
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: animation.drive(CurveTween(curve: Curves.easeIn)),
+      child: child,
+    );
+  }
 }

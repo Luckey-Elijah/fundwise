@@ -43,113 +43,139 @@ class _SettingsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final space = context.marginTheme.large.box;
     return ListView(
       children: [
         Text('Budget Settings', style: context.textTheme.bodyMedium),
-        context.marginTheme.small.box,
-        Wrap(
-          children: [
-            TextButton.icon(
-              icon: const Icon(Icons.settings_rounded),
-              label: const Text(
-                'Budget Settings',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) => const _BudgetSettingsDialog(),
-              ),
-            ),
-            TextButton.icon(
-              icon: const Icon(Icons.folder_open_rounded),
-              label: const Text(
-                'Open Budget',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) => const _BudgetPickerDialog(),
-              ),
-            ),
-            context.marginTheme.small.box,
-            TextButton.icon(
-              icon: const Icon(Icons.create_new_folder_rounded),
-              label: const Text(
-                'New Budget',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) => const _NewBudgetDialog(),
-              ),
-            ),
-          ],
-        ),
-        context.marginTheme.large.box,
+        space,
+        const _BudgetItems(),
+        space,
         Text('Accounts Settings', style: context.textTheme.bodyMedium),
-        context.marginTheme.small.box,
-        Wrap(
-          children: [
-            TextButton.icon(
-              icon: const Icon(Icons.logout_rounded),
-              label: const Text(
-                'Logout',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: const Text('Are you sure you want to logout?'),
-                  actions: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.cancel_rounded),
-                      label: const Text(
-                        'Cancel',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      onPressed: context.pop,
-                    ),
-                    TextButton.icon(
-                      onPressed: () =>
-                          context.read<AuthBloc>().add(LogoutEvent()),
-                      icon: const Icon(Icons.logout_rounded),
-                      label: const Text(
-                        'Logout',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        const Divider(),
-        context.marginTheme.large.box,
+        space,
+        const _AccountItems(),
+        space,
         Text('Legal', style: context.textTheme.bodyMedium),
-        context.marginTheme.small.box,
-        Wrap(
-          children: [
-            TextButton.icon(
-              onPressed: () => showAboutDialog(
-                context: context,
-                applicationName: 'fundwise.dev',
-                applicationVersion: '0.0.1',
-              ),
-              icon: const Icon(Icons.edit_document),
-              label: const Text(
-                'About',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+        space,
+        const _LegalItems(),
+      ],
+    );
+  }
+}
+
+class _LegalItems extends StatelessWidget {
+  const _LegalItems();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: [
+        TextButton.icon(
+          onPressed: () => showAboutDialog(
+            context: context,
+            applicationName: 'fundwise.dev',
+            applicationVersion: '0.0.1',
+          ),
+          icon: const Icon(Icons.edit_document),
+          label: const Text(
+            'About',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountItems extends StatelessWidget {
+  const _AccountItems();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: [
+        TextButton.icon(
+          icon: const Icon(Icons.logout_rounded),
+          label: const Text(
+            'Logout',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: const Text('Are you sure you want to logout?'),
+              actions: [
+                TextButton.icon(
+                  icon: const Icon(Icons.cancel_rounded),
+                  label: const Text(
+                    'Cancel',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  onPressed: context.pop,
+                ),
+                TextButton.icon(
+                  onPressed: () => context.read<AuthBloc>().add(LogoutEvent()),
+                  icon: const Icon(Icons.logout_rounded),
+                  label: const Text(
+                    'Logout',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BudgetItems extends StatelessWidget {
+  const _BudgetItems();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      children: [
+        TextButton.icon(
+          icon: const Icon(Icons.settings_rounded),
+          label: const Text(
+            'Budget Settings',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const _BudgetSettingsDialog(),
+          ),
+        ),
+        TextButton.icon(
+          icon: const Icon(Icons.folder_open_rounded),
+          label: const Text(
+            'Open Budget',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const _BudgetPickerDialog(),
+          ),
+        ),
+        context.marginTheme.small.box,
+        TextButton.icon(
+          icon: const Icon(Icons.create_new_folder_rounded),
+          label: const Text(
+            'New Budget',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => const _NewBudgetDialog(),
+          ),
         ),
       ],
     );

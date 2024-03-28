@@ -97,9 +97,7 @@ class _BudgetMonthHeader extends StatelessWidget {
 }
 
 class _EnterNoteButton extends StatefulWidget {
-  const _EnterNoteButton({
-    super.key,
-  });
+  const _EnterNoteButton();
 
   @override
   State<_EnterNoteButton> createState() => _EnterNoteButtonState();

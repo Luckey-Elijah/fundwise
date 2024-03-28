@@ -1,4 +1,3 @@
-import 'package:app/auth/auth_bloc.dart';
 import 'package:bloc/bloc.dart';
 
 class FundwiseBlocObserver extends BlocObserver {
@@ -7,10 +6,6 @@ class FundwiseBlocObserver extends BlocObserver {
     BlocBase<Object?> bloc,
     Change<Object?> change,
   ) {
-    if (bloc is AuthBloc && change is Change<AuthState>) {
-      print(bloc);
-      print(change);
-    }
     super.onChange(bloc, change);
   }
 
