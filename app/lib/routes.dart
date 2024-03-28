@@ -17,7 +17,7 @@ enum Routes {
 
   final String path;
 
-  static String get initialRoute => Routes.register.path;
+  static String get initialRoute => Routes.login.path;
 
   static Map<String, WidgetBuilder> routes() => {
         for (final route in Routes.values)

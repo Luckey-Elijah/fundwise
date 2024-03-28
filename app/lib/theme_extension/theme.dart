@@ -36,7 +36,7 @@ ThemeData theme(ThemeData theme) {
       ),
       DecorationTheme(
         primary: BoxDecoration(
-          color: theme.colorScheme.tertiaryContainer,
+          color: theme.colorScheme.primaryContainer,
           borderRadius: br,
         ),
         error: BoxDecoration(
