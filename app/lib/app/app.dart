@@ -32,7 +32,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   @override
   Widget build(BuildContext context) {
-    const scheme = FlexScheme.espresso;
+    const scheme = FlexScheme.blueWhale;
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: widget.pocketbase),
