@@ -1,6 +1,7 @@
 import 'package:app/components/primary_header.dart';
-import 'package:app/theme_extension/margin.dart';
+import 'package:app/theme_extension/theme.dart';
 import 'package:app/utility/build_context.extension.dart';
+import 'package:app/utility/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,16 +83,7 @@ class _BudgetMonthHeader extends StatelessWidget {
                   );
                 },
               ),
-              TextButton(
-                onPressed: () {
-                  showAboutDialog(context: context);
-                },
-                style: TextButton.styleFrom(
-                  visualDensity: VisualDensity.compact,
-                  textStyle: context.textTheme.bodySmall,
-                ),
-                child: const Text('Enter a note...'),
-              ),
+              const _EnterNoteButton(),
             ],
           ),
           IconButton(
@@ -100,6 +92,80 @@ class _BudgetMonthHeader extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _EnterNoteButton extends StatefulWidget {
+  const _EnterNoteButton({
+    super.key,
+  });
+
+  @override
+  State<_EnterNoteButton> createState() => _EnterNoteButtonState();
+}
+
+class _EnterNoteButtonState extends State<_EnterNoteButton> {
+  OverlayEntry? entry;
+  final key = GlobalKey();
+
+  (Offset, Size) getRect() {
+    final box = key.currentContext?.findRenderObject();
+    if (box is RenderBox) {
+      return (box.localToGlobal(Offset.zero), box.size);
+    }
+    throw const FundwiseException(message: '[box] is not a [RenderBox]');
+  }
+
+  void toggleOverlay() {
+    if (entry != null) {
+      entry?.remove();
+      entry?.dispose();
+      entry = null;
+      return;
+    }
+    final res = getRect();
+    // final rect = res.$1 & res.$1;
+    entry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          top: res.$1.dy,
+          left: res.$1.dx,
+          child: DecoratedBox(
+            decoration: context.decorationTheme.primary.copyWith(
+              color: Theme.of(context).colorScheme.tertiaryContainer,
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context, debugRequiredFor: widget).insert(entry!);
+  }
+
+  @override
+  void dispose() {
+    entry?.remove();
+    entry?.dispose();
+    entry = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      key: key,
+      onPressed: toggleOverlay,
+      style: TextButton.styleFrom(
+        textStyle: context.textTheme.bodySmall,
+      ),
+      child: const Text('Enter a note...'),
     );
   }
 }
