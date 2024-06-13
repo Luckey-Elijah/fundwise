@@ -31,16 +31,9 @@ class DashboardShellRoute extends ShellRouteData {
     return NoTransitionPage(
       child: DashboardShell(
         matchedLocation: state.matchedLocation,
+        url: state.uri,
         child: navigator,
       ),
-    );
-  }
-
-  @override
-  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    return DashboardShell(
-      matchedLocation: state.matchedLocation,
-      child: navigator,
     );
   }
 }
