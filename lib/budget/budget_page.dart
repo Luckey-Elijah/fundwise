@@ -17,16 +17,71 @@ class BudgetPage extends StatelessWidget {
         BudgetTopNavigator(),
         GutterSmall(),
         Divider(),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(flex: 3, child: BudgetActionsAndListView()),
-              VerticalDivider(width: 1),
-              Flexible(child: BudgetSidebar()),
-            ],
-          ),
-        ),
+        Expanded(child: BudgetContentBuilder()),
       ],
+    );
+  }
+}
+
+class BudgetContentBuilder extends StatefulWidget {
+  const BudgetContentBuilder({super.key});
+
+  @override
+  State<BudgetContentBuilder> createState() => _BudgetContentBuilderState();
+}
+
+class _BudgetContentBuilderState extends State<BudgetContentBuilder> {
+  bool showSideBar = false;
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final large = constraints.maxWidth > 1200;
+        return Stack(
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  flex: 3,
+                  child: BudgetActionsAndListView(),
+                ),
+                if (large) ...[
+                  const VerticalDivider(width: 1),
+                  const Flexible(child: BudgetSidebar()),
+                ],
+              ],
+            ),
+            if (!large) ...[
+              Align(
+                alignment: Alignment.centerRight,
+                child: AnimatedSlide(
+                  duration: Durations.short2,
+                  offset: showSideBar ? Offset.zero : Offset.fromDirection(0),
+                  child: Material(
+                    elevation: 10,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 420),
+                      child: const BudgetSidebar(),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: IconButton.filled(
+                    icon: showSideBar
+                        ? const Icon(Icons.chevron_right)
+                        : const Icon(Icons.chevron_left),
+                    onPressed: () => setState(() => showSideBar = !showSideBar),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }

@@ -158,7 +158,6 @@ class BudgetSidebarInspector extends StatefulWidget {
 
   final Widget title;
   final Widget? trailing;
-
   final List<Widget> children;
 
   @override
@@ -166,7 +165,7 @@ class BudgetSidebarInspector extends StatefulWidget {
 }
 
 class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
-  bool expanded = true;
+  bool expanded = false;
 
   @override
   Widget build(BuildContext context) {

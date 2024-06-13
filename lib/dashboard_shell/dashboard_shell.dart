@@ -63,6 +63,7 @@ class PrimaryScaffold extends StatelessWidget {
         );
       },
       body: (context) => child,
+      // secondaryBody: (context) => const BudgetSidebar(),
       transitionDuration: Durations.short3,
       trailingNavRail: const LogoutButton(),
       selectedIndex: index,
