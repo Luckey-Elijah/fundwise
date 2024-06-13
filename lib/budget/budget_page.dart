@@ -54,12 +54,11 @@ class BudgetActionsAndListView extends StatelessWidget {
   }
 }
 
-Random rand = Random();
+final rand = Random();
 String r() => r'$'
-        '${rand.nextInt(1200)}'
-        '.'
-        '${rand.nextInt(100)}'
-    .padLeft(2, '0');
+    '${rand.nextInt(1200)}'
+    '.'
+    '${rand.nextInt(100).toString().padLeft(2, '0')}';
 
 class BudgetListViewContent extends StatelessWidget {
   const BudgetListViewContent({super.key});

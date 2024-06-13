@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
-    required this.child,
+    required this.anchorChild,
     required this.overlayBuilder,
     super.key,
     this.debugLabel,
@@ -21,7 +21,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
     BuildContext context,
     OverlayPortalController controller,
   ) overlayBuilder;
-  final Widget child;
+  final Widget anchorChild;
 
   @override
   State<PositionedOverlayBuilder> createState() =>
@@ -37,6 +37,7 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
   Offset getWidgetOffset(GlobalKey key) {
     final renderBox = key.currentContext!.findRenderObject()! as RenderBox;
     final origin = renderBox.localToGlobal(Offset.zero);
+    key.currentWidget;
     return renderBox.size.center(origin);
   }
 
@@ -48,7 +49,7 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       OverlayPortal(
         key: key,
         controller: controller,
-        child: widget.child,
+        child: widget.anchorChild,
         overlayChildBuilder: (context) {
           final offset = getWidgetOffset(key);
 

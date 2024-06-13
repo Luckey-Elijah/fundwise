@@ -13,7 +13,7 @@ class LogoutButton extends StatelessWidget {
       anchorBuilder: (context, controller, child) {
         return TextButton(onPressed: controller.toggle, child: child);
       },
-      child: const Text('logout'),
+      anchorChild: const Text('logout'),
       overlayBuilder: (context, controller) {
         return Card(
           elevation: 20,

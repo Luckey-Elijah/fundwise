@@ -16,7 +16,7 @@ class BudgetSidebar extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: AutoAssignInspector(),
         ),
-        GutterTiny(),
+        GutterSmall(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: BudgetAvailabilityInspector(),
@@ -171,6 +171,7 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Column(
         children: [

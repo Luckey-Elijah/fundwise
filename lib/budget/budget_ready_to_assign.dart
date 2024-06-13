@@ -29,54 +29,58 @@ class BudgetReadyToAssign extends StatelessWidget {
             ),
           ),
           const Gutter(),
-          PositionedOverlayBuilder(
-            anchorBuilder: (context, controller, child) {
-              return TextButton.icon(
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  foregroundColor:
-                      Theme.of(context).colorScheme.onTertiaryContainer,
-                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                ),
-                iconAlignment: IconAlignment.end,
-                label: child,
-                icon: const Icon(Icons.arrow_drop_down),
-                onPressed: controller.toggle,
-              );
-            },
-            overlayBuilder: (context, controller) {
-              return Card(
-                elevation: 10,
-                child: Column(
-                  children: [
-                    for (var i = 0; i < 10; i++) Text('thing $i'),
-                  ],
-                ),
-              );
-            },
-            child: const Text('Assign'),
-          ),
-          // TextButton.icon(
-          //   style: TextButton.styleFrom(
-          //     padding: const EdgeInsets.all(16),
-          //     shape: const RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.all(Radius.circular(8)),
-          //     ),
-          //     foregroundColor:
-          //         Theme.of(context).colorScheme.onTertiaryContainer,
-          //     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          //   ),
-          //   iconAlignment: IconAlignment.end,
-          //   label: const Text('Assign'),
-          //   icon: const Icon(Icons.arrow_drop_down),
-          //   onPressed: () {},
-          // ),
+          const BudgetAssignButton(),
           const Gutter(),
         ],
       ),
+    );
+  }
+}
+
+class BudgetAssignButton extends StatelessWidget {
+  const BudgetAssignButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PositionedOverlayBuilder(
+      debugLabel: 'BudgetAssignButton',
+      anchorBuilder: (context, controller, child) {
+        return TextButton.icon(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(16),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          ),
+          iconAlignment: IconAlignment.end,
+          label: child,
+          icon: const Icon(Icons.arrow_drop_down),
+          onPressed: controller.toggle,
+        );
+      },
+      overlayBuilder: (context, controller) {
+        return Card(
+          elevation: 10,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                for (var i = 0; i < 10; i++)
+                  InkWell(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text('thing $i'),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+      anchorChild: const Text('Assign'),
     );
   }
 }
