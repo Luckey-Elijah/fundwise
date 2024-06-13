@@ -65,37 +65,30 @@ class BudgetListViewContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const BudgetCategoryGroupListItem(
+        BudgetCategoryGroupListItem(
           expanded: false,
           selected: false,
           name: 'CATEGORY',
           assigned: 'ASSIGNED',
           activity: 'ACTIVITY',
           available: 'AVAILABLE',
+          onCheckboxChanged: (value) {},
+          onExpandedPressed: () {},
         ),
         Expanded(
           child: ListView.custom(
             padding: EdgeInsets.zero,
             childrenDelegate: SliverChildBuilderDelegate(
               (context, index) {
-                // if (index == 0) {
-                // return const BudgetCategoryGroupListItem(
-                //   expanded: false,
-                //   selected: false,
-                //   name: 'CATEGORY',
-                //   assigned: 'ASSIGNED',
-                //   activity: 'ACTIVITY',
-                //   available: 'AVAILABLE',
-                // );
-                // }
-
                 return BudgetCategoryGroupListItem(
                   expanded: false,
                   selected: false,
-                  name: 'Group #.${index - 1}',
+                  name: 'Group #$index ',
                   assigned: r(),
                   activity: r(),
                   available: r(),
+                  onCheckboxChanged: (value) {},
+                  onExpandedPressed: () {},
                 );
               },
               childCount: 8,
@@ -115,6 +108,8 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
     required this.assigned,
     required this.activity,
     required this.available,
+    required this.onCheckboxChanged,
+    required this.onExpandedPressed,
     super.key,
   });
 
@@ -124,6 +119,8 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
   final String assigned;
   final String activity;
   final String available;
+  final ValueChanged<bool?>? onCheckboxChanged;
+  final VoidCallback? onExpandedPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -138,13 +135,13 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: onExpandedPressed,
                       icon: Transform.rotate(
                         angle: expanded ? pi / 2 : 0,
                         child: const Icon(Icons.chevron_right),
                       ),
                     ),
-                    Checkbox(value: selected, onChanged: (_) {}),
+                    Checkbox(value: selected, onChanged: onCheckboxChanged),
                     Text(name),
                   ],
                 ),
