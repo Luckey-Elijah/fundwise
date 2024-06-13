@@ -9,14 +9,7 @@
       "request": "launch",
       "flutterMode": "debug",
       "type": "dart",
-      "program": "app/lib/main.dart"
-    },
-    {
-      "name": "fundwise server",
-      "type": "node-terminal",
-      "cwd": "${workspaceFolder}/server",
-      "request": "launch",
-      "command": "./pocketbase serve"
+      "program": "lib/main.dart"
     }
   ]
 }
