@@ -22,14 +22,8 @@ class LoginView extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
+              child: Card(
+                color: Theme.of(context).colorScheme.primaryContainer,
                 child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Column(

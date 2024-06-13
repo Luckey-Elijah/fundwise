@@ -170,7 +170,7 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
 
   @override
   Widget build(BuildContext context) {
-    return Card.outlined(
+    return Card(
       color: Theme.of(context).colorScheme.primaryContainer,
       child: Column(
         children: [

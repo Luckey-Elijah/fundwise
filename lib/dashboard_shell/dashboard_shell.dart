@@ -1,3 +1,4 @@
+import 'package:app/logout_button.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
@@ -62,7 +63,8 @@ class PrimaryScaffold extends StatelessWidget {
         );
       },
       body: (context) => child,
-      leadingExtendedNavRail: const SettingsButton(),
+      transitionDuration: Durations.short3,
+      trailingNavRail: const LogoutButton(),
       selectedIndex: index,
       destinations: const [
         NavigationDestination(
@@ -106,24 +108,6 @@ class TopBarNavigator extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-class SettingsButton extends StatelessWidget {
-  const SettingsButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: TextButton(
-          child: const Text('Settings'),
-          onPressed: () => context.go('/settings'),
-        ),
       ),
     );
   }
