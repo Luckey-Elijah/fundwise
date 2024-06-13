@@ -17,12 +17,44 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp.router(
+      theme: lightTheme,
+      routerConfig: _router,
+    );
+  }
+
+  ThemeData get lightTheme {
     const dividerThemeData = DividerThemeData(space: 0);
-    final lightTheme = FlexThemeData.light(
+    final textButtonTheme = TextButtonThemeData(
+      style: ButtonStyle(
+        splashFactory: NoSplash.splashFactory,
+        elevation: const WidgetStatePropertyAll(0),
+        shape: WidgetStatePropertyAll(
+          ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+    final elevatedButtonTheme = ElevatedButtonThemeData(
+      style: ButtonStyle(
+        splashFactory: NoSplash.splashFactory,
+        elevation: const WidgetStatePropertyAll(0),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
+        shape: WidgetStatePropertyAll(
+          ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+
+    return FlexThemeData.light(
       scheme: FlexScheme.dellGenoa,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 7,
       subThemesData: const FlexSubThemesData(
+        elevatedButtonRadius: 8,
         blendOnLevel: 10,
         blendOnColors: false,
         useTextTheme: true,
@@ -33,29 +65,10 @@ class _FundwiseAppState extends State<FundwiseApp> {
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
       useMaterial3: true,
       swapLegacyOnMaterial3: true,
-    ).copyWith(dividerTheme: dividerThemeData);
-
-    final darkTheme = FlexThemeData.dark(
-      scheme: FlexScheme.dellGenoa,
-      surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-      blendLevel: 13,
-      subThemesData: const FlexSubThemesData(
-        blendOnLevel: 20,
-        useTextTheme: true,
-        useM2StyleDividerInM3: true,
-        alignedDropdown: true,
-        useInputDecoratorThemeInDialogs: true,
-      ),
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
-      swapLegacyOnMaterial3: true,
-    ).copyWith(dividerTheme: dividerThemeData);
-
-    return MaterialApp.router(
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      // themeMode: ThemeMode.light,
-      routerConfig: _router,
+    ).copyWith(
+      dividerTheme: dividerThemeData,
+      elevatedButtonTheme: elevatedButtonTheme,
+      textButtonTheme: textButtonTheme,
     );
   }
 }
