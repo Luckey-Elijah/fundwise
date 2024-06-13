@@ -1,3 +1,5 @@
+import 'dart:math' show Random, pi;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -15,8 +17,9 @@ class BudgetPage extends StatelessWidget {
           child: Row(
             children: [
               Expanded(child: BudgetActionsAndListView()),
-              VerticalDivider(width: 1),
-              BudgetSideBar(),
+
+              // VerticalDivider(width: 1),
+              // BudgetSideBar(),
             ],
           ),
         ),
@@ -32,162 +35,157 @@ class BudgetActionsAndListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        Flexible(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 4),
-            child: SizedBox(
-              height: 36,
-              child: BudgetListViewActions(),
-            ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: SizedBox(
+            height: 36,
+            child: BudgetListViewActions(),
           ),
         ),
         Divider(),
-        Expanded(child: BudgetListViewContent()),
+        Expanded(
+          child: BudgetListViewContent(),
+        ),
       ],
     );
   }
 }
+
+Random rand = Random();
+String r() => r'$'
+        '${rand.nextInt(1200)}'
+        '.'
+        '${rand.nextInt(100)}'
+    .padLeft(2, '0');
 
 class BudgetListViewContent extends StatelessWidget {
   const BudgetListViewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.custom(
-      padding: EdgeInsets.zero,
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, index) {
-          if (index == 0) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.chevron_right),
-                            ),
-                            Checkbox(value: false, onChanged: (_) {}),
-                            const Text('CATEGORY'),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'ASSIGNED',
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.clip,
-                                maxLines: 1,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'ACTIVITY',
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.clip,
-                                maxLines: 1,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'AVAILABLE',
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.clip,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gutter(),
-                    ],
-                  ),
-                ),
-                const Divider(),
-              ],
-            );
-          }
+    return Column(
+      children: [
+        const BudgetCategoryGroupListItem(
+          expanded: false,
+          selected: false,
+          name: 'CATEGORY',
+          assigned: 'ASSIGNED',
+          activity: 'ACTIVITY',
+          available: 'AVAILABLE',
+        ),
+        Expanded(
+          child: ListView.custom(
+            padding: EdgeInsets.zero,
+            childrenDelegate: SliverChildBuilderDelegate(
+              (context, index) {
+                // if (index == 0) {
+                // return const BudgetCategoryGroupListItem(
+                //   expanded: false,
+                //   selected: false,
+                //   name: 'CATEGORY',
+                //   assigned: 'ASSIGNED',
+                //   activity: 'ACTIVITY',
+                //   available: 'AVAILABLE',
+                // );
+                // }
 
-          return Column(
+                return BudgetCategoryGroupListItem(
+                  expanded: false,
+                  selected: false,
+                  name: 'Group #.${index - 1}',
+                  assigned: r(),
+                  activity: r(),
+                  available: r(),
+                );
+              },
+              childCount: 8,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BudgetCategoryGroupListItem extends StatelessWidget {
+  const BudgetCategoryGroupListItem({
+    required this.expanded,
+    required this.selected,
+    required this.name,
+    required this.assigned,
+    required this.activity,
+    required this.available,
+    super.key,
+  });
+
+  final bool expanded;
+  final bool selected;
+  final String name;
+  final String assigned;
+  final String activity;
+  final String available;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.chevron_right),
-                              ),
-                              Checkbox(value: false, onChanged: (_) {}),
-                              Flexible(
-                                child: Text(
-                                  'Category Group #$index',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  r'$0.00',
-                                  textAlign: TextAlign.end,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 1,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  r'$0.00',
-                                  textAlign: TextAlign.end,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 1,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  r'$0.00',
-                                  textAlign: TextAlign.end,
-                                  overflow: TextOverflow.clip,
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gutter(),
-                      ],
+              Expanded(
+                flex: 3,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Transform.rotate(
+                        angle: expanded ? pi / 2 : 0,
+                        child: const Icon(Icons.chevron_right),
+                      ),
                     ),
-                  ),
-                ],
+                    Checkbox(value: selected, onChanged: (_) {}),
+                    Text(name),
+                  ],
+                ),
               ),
-              const Divider(),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        assigned,
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        activity,
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        available,
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Gutter(),
             ],
-          );
-        },
-        childCount: 8,
-      ),
+          ),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
@@ -390,10 +388,7 @@ class BudgetReadyToAssign extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    r'$4,527.18',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
+                  Text(r(), style: Theme.of(context).textTheme.headlineSmall),
                   Text(
                     'Ready to assign',
                     style: Theme.of(context).textTheme.labelLarge,
