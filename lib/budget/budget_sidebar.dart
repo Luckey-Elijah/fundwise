@@ -32,14 +32,10 @@ class BudgetAvailabilityInspector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BudgetSidebarInspector(
-      trailing: Text(
-        r(),
-        overflow: TextOverflow.clip,
-      ),
+      trailing: Text(r(), overflow: TextOverflow.clip),
       title: const Text(
         'Available in Jun',
         overflow: TextOverflow.clip,
-        maxLines: 1,
       ),
       children: [
         SidebarInspectionRow(label: 'Left Over from Last Month', amount: r()),

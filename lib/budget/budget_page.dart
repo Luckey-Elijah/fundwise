@@ -32,6 +32,7 @@ class BudgetContentBuilder extends StatefulWidget {
 
 class _BudgetContentBuilderState extends State<BudgetContentBuilder> {
   bool showSideBar = false;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -115,44 +116,142 @@ String r() => r'$'
     '.'
     '${rand.nextInt(100).toString().padLeft(2, '0')}';
 
-class BudgetListViewContent extends StatelessWidget {
+class BudgetListViewContent extends StatefulWidget {
   const BudgetListViewContent({super.key});
+
+  @override
+  State<BudgetListViewContent> createState() => _BudgetListViewContentState();
+}
+
+class _BudgetListViewContentState extends State<BudgetListViewContent> {
+  final List<BudgetCategoryGroupListItemData> categoryGroups = [
+    for (var i = 0; i < rand.nextInt(4) + 4; i++)
+      BudgetCategoryGroupListItemData(
+        expanded: false,
+        selected: false,
+        name: 'Group #$i ',
+        assigned: r(),
+        activity: r(),
+        available: r(),
+        categories: [
+          for (var i = 0; i < rand.nextInt(4) + 4; i++)
+            BudgetCategoryListItemData(
+              selected: false,
+              name: 'Category #$i ',
+              assigned: r(),
+              activity: r(),
+              available: r(),
+            ),
+        ],
+      ),
+  ];
+
+  bool get allGroupsSelected => categoryGroups.every((group) => group.selected);
+  bool get allGroupsExpanded => categoryGroups.every((group) => group.expanded);
+  bool get anyGroupExpanded => categoryGroups.any((group) => group.expanded);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         BudgetCategoryGroupListItem(
-          expanded: false,
-          selected: false,
+          groupExpanded: allGroupsExpanded || anyGroupExpanded,
+          selected: allGroupsSelected,
           name: 'CATEGORY',
           assigned: 'ASSIGNED',
           activity: 'ACTIVITY',
           available: 'AVAILABLE',
-          onCheckboxChanged: (value) {},
-          onExpandedPressed: () {},
+          onCheckboxChanged: (value) {
+            for (final group in categoryGroups) {
+              setState(() => group.selected = value ?? !group.selected);
+            }
+          },
+          onExpandedPressed: () {
+            final allExpanded = allGroupsExpanded;
+            for (final group in categoryGroups) {
+              setState(() => group.expanded = !allExpanded);
+            }
+          },
         ),
         Expanded(
           child: ListView.custom(
             padding: EdgeInsets.zero,
             childrenDelegate: SliverChildBuilderDelegate(
-              (context, index) {
+              (context, groupIndex) {
+                final group = categoryGroups[groupIndex];
                 return BudgetCategoryGroupListItem(
-                  expanded: false,
-                  selected: false,
-                  name: 'Group #$index ',
-                  assigned: r(),
-                  activity: r(),
-                  available: r(),
-                  onCheckboxChanged: (value) {},
-                  onExpandedPressed: () {},
+                  groupExpanded: group.expanded,
+                  selected: group.selected,
+                  name: group.name,
+                  assigned: group.assigned,
+                  activity: group.activity,
+                  available: group.available,
+                  onCheckboxChanged: (value) {
+                    final newSelected = value ?? !group.selected;
+                    setState(() => group.selected = newSelected);
+                    for (final cat in group.categories) {
+                      setState(() => cat.selected = group.selected);
+                    }
+                  },
+                  onExpandedPressed: () {
+                    setState(() => group.expanded = !group.expanded);
+                  },
+                  categories: [
+                    for (final category in group.categories)
+                      BudgetCategoryGroupListItem(
+                        groupExpanded: null,
+                        selected: group.selected || category.selected,
+                        name: category.name,
+                        assigned: category.assigned,
+                        activity: category.activity,
+                        available: category.available,
+                        onCheckboxChanged: (value) {},
+                        onExpandedPressed: () {},
+                      ),
+                  ],
                 );
               },
-              childCount: 8,
+              childCount: categoryGroups.length,
             ),
           ),
         ),
       ],
     );
   }
+}
+
+class BudgetCategoryGroupListItemData {
+  BudgetCategoryGroupListItemData({
+    required this.categories,
+    required this.expanded,
+    required this.selected,
+    required this.name,
+    required this.assigned,
+    required this.activity,
+    required this.available,
+  });
+
+  bool expanded;
+  bool selected;
+  String name;
+  String assigned;
+  String activity;
+  String available;
+  List<BudgetCategoryListItemData> categories;
+}
+
+class BudgetCategoryListItemData {
+  BudgetCategoryListItemData({
+    required this.selected,
+    required this.name,
+    required this.assigned,
+    required this.activity,
+    required this.available,
+  });
+
+  bool selected;
+  String name;
+  String assigned;
+  String activity;
+  String available;
 }

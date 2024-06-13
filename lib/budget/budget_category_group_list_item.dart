@@ -5,7 +5,7 @@ import 'package:flutter_gutter/flutter_gutter.dart';
 
 class BudgetCategoryGroupListItem extends StatelessWidget {
   const BudgetCategoryGroupListItem({
-    required this.expanded,
+    required this.groupExpanded,
     required this.selected,
     required this.name,
     required this.assigned,
@@ -13,10 +13,11 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
     required this.available,
     required this.onCheckboxChanged,
     required this.onExpandedPressed,
+    this.categories = const [],
     super.key,
   });
 
-  final bool expanded;
+  final bool? groupExpanded;
   final bool selected;
   final String name;
   final String assigned;
@@ -24,67 +25,79 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
   final String available;
   final ValueChanged<bool?>? onCheckboxChanged;
   final VoidCallback? onExpandedPressed;
+  final List<Widget> categories;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: onExpandedPressed,
-                      icon: Transform.rotate(
-                        angle: expanded ? pi / 2 : 0,
-                        child: const Icon(Icons.chevron_right),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: groupExpanded != null
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Visibility.maintain(
+                        visible: groupExpanded != null,
+                        child: IconButton(
+                          onPressed: onExpandedPressed,
+                          icon: Transform.rotate(
+                            angle: (groupExpanded ?? false) ? pi / 2 : 0,
+                            child: const Icon(Icons.chevron_right),
+                          ),
+                        ),
                       ),
-                    ),
-                    Checkbox(value: selected, onChanged: onCheckboxChanged),
-                    Text(name),
-                  ],
+                      Checkbox(value: selected, onChanged: onCheckboxChanged),
+                      Text(name),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        assigned,
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          assigned,
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        activity,
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
+                      Expanded(
+                        child: Text(
+                          activity,
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        available,
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
+                      Expanded(
+                        child: Text(
+                          available,
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const Gutter(),
-            ],
+                const Gutter(),
+              ],
+            ),
           ),
         ),
         const Divider(),
+        if (groupExpanded case == true) ...categories,
       ],
     );
   }
