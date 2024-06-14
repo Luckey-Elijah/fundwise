@@ -127,14 +127,13 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
   final List<BudgetCategoryGroupListItemData> categoryGroups = [
     for (var i = 0; i < rand.nextInt(4) + 4; i++)
       BudgetCategoryGroupListItemData(
-        expanded: false,
-        selected: false,
+        expanded: rand.nextBool(),
         name: 'Group #$i ',
         assigned: r(),
         activity: r(),
         available: r(),
         categories: [
-          for (var i = 0; i < rand.nextInt(4) + 4; i++)
+          for (var i = 0; i < rand.nextInt(4) + 1; i++)
             BudgetCategoryListItemData(
               selected: false,
               name: 'Category #$i ',
@@ -143,10 +142,11 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
               available: r(),
             ),
         ],
-      ),
+      )..selected = rand.nextBool(),
   ];
 
-  bool get allGroupsSelected => categoryGroups.every((group) => group.selected);
+  bool get allCategoriesSelected =>
+      categoryGroups.every((group) => group.selected);
   bool get allGroupsExpanded => categoryGroups.every((group) => group.expanded);
   bool get anyGroupExpanded => categoryGroups.any((group) => group.expanded);
 
@@ -154,24 +154,30 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        BudgetCategoryGroupListItem(
-          groupExpanded: allGroupsExpanded || anyGroupExpanded,
-          selected: allGroupsSelected,
-          name: 'CATEGORY',
-          assigned: 'ASSIGNED',
-          activity: 'ACTIVITY',
-          available: 'AVAILABLE',
-          onCheckboxChanged: (value) {
-            for (final group in categoryGroups) {
-              setState(() => group.selected = value ?? !group.selected);
-            }
-          },
-          onExpandedPressed: () {
-            final allExpanded = allGroupsExpanded;
-            for (final group in categoryGroups) {
-              setState(() => group.expanded = !allExpanded);
-            }
-          },
+        DefaultTextStyle(
+          style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                fontWeight: FontWeight.w300,
+                letterSpacing: 2,
+              ),
+          child: BudgetCategoryGroupListItem(
+            groupExpanded: allGroupsExpanded,
+            selected: allCategoriesSelected,
+            name: 'CATEGORY',
+            assigned: 'ASSIGNED',
+            activity: 'ACTIVITY',
+            available: 'AVAILABLE',
+            onCheckboxChanged: (value) {
+              for (final group in categoryGroups) {
+                setState(() => group.selected = value ?? !group.selected);
+              }
+            },
+            onExpandedPressed: () {
+              final allExpanded = allGroupsExpanded;
+              for (final group in categoryGroups) {
+                setState(() => group.expanded = !allExpanded);
+              }
+            },
+          ),
         ),
         Expanded(
           child: ListView.custom(
@@ -186,12 +192,9 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
                   assigned: group.assigned,
                   activity: group.activity,
                   available: group.available,
+                  onAdd: () {},
                   onCheckboxChanged: (value) {
-                    final newSelected = value ?? !group.selected;
-                    setState(() => group.selected = newSelected);
-                    for (final cat in group.categories) {
-                      setState(() => cat.selected = group.selected);
-                    }
+                    setState(() => group.selected = value ?? !group.selected);
                   },
                   onExpandedPressed: () {
                     setState(() => group.expanded = !group.expanded);
@@ -200,13 +203,17 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
                     for (final category in group.categories)
                       BudgetCategoryGroupListItem(
                         groupExpanded: null,
-                        selected: group.selected || category.selected,
+                        selected: category.selected,
                         name: category.name,
                         assigned: category.assigned,
                         activity: category.activity,
                         available: category.available,
-                        onCheckboxChanged: (value) {},
-                        onExpandedPressed: () {},
+                        onCheckboxChanged: (value) {
+                          setState(() {
+                            category.selected = value ?? !category.selected;
+                          });
+                        },
+                        onExpandedPressed: null,
                       ),
                   ],
                 );
@@ -224,15 +231,20 @@ class BudgetCategoryGroupListItemData {
   BudgetCategoryGroupListItemData({
     required this.categories,
     required this.expanded,
-    required this.selected,
     required this.name,
     required this.assigned,
     required this.activity,
     required this.available,
   });
 
+  bool get selected => categories.every((category) => category.selected);
+  set selected(bool value) {
+    for (final category in categories) {
+      category.selected = value;
+    }
+  }
+
   bool expanded;
-  bool selected;
   String name;
   String assigned;
   String activity;
