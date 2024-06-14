@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/widgets.dart' show ChangeNotifier;
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthState;
 
 class AuthListenable extends ChangeNotifier {
   AuthListenable(this.onAuthStateChange) {
