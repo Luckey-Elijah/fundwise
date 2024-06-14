@@ -1,4 +1,4 @@
-import 'package:app/logout_button.dart';
+import 'package:app/dashboard_shell/logout_button.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';

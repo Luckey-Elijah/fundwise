@@ -1,4 +1,4 @@
-import 'package:app/router.dart';
+import 'package:app/app/router.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +13,9 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final GoRouter _router = router(context.read<SupabaseClient>());
+  late final GoRouter _router = router(
+    context.read<SupabaseClient>().auth.onAuthStateChange,
+  );
 
   @override
   Widget build(BuildContext context) {

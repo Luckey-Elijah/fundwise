@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:app/auth_listenable.dart';
+import 'package:app/app/auth_listenable.dart';
 import 'package:app/budget/budget_page.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
@@ -100,8 +100,8 @@ class LoginRoute extends GoRouteData {
   }
 }
 
-GoRouter router(SupabaseClient supabase) {
-  final authListenable = AuthListenable(supabase);
+GoRouter router(Stream<AuthState> onAuthStateChange) {
+  final authListenable = AuthListenable(onAuthStateChange);
   return GoRouter(
     initialLocation: '/login',
     refreshListenable: authListenable,

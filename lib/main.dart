@@ -1,4 +1,4 @@
-import 'package:app/app.dart';
+import 'package:app/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
