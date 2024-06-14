@@ -13,6 +13,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
     required this.available,
     required this.onCheckboxChanged,
     required this.onExpandedPressed,
+    this.onAdd,
     this.categories = const [],
     super.key,
   });
@@ -26,6 +27,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
   final ValueChanged<bool?>? onCheckboxChanged;
   final VoidCallback? onExpandedPressed;
   final List<Widget> categories;
+  final VoidCallback? onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                   flex: 3,
                   child: Row(
                     children: [
+                      const GutterTiny(),
                       Visibility.maintain(
                         visible: groupExpanded != null,
                         child: IconButton(
@@ -57,6 +60,10 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                       ),
                       Checkbox(value: selected, onChanged: onCheckboxChanged),
                       Text(name),
+                      if (onAdd != null) ...[
+                        const GutterTiny(),
+                        AddNewCategoryButton(onPressed: onAdd!),
+                      ],
                     ],
                   ),
                 ),
@@ -99,6 +106,36 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
         const Divider(),
         if (groupExpanded case == true) ...categories,
       ],
+    );
+  }
+}
+
+class AddNewCategoryButton extends StatefulWidget {
+  const AddNewCategoryButton({required this.onPressed, super.key});
+
+  final VoidCallback onPressed;
+
+  @override
+  State<AddNewCategoryButton> createState() => _AddNewCategoryButtonState();
+}
+
+class _AddNewCategoryButtonState extends State<AddNewCategoryButton> {
+  bool visible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => visible = true),
+      onExit: (_) => setState(() => visible = false),
+      child: Visibility.maintain(
+        visible: visible,
+        child: TextButton.icon(
+          iconAlignment: IconAlignment.end,
+          onPressed: widget.onPressed,
+          label: const Text('Add New Category'),
+          icon: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
