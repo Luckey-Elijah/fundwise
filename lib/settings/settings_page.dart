@@ -1,4 +1,4 @@
-import 'package:app/components/context_extension.dart';
+import 'package:app/dashboard_shell/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -7,11 +7,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: [
-        TextButton(
-          onPressed: context.supabase.auth.signOut,
-          child: const Text('logout'),
-        ),
+      children: const [
+        LogoutButton(),
       ],
     );
   }

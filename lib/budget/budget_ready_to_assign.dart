@@ -44,7 +44,7 @@ class BudgetAssignButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
       debugLabel: 'BudgetAssignButton',
-      anchorBuilder: (context, controller, child) {
+      anchorBuilder: (context, controller) {
         return TextButton.icon(
           style: TextButton.styleFrom(
             padding: const EdgeInsets.all(16),
@@ -55,32 +55,35 @@ class BudgetAssignButton extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           ),
           iconAlignment: IconAlignment.end,
-          label: child,
+          label: const Text('Assign'),
           icon: const Icon(Icons.arrow_drop_down),
           onPressed: controller.toggle,
         );
       },
-      overlayBuilder: (context, controller) {
-        return Card(
-          elevation: 10,
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                for (var i = 0; i < 10; i++)
-                  InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text('thing $i'),
+      overlayChildBuilder: (context, controller, size, offset) {
+        return Positioned(
+          left: offset.dx,
+          top: offset.dy,
+          child: Card(
+            elevation: 10,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  for (var i = 0; i < 10; i++)
+                    InkWell(
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text('thing $i'),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );
       },
-      anchorChild: const Text('Assign'),
     );
   }
 }

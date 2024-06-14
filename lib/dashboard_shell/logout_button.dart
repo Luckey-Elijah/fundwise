@@ -9,11 +9,16 @@ class LogoutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
       debugLabel: 'logout',
-      anchorBuilder: (context, controller, child) {
-        return TextButton(onPressed: controller.toggle, child: child);
+      anchorBuilder: (context, controller) {
+        return TextButton.icon(
+          iconAlignment: IconAlignment.end,
+          onPressed: controller.toggle,
+          label: const Text('Logout'),
+          icon: const Icon(Icons.logout),
+        );
       },
-      anchorChild: const Text('logout'),
-      overlayBuilder: (context, controller) {
+      // anchorChild: const Icon(Icons.logout),
+      overlayChildBuilder: (context, controller, size, offset) {
         return Card(
           elevation: 20,
           borderOnForeground: false,
@@ -27,11 +32,11 @@ class LogoutButton extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: context.supabase.auth.signOut,
-                    child: const Text('logout'),
+                    child: const Text('Logout'),
                   ),
                   TextButton(
                     onPressed: controller.hide,
-                    child: const Text('cancel'),
+                    child: const Text('Cancel'),
                   ),
                 ],
               ),

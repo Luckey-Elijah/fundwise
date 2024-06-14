@@ -1,5 +1,5 @@
 import 'package:app/dashboard_shell/logout_button.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -63,9 +63,18 @@ class PrimaryScaffold extends StatelessWidget {
         );
       },
       body: (context) => child,
-      // secondaryBody: (context) => const BudgetSidebar(),
+      leadingExtendedNavRail: Center(
+        child: TextButton.icon(
+          onPressed: () => context.go('/settings'),
+          iconAlignment: IconAlignment.end,
+          label: const Text('Account'),
+          icon: const Icon(Icons.lightbulb),
+        ),
+      ),
       transitionDuration: Durations.short3,
-      trailingNavRail: const LogoutButton(),
+      trailingNavRail: const Center(
+        child: LogoutButton(),
+      ),
       selectedIndex: index,
       destinations: const [
         NavigationDestination(
