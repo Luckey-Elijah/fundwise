@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:app/app/auth_listenable.dart';
 import 'package:app/budget/budget_page.dart';
+import 'package:app/components/context_extension.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -89,8 +89,7 @@ class ReportsRoute extends GoRouteData {
 class LoginRoute extends GoRouteData {
   @override
   FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
-    final user = context.read<SupabaseClient>().auth.currentUser;
-    if (user != null) return '/';
+    if (context.supabase.auth.currentUser != null) return '/';
     return null;
   }
 
@@ -107,8 +106,7 @@ GoRouter router(Stream<AuthState> onAuthStateChange) {
     refreshListenable: authListenable,
     routes: $appRoutes,
     redirect: (context, state) {
-      final user = context.read<SupabaseClient>().auth.currentUser;
-      if (user == null) return '/login';
+      if (context.supabase.auth.currentUser == null) return '/login';
       return null;
     },
   );

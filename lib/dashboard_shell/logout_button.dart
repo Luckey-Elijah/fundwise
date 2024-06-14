@@ -1,7 +1,6 @@
+import 'package:app/components/context_extension.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -27,7 +26,7 @@ class LogoutButton extends StatelessWidget {
               Row(
                 children: [
                   TextButton(
-                    onPressed: context.read<SupabaseClient>().auth.signOut,
+                    onPressed: context.supabase.auth.signOut,
                     child: const Text('logout'),
                   ),
                   TextButton(
