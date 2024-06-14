@@ -8,7 +8,6 @@ class LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
-      debugLabel: 'logout',
       anchorBuilder: (context, controller) {
         return TextButton.icon(
           iconAlignment: IconAlignment.end,
@@ -17,30 +16,34 @@ class LogoutButton extends StatelessWidget {
           icon: const Icon(Icons.logout),
         );
       },
-      // anchorChild: const Icon(Icons.logout),
-      overlayChildBuilder: (context, controller, size, offset) {
-        return Card(
-          elevation: 20,
-          borderOnForeground: false,
-          child: Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Are you sure?'),
-              ),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: context.supabase.auth.signOut,
-                    child: const Text('Logout'),
-                  ),
-                  TextButton(
-                    onPressed: controller.hide,
-                    child: const Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
+      overlayChildBuilder: (context, controller, size, origin) {
+        final bottomCenter = size.bottomCenter(origin);
+        return Positioned(
+          left: bottomCenter.dx,
+          top: bottomCenter.dy,
+          child: Card(
+            elevation: 20,
+            borderOnForeground: false,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text('Are you sure?'),
+                ),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: context.supabase.auth.signOut,
+                      child: const Text('Logout'),
+                    ),
+                    TextButton(
+                      onPressed: controller.hide,
+                      child: const Text('Cancel'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

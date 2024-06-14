@@ -15,11 +15,22 @@ class PositionedOverlayBuilder extends StatefulWidget {
     OverlayPortalController controller,
   ) anchorBuilder;
 
+  /// Builder for the overlay widget.
+  ///
+  /// Provides the [OverlayPortalController] controller.
+  ///
+  /// Provides the [Size] and origin [Offset] of the [anchorBuilder]'s widget.
+  /// You can get a corner or side of the widget using:
+  /// ```dart
+  /// final bottomRight = size.bottomRight(origin);
+  /// final center = size.center(origin);
+  /// final bottomCenter = size.bottomCenter(origin);
+  /// ```
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
     Size size,
-    Offset offset,
+    Offset origin,
   ) overlayChildBuilder;
 
   @override
@@ -33,10 +44,11 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
 
   late final key = GlobalKey(debugLabel: widget.debugLabel);
 
-  ({Size size, Offset offset}) getWidgetSizeOffset(GlobalKey key) {
+  ({Size size, Offset origin}) getWidgetSizeOffset(GlobalKey key) {
     final renderBox = key.currentContext!.findRenderObject()! as RenderBox;
     final origin = renderBox.localToGlobal(Offset.zero);
-    return (size: renderBox.size, offset: renderBox.size.center(origin));
+
+    return (size: renderBox.size, origin: origin);
   }
 
   @override
@@ -45,8 +57,8 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       key: key,
       controller: controller,
       overlayChildBuilder: (context) {
-        final (:size, :offset) = getWidgetSizeOffset(key);
-        return widget.overlayChildBuilder(context, controller, size, offset);
+        final (:size, :origin) = getWidgetSizeOffset(key);
+        return widget.overlayChildBuilder(context, controller, size, origin);
       },
       child: widget.anchorBuilder(
         context,
