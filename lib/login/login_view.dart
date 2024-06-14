@@ -11,11 +11,17 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       body: BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
-          final error = state.error;
-          if (error == null) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error)),
-          );
+          if (state.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error!)),
+            );
+          }
+
+          if (state.signupSuccess != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.signupSuccess!)),
+            );
+          }
         },
         child: Center(
           child: Padding(
@@ -28,7 +34,7 @@ class LoginView extends StatelessWidget {
                   padding: EdgeInsets.all(16),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [_FormTitle(), Gutter(), _LoginForm()],
+                    children: [FormTitle(), Gutter(), LoginForm()],
                   ),
                 ),
               ),
@@ -40,8 +46,8 @@ class LoginView extends StatelessWidget {
   }
 }
 
-class _FormTitle extends StatelessWidget {
-  const _FormTitle();
+class FormTitle extends StatelessWidget {
+  const FormTitle({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -65,49 +71,45 @@ class _FormTitle extends StatelessWidget {
   }
 }
 
-class _LoginForm extends StatelessWidget {
-  const _LoginForm();
+class LoginForm extends StatelessWidget {
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     final isLogin = context.select<LoginCubit, bool>(
       (cubit) => cubit.state.loginOrSignUp == LoginOrSignUp.login,
     );
+
+    final enabled = context.select<LoginCubit, bool>(
+      (cubit) => !cubit.state.loading,
+    );
+
     return AutofillGroup(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(
-            onChanged: context.read<LoginCubit>().updateEmail,
-            decoration: const InputDecoration(hintText: 'email'),
-            autofillHints: [
-              if (!isLogin) AutofillHints.newUsername,
-              if (isLogin) AutofillHints.username,
-            ],
-          ),
+          EmailField(enabled: enabled, isLogin: isLogin),
           const Gutter(),
-          TextField(
-            obscureText: true,
-            onChanged: context.read<LoginCubit>().updatePassword,
-            decoration: const InputDecoration(hintText: 'password'),
-            onSubmitted: (_) {
-              if (isLogin) context.read<LoginCubit>().loginOrSignup();
-            },
-            autofillHints: [
-              if (!isLogin) AutofillHints.newPassword,
-              if (isLogin) AutofillHints.password,
-            ],
-          ),
+          PasswordField(enabled: enabled, isLogin: isLogin),
           const Gutter(),
           AnimatedSize(
             duration: Durations.short4,
-            child: isLogin ? const SizedBox.shrink() : const _ConfimColumn(),
+            child: isLogin
+                ? const SizedBox.shrink()
+                : Column(
+                    children: [
+                      ConfirmField(enabled: enabled),
+                      const Gutter(),
+                      UsernameField(enabled: enabled),
+                      const Gutter(),
+                    ],
+                  ),
           ),
-          const Row(
+          Row(
             children: [
-              _LoginOrSignUpButton(),
-              Spacer(),
-              _ToogleLoginSignUpButton(),
+              LoginOrSignUpButton(enabled: enabled, isLogin: isLogin),
+              const Spacer(),
+              ToggleLoginSignUpButton(enabled: enabled, isLogin: isLogin),
             ],
           ),
         ],
@@ -116,53 +118,131 @@ class _LoginForm extends StatelessWidget {
   }
 }
 
-class _ConfimColumn extends StatelessWidget {
-  const _ConfimColumn();
+class PasswordField extends StatelessWidget {
+  const PasswordField({
+    required this.enabled,
+    required this.isLogin,
+    super.key,
+  });
+
+  final bool enabled;
+  final bool isLogin;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          obscureText: true,
-          onSubmitted: (_) => context.read<LoginCubit>().loginOrSignup(),
-          onChanged: context.read<LoginCubit>().updateConfirm,
-          decoration: const InputDecoration(hintText: 'confirm'),
-          autofillHints: const [AutofillHints.newPassword],
-        ),
-        const Gutter(),
+    return TextField(
+      enabled: enabled,
+      obscureText: true,
+      onChanged: context.read<LoginCubit>().updatePassword,
+      decoration: const InputDecoration(hintText: 'password'),
+      onSubmitted: (_) {
+        if (isLogin) context.read<LoginCubit>().loginOrSignup();
+      },
+      autofillHints: [
+        if (!isLogin) AutofillHints.newPassword,
+        if (isLogin) AutofillHints.password,
       ],
     );
   }
 }
 
-class _LoginOrSignUpButton extends StatelessWidget {
-  const _LoginOrSignUpButton();
+class EmailField extends StatelessWidget {
+  const EmailField({
+    required this.enabled,
+    required this.isLogin,
+    super.key,
+  });
+
+  final bool enabled;
+  final bool isLogin;
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: context.read<LoginCubit>().loginOrSignup,
-      child: BlocSelector<LoginCubit, LoginState, bool>(
-        selector: (state) => state.loginOrSignUp == LoginOrSignUp.login,
-        builder: (context, login) => Text(login ? 'login' : 'signup'),
-      ),
+    return TextField(
+      enabled: enabled,
+      onChanged: context.read<LoginCubit>().updateEmail,
+      decoration: const InputDecoration(hintText: 'email'),
+      autofillHints: [
+        if (!isLogin) AutofillHints.newUsername,
+        if (isLogin) AutofillHints.username,
+      ],
     );
   }
 }
 
-class _ToogleLoginSignUpButton extends StatelessWidget {
-  const _ToogleLoginSignUpButton();
+class ConfirmField extends StatelessWidget {
+  const ConfirmField({
+    required this.enabled,
+    super.key,
+  });
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: true,
+      enabled: enabled,
+      onChanged: context.read<LoginCubit>().updateConfirm,
+      decoration: const InputDecoration(hintText: 'confirm'),
+      autofillHints: const [AutofillHints.newPassword],
+    );
+  }
+}
+
+class UsernameField extends StatelessWidget {
+  const UsernameField({
+    required this.enabled,
+    super.key,
+  });
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      enabled: enabled,
+      onSubmitted: (_) => context.read<LoginCubit>().loginOrSignup(),
+      onChanged: context.read<LoginCubit>().updateUsername,
+      decoration: const InputDecoration(hintText: 'username'),
+      autofillHints: const [AutofillHints.newUsername],
+    );
+  }
+}
+
+class LoginOrSignUpButton extends StatelessWidget {
+  const LoginOrSignUpButton({
+    required this.enabled,
+    required this.isLogin,
+    super.key,
+  });
+
+  final bool enabled;
+  final bool isLogin;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: context.read<LoginCubit>().toggleLoginOrSignUp,
-      child: BlocSelector<LoginCubit, LoginState, bool>(
-        selector: (state) => state.loginOrSignUp == LoginOrSignUp.login,
-        builder: (context, login) =>
-            Text(login ? 'go to sign up' : 'go to login'),
-      ),
+      onPressed: enabled ? context.read<LoginCubit>().loginOrSignup : null,
+      child: Text(isLogin ? 'login' : 'signup'),
+    );
+  }
+}
+
+class ToggleLoginSignUpButton extends StatelessWidget {
+  const ToggleLoginSignUpButton({
+    required this.enabled,
+    required this.isLogin,
+    super.key,
+  });
+
+  final bool enabled;
+  final bool isLogin;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed:
+          enabled ? context.read<LoginCubit>().toggleLoginOrSignUp : null,
+      child: Text(isLogin ? 'go to sign up' : 'go to login'),
     );
   }
 }
