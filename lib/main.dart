@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
-  runApp(const _LoadingSplash());
-
   final supabase = await Supabase.initialize(
     debug: false,
     url: 'https://burstizdkvwekutqexxj.supabase.co',
@@ -23,17 +21,4 @@ Future<void> main() async {
       child: const FundwiseApp(),
     ),
   );
-}
-
-class _LoadingSplash extends StatelessWidget {
-  const _LoadingSplash();
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Center(
-        child: Material(child: CircularProgressIndicator.adaptive()),
-      ),
-    );
-  }
 }
