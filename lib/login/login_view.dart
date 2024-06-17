@@ -161,7 +161,7 @@ class EmailField extends StatelessWidget {
     return TextField(
       enabled: enabled,
       onChanged: context.read<LoginCubit>().updateEmail,
-      decoration: const InputDecoration(hintText: 'email'),
+      decoration: const InputDecoration(hintText: 'email/username'),
       autofillHints: [
         if (!isLogin) AutofillHints.newUsername,
         if (isLogin) AutofillHints.username,

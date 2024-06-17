@@ -8,106 +8,71 @@ import 'package:app/login/login_page.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:pocketbase/pocketbase.dart';
 
-part 'router.g.dart';
+FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+  final user = context.pb.authStore.model;
+  if (user == null) return '/login';
 
-@TypedShellRoute<DashboardShellRoute>(
-  routes: [
-    TypedGoRoute<BudgetsRoute>(path: '/budgets', name: 'Budgets'),
-    TypedGoRoute<ReportsRoute>(path: '/reports', name: 'Reports'),
-    TypedGoRoute<AccountsRoute>(path: '/accounts', name: 'Accounts'),
-    TypedGoRoute<SettingsRoute>(path: '/settings', name: 'Settings'),
-    TypedGoRoute<RedirectShellRoute>(path: '/'),
-  ],
-)
-class DashboardShellRoute extends ShellRouteData {
-  @override
-  Page<void> pageBuilder(
-    BuildContext context,
-    GoRouterState state,
-    Widget navigator,
-  ) {
-    return NoTransitionPage(
-      child: DashboardShell(
-        matchedLocation: state.matchedLocation,
-        url: state.uri,
-        child: navigator,
-      ),
-    );
-  }
+  return null;
 }
 
-class BudgetsRoute extends GoRouteData {
-  const BudgetsRoute({this.budgetId});
-
-  final String? budgetId;
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(child: BudgetPage());
-  }
-}
-
-class RedirectShellRoute extends GoRouteData {
-  const RedirectShellRoute();
-
-  @override
-  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
-    return '/budgets';
-  }
-}
-
-class SettingsRoute extends GoRouteData {
-  const SettingsRoute();
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(child: SettingsPage());
-  }
-}
-
-class AccountsRoute extends GoRouteData {
-  const AccountsRoute();
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(child: Center(child: Text('${state.name}')));
-  }
-}
-
-class ReportsRoute extends GoRouteData {
-  const ReportsRoute();
-
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(child: Center(child: Text('${state.name}')));
-  }
-}
-
-@TypedGoRoute<LoginRoute>(path: '/login')
-class LoginRoute extends GoRouteData {
-  @override
-  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
-    if (context.supabase.auth.currentUser != null) return '/';
-    return null;
-  }
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const LoginPage();
-  }
-}
-
-GoRouter router(Stream<AuthState> onAuthStateChange) {
+GoRouter router(Stream<AuthStoreEvent> onAuthStateChange) {
   final authListenable = AuthListenable(onAuthStateChange);
   return GoRouter(
     initialLocation: '/login',
     refreshListenable: authListenable,
-    routes: $appRoutes,
-    redirect: (context, state) {
-      if (context.supabase.auth.currentUser == null) return '/login';
-      return null;
-    },
+    redirect: redirect,
+    routes: [
+      GoRoute(
+        path: '/login',
+        redirect: (context, state) {
+          final user = context.pb.authStore.model;
+          if (user != null) return '/';
+          return null;
+        },
+        pageBuilder: (_, __) => const NoTransitionPage(child: LoginPage()),
+      ),
+      GoRoute(
+        path: '/',
+        redirect: (context, state) => '/budget',
+      ),
+      ShellRoute(
+        pageBuilder: (context, state, child) => NoTransitionPage(
+          child: DashboardShell(
+            matchedLocation: state.matchedLocation,
+            url: state.uri,
+            child: child,
+          ),
+        ),
+        routes: [
+          GoRoute(
+            path: '/budget',
+            name: 'Budget',
+            pageBuilder: (_, __) => const NoTransitionPage(child: BudgetPage()),
+          ),
+          GoRoute(
+            path: '/reports',
+            name: 'Reports',
+            pageBuilder: (_, state) => NoTransitionPage(
+              child: Center(child: Text('${state.name}')),
+            ),
+          ),
+          GoRoute(
+            path: '/accounts',
+            name: 'Accounts',
+            pageBuilder: (_, state) => NoTransitionPage(
+              child: Center(child: Text('${state.name}')),
+            ),
+          ),
+          GoRoute(
+            path: '/settings',
+            pageBuilder: (_, __) => const NoTransitionPage(
+              child: SettingsPage(),
+            ),
+          ),
+        ],
+      ),
+    ],
   );
 }

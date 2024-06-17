@@ -1,22 +1,24 @@
 import 'package:app/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:pocketbase/pocketbase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  final supabase = await Supabase.initialize(
-    debug: false,
-    url: 'https://burstizdkvwekutqexxj.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I'
-        'mJ1cnN0aXpka3Z3ZWt1dHFleHhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTgxMTYzNDk'
-        'sImV4cCI6MjAzMzY5MjM0OX0.BSAvx_KvnYR6dxZjsrHYCjay3nXDaXS4IKrorWUIpt8',
+  final prefs = await SharedPreferences.getInstance();
+
+  final store = AsyncAuthStore(
+    save: (String data) async => prefs.setString('pb_auth', data),
+    initial: prefs.getString('pb_auth'),
   );
+
+  final pocketbase = PocketBase('http://127.0.0.1:8090', authStore: store);
 
   return runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<SupabaseClient>.value(value: supabase.client),
+        RepositoryProvider<PocketBase>.value(value: pocketbase),
+        RepositoryProvider<SharedPreferences>.value(value: prefs),
       ],
       child: const FundwiseApp(),
     ),

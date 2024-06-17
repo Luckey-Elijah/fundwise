@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 enum LoginOrSignUp { login, signup }
 
@@ -36,10 +36,10 @@ class LoginState {
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({
-    required this.supabase,
+    required this.pocketBase,
   }) : super(LoginState.initial);
 
-  final SupabaseClient supabase;
+  final PocketBase pocketBase;
 
   void updateEmail(String email) {
     emit(
@@ -109,11 +109,11 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> _login() async {
     try {
-      await supabase.auth.signInWithPassword(
-        password: state.password,
-        email: state.email,
-      );
-    } on AuthApiException catch (e) {
+      await pocketBase.collection('users').authWithPassword(
+            state.email,
+            state.password,
+          );
+    } on Exception catch (e) {
       emit(
         LoginState(
           email: state.email,
@@ -121,7 +121,7 @@ class LoginCubit extends Cubit<LoginState> {
           password: state.password,
           confirm: state.confirm,
           loginOrSignUp: state.loginOrSignUp,
-          error: 'Could not login: ${e.message}',
+          error: 'Could not login: $e',
         ),
       );
     }
@@ -170,10 +170,15 @@ class LoginCubit extends Cubit<LoginState> {
     }
 
     try {
-      final AuthResponse(:user) = await supabase.auth.signUp(
-        password: state.password,
-        email: state.email,
-        data: {'username': state.username},
+      // ignore: unused_local_variable
+      final record = await pocketBase.collection('users').create(
+        body: {
+          'username': state.username,
+          'email': state.email,
+          'emailVisibility': true,
+          'password': state.password,
+          'passwordConfirm': state.confirm,
+        },
       );
 
       emit(
@@ -182,11 +187,10 @@ class LoginCubit extends Cubit<LoginState> {
           username: state.username,
           password: state.password,
           confirm: state.confirm,
-          signupSuccess: 'Please confim email sent to ${user?.email}.',
-          loginOrSignUp: LoginOrSignUp.login,
+          loginOrSignUp: state.loginOrSignUp,
         ),
       );
-    } on AuthException catch (e) {
+    } on Exception catch (e) {
       emit(
         LoginState(
           email: state.email,
@@ -194,7 +198,7 @@ class LoginCubit extends Cubit<LoginState> {
           password: state.password,
           confirm: state.confirm,
           loginOrSignUp: state.loginOrSignUp,
-          error: 'Could not sign up: ${e.message}',
+          error: 'Could not sign up: $e',
         ),
       );
     }

@@ -2,22 +2,27 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart' show ChangeNotifier;
-import 'package:supabase_flutter/supabase_flutter.dart' show AuthState;
+import 'package:pocketbase/pocketbase.dart';
 
 class AuthListenable extends ChangeNotifier {
   AuthListenable(this.onAuthStateChange) {
-    subscription = onAuthStateChange.listen((AuthState auth) {
-      stdout.writeln(auth.session?.user.email);
-      notifyListeners();
-    });
+    subscription = onAuthStateChange.listen(
+      (event) {
+        final model = event.model;
+        if (model is RecordModel) {
+          stdout.writeln(model.toJson());
+        }
+        notifyListeners();
+      },
+    );
   }
 
-  StreamSubscription<AuthState>? subscription;
-  final Stream<AuthState> onAuthStateChange;
+  late final StreamSubscription<AuthStoreEvent> subscription;
+  final Stream<AuthStoreEvent> onAuthStateChange;
 
   @override
   void dispose() {
-    subscription?.cancel();
+    subscription.cancel();
     super.dispose();
   }
 }

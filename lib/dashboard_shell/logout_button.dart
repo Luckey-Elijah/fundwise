@@ -33,7 +33,7 @@ class LogoutButton extends StatelessWidget {
                 Row(
                   children: [
                     TextButton(
-                      onPressed: context.supabase.auth.signOut,
+                      onPressed: () => context.pb.authStore.clear(),
                       child: const Text('Logout'),
                     ),
                     TextButton(

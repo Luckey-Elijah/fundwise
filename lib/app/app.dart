@@ -11,7 +11,7 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final _router = router(context.supabase.auth.onAuthStateChange);
+  late final _router = router(context.pb.authStore.onChange);
 
   @override
   Widget build(BuildContext context) {

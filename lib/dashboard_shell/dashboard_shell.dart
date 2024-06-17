@@ -30,7 +30,7 @@ class DashboardShell extends StatelessWidget {
 
   int? selectedIndex(String matchedLocation) {
     return switch (matchedLocation) {
-      '/budgets' => 0,
+      '/budget' => 0,
       '/reports' => 1,
       '/accounts' => 2,
       _ => null,
@@ -55,7 +55,7 @@ class PrimaryScaffold extends StatelessWidget {
       onSelectedIndexChange: (int index) {
         context.go(
           switch (index) {
-            0 => '/budgets',
+            0 => '/budget',
             1 => '/reports',
             2 => '/accounts',
             _ => '/404',
