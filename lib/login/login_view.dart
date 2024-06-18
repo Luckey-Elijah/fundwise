@@ -1,5 +1,5 @@
-import 'package:app/components/context_extension.dart';
 import 'package:app/login/login_cubit.dart';
+import 'package:app/server/server_url_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -29,7 +29,7 @@ class LoginView extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
-              child: Card(
+              child: Card.outlined(
                 color: Theme.of(context).colorScheme.primaryContainer,
                 child: const Padding(
                   padding: EdgeInsets.all(16),
@@ -116,54 +116,6 @@ class LoginForm extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class ServerUrlField extends StatefulWidget {
-  const ServerUrlField({
-    super.key,
-  });
-
-  @override
-  State<ServerUrlField> createState() => _ServerUrlFieldState();
-}
-
-class _ServerUrlFieldState extends State<ServerUrlField> {
-  late final controller = TextEditingController(text: context.pb.baseUrl);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: controller,
-            decoration: const InputDecoration(hintText: 'server url'),
-            onChanged: (value) => context.pb.baseUrl = value,
-          ),
-        ),
-        const Gutter(),
-        ElevatedButton(
-          child: const Text('check'),
-          onPressed: () async {
-            try {
-              final check = await context.pb.health.check();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(check.message)),
-                );
-              }
-            } on Exception catch (e) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('$e')),
-                );
-              }
-            }
-          },
-        ),
-      ],
     );
   }
 }
