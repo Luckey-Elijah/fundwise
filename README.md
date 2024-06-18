@@ -4,7 +4,7 @@ Open source budgeting at home.
 
 [![MIT license][mit_badge]][mit_license]
 
-> [!INFO]  
+> [!NOTE]
 > 🚧 This project is still in develpoment.
 
 [fundwise_dev]: https://fundwise.dev
