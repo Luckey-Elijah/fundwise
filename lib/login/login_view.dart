@@ -107,6 +107,7 @@ class LoginForm extends StatelessWidget {
                   ),
           ),
           const ServerUrlField(),
+          const Gutter(),
           Row(
             children: [
               LoginOrSignUpButton(enabled: enabled, isLogin: isLogin),
