@@ -1,3 +1,4 @@
+import 'package:app/components/context_extension.dart';
 import 'package:app/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,6 +106,7 @@ class LoginForm extends StatelessWidget {
                     ],
                   ),
           ),
+          const ServerUrlField(),
           Row(
             children: [
               LoginOrSignUpButton(enabled: enabled, isLogin: isLogin),
@@ -118,7 +120,55 @@ class LoginForm extends StatelessWidget {
   }
 }
 
-class PasswordField extends StatelessWidget {
+class ServerUrlField extends StatefulWidget {
+  const ServerUrlField({
+    super.key,
+  });
+
+  @override
+  State<ServerUrlField> createState() => _ServerUrlFieldState();
+}
+
+class _ServerUrlFieldState extends State<ServerUrlField> {
+  late final controller = TextEditingController(text: context.pb.baseUrl);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            decoration: const InputDecoration(hintText: 'server url'),
+            onChanged: (value) => context.pb.baseUrl = value,
+          ),
+        ),
+        const Gutter(),
+        ElevatedButton(
+          child: const Text('check'),
+          onPressed: () async {
+            try {
+              final check = await context.pb.health.check();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(check.message)),
+                );
+              }
+            } on Exception catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$e')),
+                );
+              }
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class PasswordField extends StatefulWidget {
   const PasswordField({
     required this.enabled,
     required this.isLogin,
@@ -129,20 +179,43 @@ class PasswordField extends StatelessWidget {
   final bool isLogin;
 
   @override
+  State<PasswordField> createState() => _PasswordFieldState();
+}
+
+class _PasswordFieldState extends State<PasswordField> with ObscureState {
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      enabled: enabled,
-      obscureText: true,
+      enabled: widget.enabled,
       onChanged: context.read<LoginCubit>().updatePassword,
-      decoration: const InputDecoration(hintText: 'password'),
+      obscureText: obscure,
+      decoration: InputDecoration(
+        hintText: 'password',
+        suffixIcon: IconButton(
+          onPressed: () => obscure = !obscure,
+          icon: obscure
+              ? const Icon(Icons.visibility)
+              : const Icon(Icons.visibility_off),
+        ),
+      ),
       onSubmitted: (_) {
-        if (isLogin) context.read<LoginCubit>().loginOrSignup();
+        if (widget.isLogin) context.read<LoginCubit>().loginOrSignup();
       },
       autofillHints: [
-        if (!isLogin) AutofillHints.newPassword,
-        if (isLogin) AutofillHints.password,
+        if (!widget.isLogin) AutofillHints.newPassword,
+        if (widget.isLogin) AutofillHints.password,
       ],
     );
+  }
+}
+
+mixin ObscureState<T extends StatefulWidget> on State<T> {
+  bool _obscure = true;
+
+  bool get obscure => _obscure;
+
+  set obscure(bool value) {
+    setState(() => _obscure = value);
   }
 }
 
@@ -170,7 +243,7 @@ class EmailField extends StatelessWidget {
   }
 }
 
-class ConfirmField extends StatelessWidget {
+class ConfirmField extends StatefulWidget {
   const ConfirmField({
     required this.enabled,
     super.key,
@@ -178,12 +251,25 @@ class ConfirmField extends StatelessWidget {
   final bool enabled;
 
   @override
+  State<ConfirmField> createState() => _ConfirmFieldState();
+}
+
+class _ConfirmFieldState extends State<ConfirmField> with ObscureState {
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      obscureText: true,
-      enabled: enabled,
+      obscureText: obscure,
+      enabled: widget.enabled,
       onChanged: context.read<LoginCubit>().updateConfirm,
-      decoration: const InputDecoration(hintText: 'confirm'),
+      decoration: InputDecoration(
+        hintText: 'confirm',
+        suffixIcon: IconButton(
+          onPressed: () => obscure = !obscure,
+          icon: obscure
+              ? const Icon(Icons.visibility)
+              : const Icon(Icons.visibility_off),
+        ),
+      ),
       autofillHints: const [AutofillHints.newPassword],
     );
   }

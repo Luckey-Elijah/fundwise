@@ -12,7 +12,7 @@ Future<void> main() async {
     initial: prefs.getString('pb_auth'),
   );
 
-  final pocketbase = PocketBase('http://127.0.0.1:8090', authStore: store);
+  final pocketbase = PocketBase('', authStore: store);
 
   return runApp(
     MultiRepositoryProvider(
