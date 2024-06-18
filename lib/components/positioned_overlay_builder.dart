@@ -4,12 +4,15 @@ class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
     required this.overlayChildBuilder,
-    super.key,
+    this.dismissible = true,
+    this.barrierColor = Colors.transparent,
     this.debugLabel,
+    super.key,
   });
 
   final String? debugLabel;
-
+  final bool dismissible;
+  final Color barrierColor;
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
@@ -44,12 +47,12 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
 
   late final key = GlobalKey(debugLabel: widget.debugLabel);
 
-  ({Size size, Offset origin}) getWidgetSizeOffset(GlobalKey key) {
-    final renderBox = key.currentContext!.findRenderObject()! as RenderBox;
-    final origin = renderBox.localToGlobal(Offset.zero);
-
-    return (size: renderBox.size, origin: origin);
+  Offset getWidgetOrigin(RenderBox renderBox) {
+    return renderBox.localToGlobal(Offset.zero);
   }
+
+  RenderBox getRenderBox() =>
+      key.currentContext!.findRenderObject()! as RenderBox;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +60,23 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       key: key,
       controller: controller,
       overlayChildBuilder: (context) {
-        final (:size, :origin) = getWidgetSizeOffset(key);
-        return widget.overlayChildBuilder(context, controller, size, origin);
+        final renderBox = getRenderBox();
+        final origin = getWidgetOrigin(renderBox);
+        return Stack(
+          children: [
+            ModalBarrier(
+              dismissible: widget.dismissible,
+              onDismiss: controller.hide,
+              color: widget.barrierColor,
+            ),
+            widget.overlayChildBuilder(
+              context,
+              controller,
+              renderBox.size,
+              origin,
+            ),
+          ],
+        );
       },
       child: widget.anchorBuilder(
         context,
