@@ -4,12 +4,12 @@ import 'package:app/components/status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-abstract class AccountEvent {}
+abstract class UserEvent {}
 
-class InitilaizeAccountEvent extends AccountEvent {}
+class InitilaizeUserEvent extends UserEvent {}
 
-class AccountState {
-  const AccountState({
+class UserState {
+  const UserState({
     required this.status,
     required this.id,
     required this.username,
@@ -18,14 +18,14 @@ class AccountState {
     required this.verified,
   });
 
-  const AccountState.empty(this.status)
+  const UserState.empty(this.status)
       : id = null,
         username = null,
         email = null,
         name = null,
         verified = null;
 
-  static const initial = AccountState.empty(FundwiseStatus.initial);
+  static const initial = UserState.empty(FundwiseStatus.initial);
 
   final FundwiseStatus status;
   final bool? verified;
@@ -35,18 +35,18 @@ class AccountState {
   final String? name;
 }
 
-class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  AccountBloc(this.pb) : super(AccountState.initial) {
-    on<InitilaizeAccountEvent>(_onInitilaizeAccountEvent);
+class UserBloc extends Bloc<UserEvent, UserState> {
+  UserBloc(this.pb) : super(UserState.initial) {
+    on<InitilaizeUserEvent>(_onInitilaizeUserEvent);
   }
 
   final PocketBase pb;
 
-  FutureOr<void> _onInitilaizeAccountEvent(
-    InitilaizeAccountEvent event,
-    Emitter<AccountState> emit,
+  FutureOr<void> _onInitilaizeUserEvent(
+    InitilaizeUserEvent event,
+    Emitter<UserState> emit,
   ) async {
-    emit(const AccountState.empty(FundwiseStatus.loading));
+    emit(const UserState.empty(FundwiseStatus.loading));
     final authModel = pb.authStore.model;
     final id = switch (pb.authStore.model) {
       final RecordModel record => record.id,
@@ -62,7 +62,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       final name = authModel.getStringValue('name');
       final verified = authModel.getBoolValue('verified');
       emit(
-        AccountState(
+        UserState(
           status: FundwiseStatus.loaded,
           id: id,
           username: username,
