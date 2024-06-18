@@ -22,28 +22,33 @@ class _FundwiseAppState extends State<FundwiseApp> {
   }
 
   ThemeData get lightTheme {
+    const defaulElevation = WidgetStatePropertyAll<double>(0);
+
+    final defaultShape = WidgetStatePropertyAll(
+      ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
     const dividerThemeData = DividerThemeData(space: 0);
+    final cardTheme = CardTheme(
+      elevation: defaulElevation.value,
+      shape: defaultShape.value,
+    );
+
     final textButtonTheme = TextButtonThemeData(
       style: ButtonStyle(
         splashFactory: NoSplash.splashFactory,
-        elevation: const WidgetStatePropertyAll(0),
-        shape: WidgetStatePropertyAll(
-          ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+        elevation: defaulElevation,
+        shape: defaultShape,
       ),
     );
+
     final elevatedButtonTheme = ElevatedButtonThemeData(
       style: ButtonStyle(
         splashFactory: NoSplash.splashFactory,
         elevation: const WidgetStatePropertyAll(0),
         padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
-        shape: WidgetStatePropertyAll(
-          ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
+        shape: defaultShape,
       ),
     );
 
@@ -64,6 +69,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
       useMaterial3: true,
       swapLegacyOnMaterial3: true,
     ).copyWith(
+      cardTheme: cardTheme,
       dividerTheme: dividerThemeData,
       elevatedButtonTheme: elevatedButtonTheme,
       textButtonTheme: textButtonTheme,
