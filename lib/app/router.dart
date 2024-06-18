@@ -7,6 +7,8 @@ import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_web_plugins/url_strategy.dart' show usePathUrlStrategy;
 import 'package:go_router/go_router.dart';
 import 'package:pocketbase/pocketbase.dart';
 
@@ -19,6 +21,7 @@ FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
 
 GoRouter router(Stream<AuthStoreEvent> onAuthStateChange) {
   final authListenable = AuthListenable(onAuthStateChange);
+  usePathUrlStrategy();
   return GoRouter(
     initialLocation: '/login',
     refreshListenable: authListenable,
