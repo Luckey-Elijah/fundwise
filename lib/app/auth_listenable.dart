@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/widgets.dart' show ChangeNotifier;
+import 'package:flutter/foundation.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 class AuthListenable extends ChangeNotifier {
@@ -10,7 +9,7 @@ class AuthListenable extends ChangeNotifier {
       (event) {
         final model = event.model;
         if (model is RecordModel) {
-          stdout.writeln(model.toJson());
+          debugPrint('${model.toJson()}');
         }
         notifyListeners();
       },
