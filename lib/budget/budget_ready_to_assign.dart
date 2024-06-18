@@ -48,9 +48,6 @@ class BudgetAssignButton extends StatelessWidget {
         return TextButton.icon(
           style: TextButton.styleFrom(
             padding: const EdgeInsets.all(16),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
             foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           ),
