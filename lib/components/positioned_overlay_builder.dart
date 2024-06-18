@@ -1,34 +1,23 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
     required this.overlayChildBuilder,
     this.dismissible = true,
-    this.barrierColor = Colors.transparent,
+    this.barrierColor,
     this.debugLabel,
     super.key,
   });
 
   final String? debugLabel;
+  final Color? barrierColor;
   final bool dismissible;
-  final Color barrierColor;
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
   ) anchorBuilder;
 
-  /// Builder for the overlay widget.
-  ///
-  /// Provides the [OverlayPortalController] controller.
-  ///
-  /// Provides the [Size] and origin [Offset] of the [anchorBuilder]'s widget.
-  /// You can get a corner or side of the widget using:
-  /// ```dart
-  /// final bottomRight = size.bottomRight(origin);
-  /// final center = size.center(origin);
-  /// final bottomCenter = size.bottomCenter(origin);
-  /// ```
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
