@@ -1,7 +1,8 @@
 import 'package:app/app/router.dart';
-import 'package:app/components/context_extension.dart';
+import 'package:app/repository/auth.repo.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FundwiseApp extends StatefulWidget {
   const FundwiseApp({super.key});
@@ -11,7 +12,7 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final _router = router(context.pb.authStore.onChange);
+  late final _router = router(context.read<AuthRepository>().stream);
 
   @override
   Widget build(BuildContext context) {
@@ -23,35 +24,13 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   ThemeData get lightTheme {
     const defaulElevation = WidgetStatePropertyAll<double>(0);
-
     final defaultShape = WidgetStatePropertyAll(
       ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
     );
-    const dividerThemeData = DividerThemeData(space: 0);
-    final cardTheme = CardTheme(
-      elevation: defaulElevation.value,
-      shape: defaultShape.value,
-    );
 
-    final textButtonTheme = TextButtonThemeData(
-      style: ButtonStyle(
-        splashFactory: NoSplash.splashFactory,
-        elevation: defaulElevation,
-        shape: defaultShape,
-      ),
-    );
-
-    final elevatedButtonTheme = ElevatedButtonThemeData(
-      style: ButtonStyle(
-        splashFactory: NoSplash.splashFactory,
-        elevation: const WidgetStatePropertyAll(0),
-        padding: const WidgetStatePropertyAll(EdgeInsets.all(16)),
-        shape: defaultShape,
-      ),
-    );
-
+    const defaultPadding = WidgetStatePropertyAll(EdgeInsets.all(16));
     return FlexThemeData.light(
       scheme: FlexScheme.dellGenoa,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
@@ -69,10 +48,26 @@ class _FundwiseAppState extends State<FundwiseApp> {
       useMaterial3: true,
       swapLegacyOnMaterial3: true,
     ).copyWith(
-      cardTheme: cardTheme,
-      dividerTheme: dividerThemeData,
-      elevatedButtonTheme: elevatedButtonTheme,
-      textButtonTheme: textButtonTheme,
+      dialogTheme: DialogTheme(
+        shape: defaultShape.value,
+        insetPadding: defaultPadding.value,
+      ),
+      splashFactory: NoSplash.splashFactory,
+      cardTheme: CardTheme(
+        elevation: defaulElevation.value,
+        shape: defaultShape.value,
+      ),
+      dividerTheme: const DividerThemeData(space: 0),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          elevation: defaulElevation,
+          padding: defaultPadding,
+          shape: defaultShape,
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(elevation: defaulElevation, shape: defaultShape),
+      ),
     );
   }
 }
