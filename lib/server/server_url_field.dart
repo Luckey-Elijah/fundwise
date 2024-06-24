@@ -44,16 +44,18 @@ class ServerUrlFieldState extends State<ServerUrlField> {
           prev.status == FundwiseStatus.initial &&
           next.status == FundwiseStatus.loaded,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: BlocBuilder<ServerCubit, ServerState>(
-              builder: (context, state) {
+            child: BlocSelector<ServerCubit, ServerState, bool?>(
+              selector: (state) => state.healthy,
+              builder: (context, healthy) {
                 return TextField(
                   controller: controller,
                   autofillHints: const [AutofillHints.url],
                   decoration: InputDecoration(
                     hintText: 'server url',
-                    suffixIcon: switch (state.healthy) {
+                    suffixIcon: switch (healthy) {
                       true => Icon(
                           Icons.verified,
                           color: Theme.of(context).colorScheme.primary,
@@ -61,7 +63,7 @@ class ServerUrlFieldState extends State<ServerUrlField> {
                       false => const Icon(Icons.error),
                       _ => null,
                     },
-                    errorText: switch (state.healthy) {
+                    errorText: switch (healthy) {
                       false => 'API is not healthy',
                       _ => null,
                     },
@@ -71,12 +73,11 @@ class ServerUrlFieldState extends State<ServerUrlField> {
             ),
           ),
           const Gutter(),
-          BlocSelector<ServerCubit, ServerState, Uri?>(
-            selector: (state) => state.url,
-            builder: (context, url) {
+          BlocSelector<ServerCubit, ServerState, bool>(
+            selector: (state) => state.url != null,
+            builder: (context, canTest) {
               return ElevatedButton(
-                onPressed:
-                    url == null ? null : context.read<ServerCubit>().check,
+                onPressed: canTest ? context.read<ServerCubit>().check : null,
                 child: const Text('test'),
               );
             },

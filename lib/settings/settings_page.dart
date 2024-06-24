@@ -1,3 +1,4 @@
+import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/status.dart';
 import 'package:app/dashboard_shell/logout_button.dart';
 import 'package:app/repository/user.model.dart';
@@ -27,30 +28,85 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        const LogoutButton(),
-        BlocBuilder<UserBloc, UserState>(
-          builder: (context, state) {
-            return StatusBuilder(
-              state.status,
-              loadedBuilder: (context) {
-                final user = state.user;
-                if (user == null) return const SizedBox.shrink();
-                final UserModel(:verified, :username, :email, :name) = user;
-                return Column(
-                  children: [
-                    Text(verified ? 'Verified' : 'Not Verified'),
-                    Text(username),
-                    Text(email),
-                    Text(name),
-                  ],
-                );
-              },
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        return StatusBuilder(
+          state.status,
+          child: const LogoutButton(),
+          loadedBuilder: (context, child) {
+            final user = state.user;
+            if (user == null) return const SizedBox.shrink();
+            final UserModel(:verified, :username, :email, :name) = user;
+            return Wrap(
+              spacing: 16,
+              children: [
+                child,
+                EditEmailButton(email: email, verified: verified),
+                Text(username),
+                Text(name),
+              ],
             );
           },
-        ),
-      ],
+        );
+      },
+    );
+  }
+}
+
+class EditEmailButton extends StatelessWidget {
+  const EditEmailButton({
+    required this.email,
+    required this.verified,
+    super.key,
+  });
+
+  final String email;
+  final bool verified;
+
+  @override
+  Widget build(BuildContext context) {
+    return PositionedOverlayBuilder(
+      anchorBuilder: (context, controller) {
+        final colors = Theme.of(context).colorScheme;
+        return TextButton.icon(
+          iconAlignment: IconAlignment.end,
+          onPressed: controller.toggle,
+          label: Text(email),
+          icon: Icon(
+            verified ? Icons.verified : Icons.warning,
+            color: verified ? colors.primary : colors.secondary,
+          ),
+        );
+      },
+      overlayChildBuilder: (context, controller, size, origin) {
+        final bottomCenter = size.bottomCenter(origin);
+        return PositonedOverlayCard(
+          position: bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!verified)
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.warning),
+                  label: const Text('Send Verification'),
+                ),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Change Email'),
+              ),
+              TextButton(
+                onPressed: controller.hide,
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: const Text('Cancel'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

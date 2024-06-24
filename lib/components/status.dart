@@ -5,6 +5,7 @@ enum FundwiseStatus { initial, success, loaded, loading, error }
 class StatusBuilder extends StatelessWidget {
   const StatusBuilder(
     this.status, {
+    this.child = const SizedBox.shrink(),
     this.initialBuilder,
     this.successBuilder,
     this.loadedBuilder,
@@ -14,24 +15,29 @@ class StatusBuilder extends StatelessWidget {
     super.key,
   });
 
+  final Widget child;
   final FundwiseStatus status;
-  final WidgetBuilder? initialBuilder;
-  final WidgetBuilder? successBuilder;
-  final WidgetBuilder? loadedBuilder;
-  final WidgetBuilder? loadingBuilder;
-  final WidgetBuilder? errorBuilder;
-  final WidgetBuilder? defaultBuilder;
+  final Widget Function(BuildContext context, Widget child)? initialBuilder;
+  final Widget Function(BuildContext context, Widget child)? successBuilder;
+  final Widget Function(BuildContext context, Widget child)? loadedBuilder;
+  final Widget Function(BuildContext context, Widget child)? loadingBuilder;
+  final Widget Function(BuildContext context, Widget child)? errorBuilder;
+  final Widget Function(BuildContext context, Widget child)? defaultBuilder;
 
   @override
   Widget build(BuildContext context) {
-    late final defaultWidget =
-        defaultBuilder?.call(context) ?? const SizedBox.shrink();
+    late final defaultWidget = defaultBuilder?.call(context, child) ?? child;
     return switch (status) {
-      FundwiseStatus.initial => initialBuilder?.call(context) ?? defaultWidget,
-      FundwiseStatus.success => successBuilder?.call(context) ?? defaultWidget,
-      FundwiseStatus.loaded => loadedBuilder?.call(context) ?? defaultWidget,
-      FundwiseStatus.loading => loadingBuilder?.call(context) ?? defaultWidget,
-      FundwiseStatus.error => errorBuilder?.call(context) ?? defaultWidget,
+      FundwiseStatus.initial =>
+        initialBuilder?.call(context, child) ?? defaultWidget,
+      FundwiseStatus.success =>
+        successBuilder?.call(context, child) ?? defaultWidget,
+      FundwiseStatus.loaded =>
+        loadedBuilder?.call(context, child) ?? defaultWidget,
+      FundwiseStatus.loading =>
+        loadingBuilder?.call(context, child) ?? defaultWidget,
+      FundwiseStatus.error =>
+        errorBuilder?.call(context, child) ?? defaultWidget,
     };
   }
 }
