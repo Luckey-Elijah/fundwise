@@ -1,5 +1,6 @@
 import 'package:app/components/status.dart';
 import 'package:app/dashboard_shell/logout_button.dart';
+import 'package:app/repository/user.model.dart';
 import 'package:app/repository/user.repo.dart';
 import 'package:app/user/user_bloc.dart';
 import 'package:flutter/material.dart';
@@ -34,14 +35,15 @@ class SettingsView extends StatelessWidget {
             return StatusBuilder(
               state.status,
               loadedBuilder: (context) {
+                final user = state.user;
+                if (user == null) return const SizedBox.shrink();
+                final UserModel(:verified, :username, :email, :name) = user;
                 return Column(
                   children: [
-                    if (state.verified != null)
-                      Text(state.verified! ? 'Verified' : 'Not Verified'),
-                    if (state.id != null) Text(state.id!),
-                    if (state.username != null) Text(state.username!),
-                    if (state.email != null) Text(state.email!),
-                    if (state.name != null) Text(state.name!),
+                    Text(verified ? 'Verified' : 'Not Verified'),
+                    Text(username),
+                    Text(email),
+                    Text(name),
                   ],
                 );
               },

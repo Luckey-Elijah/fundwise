@@ -1,58 +1,79 @@
+import 'package:app/components/status.dart';
 import 'package:app/repository/health.repo.dart';
 import 'package:app/repository/url.repo.dart';
+import 'package:flutter/widgets.dart' show ValueGetter;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ServerState {
-  const ServerState({required this.healthy, required this.url});
+  const ServerState({
+    required this.healthy,
+    required this.url,
+    required this.status,
+  });
 
   final bool? healthy;
   final Uri? url;
+  final FundwiseStatus status;
+
+  ServerState copyWith({
+    ValueGetter<bool?>? healthy,
+    ValueGetter<Uri?>? url,
+    FundwiseStatus? status,
+  }) {
+    return ServerState(
+      healthy: healthy != null ? healthy() : this.healthy,
+      url: url != null ? url() : this.url,
+      status: status ?? this.status,
+    );
+  }
 }
 
 class ServerCubit extends Cubit<ServerState> {
   ServerCubit({
     required this.urlRepository,
     required this.healthRepository,
-  }) : super(const ServerState(healthy: null, url: null));
+  }) : super(
+          const ServerState(
+            healthy: null,
+            url: null,
+            status: FundwiseStatus.initial,
+          ),
+        );
 
   final UrlRepository urlRepository;
   final HealthRepository healthRepository;
 
   Future<void> initialize() async {
-    emit(
-      ServerState(
-        healthy: state.healthy,
-        url: await urlRepository.getUrl(),
+    final url = await urlRepository.getUrl();
+    return emit(
+      state.copyWith(
+        url: () => url,
+        status: FundwiseStatus.loaded,
       ),
     );
   }
 
   Future<void> updateUrl(String text) async {
     final url = Uri.tryParse(text);
-
-    emit(
-      ServerState(
-        healthy: state.healthy,
-        url: url,
-      ),
-    );
-
     await urlRepository.setUrl(url);
+
+    return emit(state.copyWith(url: () => url));
   }
 
   Future<void> check() async {
     var healthy = false;
 
     try {
+      emit(state.copyWith(status: FundwiseStatus.loading));
       healthy = await healthRepository.check();
     } on Exception {
       healthy = false;
     }
 
-    emit(
-      ServerState(
-        healthy: healthy,
-        url: state.url,
+    return emit(
+      state.copyWith(
+        healthy: () => healthy,
+        status: FundwiseStatus.loaded,
       ),
     );
   }

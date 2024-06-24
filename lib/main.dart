@@ -18,14 +18,21 @@ Future<void> main() async {
   );
 
   final pb = PocketBase('', authStore: store);
+  final urlRepo = UrlRepository(pb: pb, prefs: prefs);
+  final authRepo = AuthRepository(pb: pb);
+  final url = await urlRepo.getUrl();
+
+  if (url == null) {
+    authRepo.signOut();
+  }
 
   return runApp(
     MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (_) => AuthRepository(pb: pb)),
+        RepositoryProvider.value(value: urlRepo),
+        RepositoryProvider.value(value: authRepo),
         RepositoryProvider(create: (_) => BudgetRepository(pb: pb)),
         RepositoryProvider(create: (_) => HealthRepository(pb: pb)),
-        RepositoryProvider(create: (_) => UrlRepository(pb: pb, prefs: prefs)),
         RepositoryProvider(create: (_) => UserRepository(pb: pb)),
       ],
       child: const FundwiseApp(),

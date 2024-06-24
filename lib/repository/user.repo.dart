@@ -1,3 +1,4 @@
+import 'package:app/repository/user.model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 class UserRepository {
@@ -5,10 +6,9 @@ class UserRepository {
 
   final PocketBase _pb;
 
-  // TODO(elijah): create user model
-  RecordModel? get user {
+  UserModel? get user {
     final model = _pb.authStore.model;
-    if (model is RecordModel) return model;
+    if (model is RecordModel) return UserModel.fromJson(model.data);
     return null;
   }
 }

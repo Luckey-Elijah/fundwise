@@ -8,8 +8,9 @@ import 'package:app/repository/auth.repo.dart';
 import 'package:app/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// ignore: depend_on_referenced_packages
-import 'package:flutter_web_plugins/url_strategy.dart' show usePathUrlStrategy;
+import 'package:flutter_web_plugins/url_strategy.dart' // ignore: depend_on_referenced_packages
+    show
+        usePathUrlStrategy;
 import 'package:go_router/go_router.dart';
 
 String? redirect(BuildContext context, GoRouterState state) {

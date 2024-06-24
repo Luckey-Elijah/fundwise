@@ -1,3 +1,4 @@
+import 'package:app/repository/user.model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 export 'package:pocketbase/pocketbase.dart' show AuthStoreEvent;
@@ -9,14 +10,18 @@ class AuthRepository {
 
   Stream<AuthStoreEvent> get stream => _pb.authStore.onChange;
 
-  RecordModel? get user {
+  UserModel? get user {
     final model = _pb.authStore.model;
-    if (model is RecordModel) return model;
+    if (model is RecordModel) return UserModel.fromJson(model.data);
     return null;
   }
 
   void signOut() {
     _pb.authStore.clear();
+  }
+
+  Future<void> refresh() async {
+    await _pb.collection('users').authRefresh();
   }
 
   Future<void> signIn({
