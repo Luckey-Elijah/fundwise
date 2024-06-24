@@ -33,14 +33,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.1.4"
-  bloc_concurrency:
-    dependency: "direct main"
-    description:
-      name: bloc_concurrency
-      sha256: "456b7a3616a7c1ceb975c14441b3f198bf57d81cb95b7c6de5cb0c60201afcd8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.5"
   boolean_selector:
     dependency: transitive
     description:
@@ -146,10 +138,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_gutter
-      sha256: c1fb998f87d08450a779bdcbb00dd9e8e22e9dbcab10b857da6e243d66fa6df8
+      sha256: "194aa213d4f3d89fd74657e3f1c12f2981ebdd62dbcf9603206676823989bfdb"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -172,10 +164,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: abec47eb8c8c36ebf41d0a4c64dbbe7f956e39a012b3aafc530e951bdc12fe3f
+      sha256: cdae1b9c8bd7efadcef6112e81c903662ef2ce105cbd220a04bbb7c3425b5554
       url: "https://pub.dev"
     source: hosted
-    version: "14.1.4"
+    version: "14.2.0"
   http:
     dependency: "direct dev"
     description:
@@ -429,14 +421,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  stream_transform:
-    dependency: "direct main"
-    description:
-      name: stream_transform
-      sha256: "14a00e794c7c11aa145a170587321aedce29769c08d7f58b1d141da75e3b1c6f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   string_scanner:
     dependency: transitive
     description:

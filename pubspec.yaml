@@ -6,16 +6,14 @@ environment: { sdk: ">=3.4.3 <4.0.0" }
 
 dependencies:
   bloc: ^8.1.4
-  bloc_concurrency: ^0.2.5
   flex_color_scheme: ^7.3.1
   flutter: { sdk: flutter }
   flutter_adaptive_scaffold: ^0.1.11
   flutter_bloc: ^8.1.6
-  flutter_gutter: ^1.0.0
-  go_router: ^14.1.4
+  flutter_gutter: ^1.0.2
+  go_router: ^14.2.0
   pocketbase: ^0.18.1
   shared_preferences: ^2.2.3
-  stream_transform: ^2.1.0
 
 dev_dependencies:
   archive: ^3.6.1
