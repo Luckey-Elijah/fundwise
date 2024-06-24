@@ -106,17 +106,26 @@ class TopBarNavigator extends StatelessWidget {
       color: colorScheme.inversePrimary,
       child: Row(
         children: [
-          for (var i = 0; i < segments.length; i++)
+          TextButton(
+            onPressed: () => context.go('/'),
+            child: const Text('/'),
+          ),
+          for (var i = 0; i < segments.length; i++) ...[
             TextButton(
-              onPressed: () => debugPrint('/${segments.take(i + 1).join('/')}'),
+              onPressed: () => context.go('/${segments.take(i + 1).join('/')}'),
               child: Row(
                 children: [
-                  const Text('/'),
                   const GutterTiny(),
                   Text(segments[i]),
                 ],
               ),
             ),
+            TextButton(
+              onPressed: () =>
+                  context.go('/${segments.take(i + 1).join('/')}/'),
+              child: const Text('/'),
+            ),
+          ],
         ],
       ),
     );
