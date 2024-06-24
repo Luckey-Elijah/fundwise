@@ -1,4 +1,4 @@
-import 'package:app/budget/budget_page.dart';
+import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';

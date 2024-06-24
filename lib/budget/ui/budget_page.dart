@@ -1,14 +1,24 @@
 import 'dart:math' show Random;
 
-import 'package:app/budget/budget_category_group_list_item.dart';
-import 'package:app/budget/budget_list_view_actions.dart';
-import 'package:app/budget/budget_sidebar.dart';
-import 'package:app/budget/budget_top_navigator.dart';
+import 'package:app/budget/ui/category_group_list_item.dart';
+import 'package:app/budget/ui/list_view_actions.dart';
+import 'package:app/budget/ui/sidebar.dart';
+import 'package:app/budget/ui/top_navigator.dart';
+import 'package:app/budget_select/budget_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class BudgetPage extends StatelessWidget {
   const BudgetPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const BudgetSelectPage();
+  }
+}
+
+class BudgetReady extends StatelessWidget {
+  const BudgetReady({super.key});
 
   @override
   Widget build(BuildContext context) {

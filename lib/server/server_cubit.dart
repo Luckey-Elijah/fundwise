@@ -1,6 +1,6 @@
+import 'package:app/repository/health.repo.dart';
+import 'package:app/repository/url.repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ServerState {
   const ServerState({required this.healthy, required this.url});
@@ -11,55 +11,49 @@ class ServerState {
 
 class ServerCubit extends Cubit<ServerState> {
   ServerCubit({
-    required this.pb,
-    required this.prefs,
+    required this.urlRepository,
+    required this.healthRepository,
   }) : super(const ServerState(healthy: null, url: null));
 
-  final PocketBase pb;
-  final SharedPreferences prefs;
-  static const key = 'server-url';
+  final UrlRepository urlRepository;
+  final HealthRepository healthRepository;
 
   Future<void> initialize() async {
-    final maybeUrl = prefs.getString(key);
-    if (maybeUrl == null) return;
     emit(
       ServerState(
         healthy: state.healthy,
-        url: Uri.tryParse(maybeUrl),
+        url: await urlRepository.getUrl(),
       ),
     );
   }
 
   Future<void> updateUrl(String text) async {
+    final url = Uri.tryParse(text);
+
     emit(
       ServerState(
         healthy: state.healthy,
-        url: Uri.tryParse(text),
+        url: url,
       ),
     );
 
-    final baseUrl = '${state.url}';
-    pb.baseUrl = baseUrl;
-    await prefs.setString(key, baseUrl);
+    await urlRepository.setUrl(url);
   }
 
   Future<void> check() async {
-    try {
-      final check = await pb.health.check();
+    var healthy = false;
 
-      emit(
-        ServerState(
-          healthy: check.code == 200,
-          url: state.url,
-        ),
-      );
+    try {
+      healthy = await healthRepository.check();
     } on Exception {
-      emit(
-        ServerState(
-          healthy: false,
-          url: state.url,
-        ),
-      );
+      healthy = false;
     }
+
+    emit(
+      ServerState(
+        healthy: healthy,
+        url: state.url,
+      ),
+    );
   }
 }

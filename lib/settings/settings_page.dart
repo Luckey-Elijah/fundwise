@@ -1,6 +1,6 @@
-import 'package:app/components/context_extension.dart';
 import 'package:app/components/status.dart';
 import 'package:app/dashboard_shell/logout_button.dart';
+import 'package:app/repository/user.repo.dart';
 import 'package:app/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +11,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (c) => UserBloc(c.pb)..add(InitilaizeUserEvent()),
+      create: (context) =>
+          UserBloc(userRepository: context.read<UserRepository>())
+            ..add(InitilaizeUserEvent()),
       child: const SettingsView(),
     );
   }

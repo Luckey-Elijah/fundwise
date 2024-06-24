@@ -1,6 +1,7 @@
-import 'package:app/components/context_extension.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:app/repository/auth.repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -18,32 +19,30 @@ class LogoutButton extends StatelessWidget {
       },
       overlayChildBuilder: (context, controller, size, origin) {
         final bottomCenter = size.bottomCenter(origin);
-        return Positioned(
-          left: bottomCenter.dx,
-          top: bottomCenter.dy,
-          child: Card(
-            elevation: 20,
-            borderOnForeground: false,
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Text('Are you sure?'),
-                ),
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () => context.pb.authStore.clear(),
-                      child: const Text('Logout'),
-                    ),
-                    TextButton(
-                      onPressed: controller.hide,
-                      child: const Text('Cancel'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+
+        return PositonedOverlayCard(
+          position: bottomCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8),
+                child: Text('Are you sure?'),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: context.read<AuthRepository>().signOut,
+                    child: const Text('Logout'),
+                  ),
+                  TextButton(
+                    onPressed: controller.hide,
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },

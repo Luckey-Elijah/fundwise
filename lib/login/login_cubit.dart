@@ -1,5 +1,5 @@
+import 'package:app/repository/auth.repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
 
 enum LoginOrSignUp { login, signup }
 
@@ -29,17 +29,17 @@ class LoginState {
   final String username;
   final LoginOrSignUp loginOrSignUp;
 
-  final String? error;
   final bool loading;
+  final String? error;
   final String? signupSuccess;
 }
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({
-    required this.pocketBase,
+    required this.authRepository,
   }) : super(LoginState.initial);
 
-  final PocketBase pocketBase;
+  final AuthRepository authRepository;
 
   void updateEmail(String email) {
     emit(
@@ -109,10 +109,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> _login() async {
     try {
-      await pocketBase.collection('users').authWithPassword(
-            state.email,
-            state.password,
-          );
+      await authRepository.signIn(
+        usernameOrEmail: state.email,
+        password: state.password,
+      );
     } on Exception catch (e) {
       emit(
         LoginState(
@@ -170,15 +170,11 @@ class LoginCubit extends Cubit<LoginState> {
     }
 
     try {
-      // ignore: unused_local_variable
-      final record = await pocketBase.collection('users').create(
-        body: {
-          'username': state.username,
-          'email': state.email,
-          'emailVisibility': true,
-          'password': state.password,
-          'passwordConfirm': state.confirm,
-        },
+      await authRepository.signUp(
+        username: state.username,
+        email: state.email,
+        password: state.email,
+        confirm: state.confirm,
       );
 
       emit(

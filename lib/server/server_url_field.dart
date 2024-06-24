@@ -1,40 +1,16 @@
-import 'package:app/components/context_extension.dart';
 import 'package:app/server/server_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ServerUrlField extends StatefulWidget {
-  const ServerUrlField({
-    super.key,
-  });
+  const ServerUrlField({super.key});
 
   @override
-  State<ServerUrlField> createState() => _ServerUrlFieldState();
+  State<ServerUrlField> createState() => ServerUrlFieldState();
 }
 
-class _ServerUrlFieldState extends State<ServerUrlField> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ServerCubit(
-        pb: context.pb,
-        prefs: context.read<SharedPreferences>(),
-      )..initialize(),
-      child: const _ServerUrlView(),
-    );
-  }
-}
-
-class _ServerUrlView extends StatefulWidget {
-  const _ServerUrlView();
-
-  @override
-  State<_ServerUrlView> createState() => _ServerUrlViewState();
-}
-
-class _ServerUrlViewState extends State<_ServerUrlView> {
+class ServerUrlFieldState extends State<ServerUrlField> {
   late final TextEditingController controller;
 
   @override

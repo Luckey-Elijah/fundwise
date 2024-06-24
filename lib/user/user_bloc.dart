@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/components/status.dart';
+import 'package:app/repository/user.repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 
@@ -36,31 +37,27 @@ class UserState {
 }
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc(this.pb) : super(UserState.initial) {
+  UserBloc({required this.userRepository}) : super(UserState.initial) {
     on<InitilaizeUserEvent>(_onInitilaizeUserEvent);
   }
 
-  final PocketBase pb;
+  final UserRepository userRepository;
 
   FutureOr<void> _onInitilaizeUserEvent(
     InitilaizeUserEvent event,
     Emitter<UserState> emit,
   ) async {
     emit(const UserState.empty(FundwiseStatus.loading));
-    final authModel = pb.authStore.model;
-    final id = switch (pb.authStore.model) {
-      final RecordModel record => record.id,
-      final AdminModel admin => admin.id,
-      _ => null,
-    };
 
-    if (id == null) return;
+    final authModel = userRepository.user;
 
     if (authModel is RecordModel) {
       final username = authModel.getStringValue('username');
       final email = authModel.getStringValue('email');
       final name = authModel.getStringValue('name');
+      final id = authModel.getStringValue('id');
       final verified = authModel.getBoolValue('verified');
+
       emit(
         UserState(
           status: FundwiseStatus.loaded,

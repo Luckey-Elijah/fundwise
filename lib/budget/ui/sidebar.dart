@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:app/budget/budget_page.dart';
+import 'package:app/budget/ui/budget_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -171,7 +171,6 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
       child: Column(
         children: [
           InkWell(
-            splashFactory: NoSplash.splashFactory,
             onTap: () => setState(() => expanded = !expanded),
             child: Padding(
               padding: const EdgeInsets.all(16),
