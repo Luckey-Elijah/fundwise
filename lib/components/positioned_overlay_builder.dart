@@ -52,6 +52,7 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       overlayChildBuilder: (context) {
         final renderBox = getRenderBox();
         final origin = getWidgetOrigin(renderBox);
+
         final sizeOf = MediaQuery.sizeOf(context);
         final isTop = sizeOf.height / 2 > origin.dy;
         final isLeft = sizeOf.width / 2 > origin.dx;
@@ -70,11 +71,13 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
 
         return Stack(
           children: [
-            ModalBarrier(
-              dismissible: widget.dismissible,
-              onDismiss: controller.hide,
-              color: widget.barrierColor,
-            ),
+            if (widget.dismissible)
+              Positioned.fill(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => controller.hide(),
+                ),
+              ),
             Positioned(
               left: left,
               right: right,
