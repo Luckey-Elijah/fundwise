@@ -35,9 +35,7 @@ class ServerUrlFieldState extends State<ServerUrlField> {
     return BlocListener<ServerCubit, ServerState>(
       listener: (context, state) {
         final url = state.url;
-        if (url == null) return;
-        debugPrint('updateing controller [url]: $url');
-        controller.text = '$url';
+        if (url != null) controller.text = '$url';
       },
       listenWhen: (prev, next) =>
           prev.url == null &&

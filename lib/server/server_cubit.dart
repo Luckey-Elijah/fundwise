@@ -45,12 +45,14 @@ class ServerCubit extends Cubit<ServerState> {
 
   Future<void> initialize() async {
     final url = await urlRepository.getUrl();
-    return emit(
+    emit(
       state.copyWith(
         url: () => url,
         status: FundwiseStatus.loaded,
       ),
     );
+
+    await check();
   }
 
   Future<void> updateUrl(String text) async {
