@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/app/app.dart';
 import 'package:app/repository/auth.repo.dart';
 import 'package:app/repository/budget.repo.dart';
+import 'package:app/repository/date_format.repo.dart';
 import 'package:app/repository/health.repo.dart';
 import 'package:app/repository/logging.repo.dart';
 import 'package:app/repository/url.repo.dart';
@@ -48,6 +49,7 @@ Future<void> main() async {
         RepositoryProvider.value(value: prefs),
         RepositoryProvider.value(value: urlRepo),
         RepositoryProvider.value(value: authRepo),
+        RepositoryProvider(create: (_) => DateFormatRepository(pb: pb)),
         RepositoryProvider(create: (_) => BudgetRepository(pb: pb)),
         RepositoryProvider(create: (_) => HealthRepository(pb: pb)),
         RepositoryProvider(create: (_) => UserRepository(pb: pb)),
