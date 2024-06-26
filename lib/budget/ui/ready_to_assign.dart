@@ -57,27 +57,20 @@ class BudgetAssignButton extends StatelessWidget {
           onPressed: controller.toggle,
         );
       },
-      overlayChildBuilder: (context, controller, size, offset) {
-        return Positioned(
-          left: offset.dx,
-          top: offset.dy,
-          child: Card(
-            elevation: 10,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  for (var i = 0; i < 10; i++)
-                    InkWell(
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text('thing $i'),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+      overlayChildBuilder: (context, controller) {
+        return Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              for (var i = 0; i < 10; i++)
+                InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text('thing $i'),
+                  ),
+                ),
+            ],
           ),
         );
       },

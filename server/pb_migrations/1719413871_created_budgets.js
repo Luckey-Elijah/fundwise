@@ -2,8 +2,8 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "woxzl28pdcvroou",
-    "created": "2024-06-18 17:14:54.546Z",
-    "updated": "2024-06-18 17:14:54.546Z",
+    "created": "2024-06-26 14:57:51.963Z",
+    "updated": "2024-06-26 14:57:51.963Z",
     "name": "budgets",
     "type": "base",
     "system": false,
@@ -53,14 +53,30 @@ migrate((db) => {
           "maxSelect": 1,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "sphj9doc",
+        "name": "owner",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "@request.auth.id = owner.id",
     "options": {}
   });
 

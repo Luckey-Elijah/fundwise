@@ -4,6 +4,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
     required this.overlayChildBuilder,
+    this.overlayContraints = const BoxConstraints(),
     this.dismissible = true,
     this.barrierColor,
     this.debugLabel,
@@ -13,6 +14,8 @@ class PositionedOverlayBuilder extends StatefulWidget {
   final String? debugLabel;
   final Color? barrierColor;
   final bool dismissible;
+  final BoxConstraints overlayContraints;
+
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
@@ -21,8 +24,6 @@ class PositionedOverlayBuilder extends StatefulWidget {
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
-    Size size,
-    Offset origin,
   ) overlayChildBuilder;
 
   @override
@@ -51,6 +52,19 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       overlayChildBuilder: (context) {
         final renderBox = getRenderBox();
         final origin = getWidgetOrigin(renderBox);
+
+        late final sizeOf = MediaQuery.sizeOf(context);
+
+        late final isTop = sizeOf.height / 2 > origin.dy;
+        late final isLeft = sizeOf.width / 2 > origin.dx;
+
+        final position = switch ((isTop, isLeft)) {
+          (true, true) => renderBox.size.bottomLeft(origin),
+          (true, false) => renderBox.size.bottomRight(origin),
+          (false, true) => renderBox.size.topLeft(origin),
+          (false, false) => renderBox.size.topRight(origin),
+        };
+
         return Stack(
           children: [
             ModalBarrier(
@@ -58,11 +72,22 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
               onDismiss: controller.hide,
               color: widget.barrierColor,
             ),
-            widget.overlayChildBuilder(
-              context,
-              controller,
-              renderBox.size,
-              origin,
+            Positioned(
+              left: isLeft ? position.dx : null,
+              right: isLeft ? null : sizeOf.width - position.dx,
+              top: isTop ? position.dy : null,
+              bottom: isTop ? null : sizeOf.height - origin.dy,
+              child: ConstrainedBox(
+                constraints: widget.overlayContraints,
+                child: Card(
+                  clipBehavior: Clip.hardEdge,
+                  elevation: 20,
+                  child: widget.overlayChildBuilder(
+                    context,
+                    controller,
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -70,35 +95,6 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       child: widget.anchorBuilder(
         context,
         controller,
-      ),
-    );
-  }
-}
-
-class PositonedOverlayCard extends StatelessWidget {
-  const PositonedOverlayCard({
-    required this.position,
-    required this.child,
-    this.constraints = const BoxConstraints(),
-    super.key,
-  });
-
-  final BoxConstraints constraints;
-  final Offset position;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: position.dx,
-      top: position.dy,
-      child: ConstrainedBox(
-        constraints: constraints,
-        child: Card(
-          clipBehavior: Clip.hardEdge,
-          elevation: 20,
-          child: child,
-        ),
       ),
     );
   }

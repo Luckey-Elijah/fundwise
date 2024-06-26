@@ -2,9 +2,9 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "a2hzh5vtcdb5720",
-    "created": "2024-06-18 17:17:24.507Z",
-    "updated": "2024-06-18 17:17:24.507Z",
-    "name": "accounts",
+    "created": "2024-06-26 14:57:51.963Z",
+    "updated": "2024-06-26 14:57:51.963Z",
+    "name": "budget_accounts",
     "type": "base",
     "system": false,
     "schema": [
@@ -115,11 +115,11 @@ migrate((db) => {
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {}
   });
 

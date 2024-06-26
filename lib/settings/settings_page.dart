@@ -43,6 +43,7 @@ class SettingsView extends StatelessWidget {
                 child,
                 EditEmailButton(email: email, verified: verified),
                 Text(username),
+                const LogoutButton(),
                 Text(name),
               ],
             );
@@ -78,33 +79,29 @@ class EditEmailButton extends StatelessWidget {
           ),
         );
       },
-      overlayChildBuilder: (context, controller, size, origin) {
-        final bottomCenter = size.bottomCenter(origin);
-        return PositonedOverlayCard(
-          position: bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!verified)
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.warning),
-                  label: const Text('Send Verification'),
-                ),
-              TextButton(
+      overlayChildBuilder: (context, controller) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!verified)
+              TextButton.icon(
                 onPressed: () {},
-                child: const Text('Change Email'),
+                icon: const Icon(Icons.warning),
+                label: const Text('Send Verification'),
               ),
-              TextButton(
-                onPressed: controller.hide,
-                style: TextButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.error,
-                ),
-                child: const Text('Cancel'),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Change Email'),
+            ),
+            TextButton(
+              onPressed: controller.hide,
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
               ),
-            ],
-          ),
+              child: const Text('Cancel'),
+            ),
+          ],
         );
       },
     );

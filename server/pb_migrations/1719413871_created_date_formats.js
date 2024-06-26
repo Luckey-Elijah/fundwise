@@ -2,8 +2,8 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "l7f5m07fb2z7khf",
-    "created": "2024-06-18 17:06:16.566Z",
-    "updated": "2024-06-18 17:06:16.566Z",
+    "created": "2024-06-26 14:57:51.963Z",
+    "updated": "2024-06-26 14:57:51.963Z",
     "name": "date_formats",
     "type": "base",
     "system": false,
@@ -38,11 +38,11 @@ migrate((db) => {
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {}
   });
 

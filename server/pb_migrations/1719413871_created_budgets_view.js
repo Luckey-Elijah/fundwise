@@ -2,15 +2,15 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "r5gc09oyr8nxfkl",
-    "created": "2024-06-24 20:44:36.093Z",
-    "updated": "2024-06-24 20:44:36.093Z",
-    "name": "get_budgets",
+    "created": "2024-06-26 14:57:51.964Z",
+    "updated": "2024-06-26 14:57:51.966Z",
+    "name": "budgets_view",
     "type": "view",
     "system": false,
     "schema": [
       {
         "system": false,
-        "id": "rwn3dt9n",
+        "id": "czp5dysb",
         "name": "name",
         "type": "text",
         "required": true,
@@ -24,7 +24,7 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "zfcy6v5i",
+        "id": "uxlwky50",
         "name": "date_format",
         "type": "text",
         "required": true,
@@ -38,21 +38,23 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "4wit3ox7",
-        "name": "currency",
-        "type": "text",
+        "id": "d1jnqqtg",
+        "name": "currency_example",
+        "type": "relation",
         "required": false,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+          "collectionId": "j2s5hcp9b3xr640",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
         }
       },
       {
         "system": false,
-        "id": "wlx0baej",
+        "id": "wvoxw2mn",
         "name": "owner",
         "type": "email",
         "required": false,
@@ -65,13 +67,13 @@ migrate((db) => {
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "",
+    "viewRule": "",
     "createRule": null,
     "updateRule": null,
     "deleteRule": null,
     "options": {
-      "query": "SELECT\n    b.id as id,\n    b.name as name,\n    df.format AS date_format,\n    c.example_format AS currency,\n    o.email AS owner,\n    b.created,\n    b.updated\nFROM\n    budgets b\n    LEFT JOIN date_formats df ON b.date_format = df.id\n    LEFT JOIN currency_formats c ON b.id = c.id\n    LEFT JOIN users o ON b.owner = o.id;\n"
+      "query": "SELECT\n    b.id as id,\n    b.name as name,\n    df.format AS date_format,\n    c.id AS currency_example,\n    o.email AS owner,\n    b.created,\n    b.updated\nFROM\n    budgets b\n    LEFT JOIN date_formats df ON b.date_format = df.id\n    LEFT JOIN currency_formats c ON b.currency_format = c.id\n    LEFT JOIN users o ON b.owner = o.id;\n"
     }
   });
 

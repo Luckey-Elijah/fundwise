@@ -2,8 +2,8 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "j2s5hcp9b3xr640",
-    "created": "2024-06-18 17:12:45.367Z",
-    "updated": "2024-06-18 17:12:45.367Z",
+    "created": "2024-06-26 14:57:51.963Z",
+    "updated": "2024-06-26 14:57:51.963Z",
     "name": "currency_formats",
     "type": "base",
     "system": false,
@@ -11,7 +11,7 @@ migrate((db) => {
       {
         "system": false,
         "id": "59ikpqys",
-        "name": "iso_code",
+        "name": "example",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -24,21 +24,7 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "lbs9kehh",
-        "name": "example_format",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "hh89bzly",
+        "id": "odzqusvl",
         "name": "decimal_digits",
         "type": "number",
         "required": false,
@@ -52,7 +38,7 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "q7t3eqif",
+        "id": "s4yzc7cb",
         "name": "decimal_separator",
         "type": "text",
         "required": false,
@@ -66,17 +52,7 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "86qrczga",
-        "name": "symbol_first",
-        "type": "bool",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {}
-      },
-      {
-        "system": false,
-        "id": "p7ujtdhl",
+        "id": "24kpetwz",
         "name": "group_separator",
         "type": "text",
         "required": false,
@@ -90,8 +66,8 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "fx95cq5e",
-        "name": "currency_symbol",
+        "id": "aupvo6be",
+        "name": "symbol",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -104,8 +80,32 @@ migrate((db) => {
       },
       {
         "system": false,
-        "id": "on0slo6y",
+        "id": "gblukj8c",
+        "name": "group_size",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
+        "id": "pjeggnyp",
         "name": "display_symbol",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "mh0j0rha",
+        "name": "symbol_first",
         "type": "bool",
         "required": false,
         "presentable": false,
@@ -113,12 +113,14 @@ migrate((db) => {
         "options": {}
       }
     ],
-    "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "indexes": [
+      "CREATE INDEX `currency_idx` ON `currency_formats` (\n  `decimal_digits`,\n  `decimal_separator`,\n  `group_separator`,\n  `symbol`,\n  `group_size`,\n  `symbol_first`,\n  `display_symbol`\n)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {}
   });
 

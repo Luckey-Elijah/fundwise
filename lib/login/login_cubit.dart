@@ -173,7 +173,7 @@ class LoginCubit extends Cubit<LoginState> {
       await authRepository.signUp(
         username: state.username,
         email: state.email,
-        password: state.email,
+        password: state.password,
         confirm: state.confirm,
       );
 

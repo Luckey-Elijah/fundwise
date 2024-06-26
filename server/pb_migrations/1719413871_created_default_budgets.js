@@ -2,8 +2,8 @@
 migrate((db) => {
   const collection = new Collection({
     "id": "81hwnfkc7nxakar",
-    "created": "2024-06-19 19:11:01.385Z",
-    "updated": "2024-06-19 19:11:01.385Z",
+    "created": "2024-06-26 14:57:51.964Z",
+    "updated": "2024-06-26 14:57:51.964Z",
     "name": "default_budgets",
     "type": "base",
     "system": false,
@@ -41,7 +41,9 @@ migrate((db) => {
         }
       }
     ],
-    "indexes": [],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_unique_user` ON `default_budgets` (`user`)"
+    ],
     "listRule": "",
     "viewRule": "",
     "createRule": "",

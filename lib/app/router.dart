@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app/app/auth_listenable.dart';
 import 'package:app/budget/ui/budget_page.dart';
+import 'package:app/budget_new/budget_new.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/repository/auth.repo.dart';
@@ -54,6 +55,14 @@ GoRouter router(Stream<AuthStoreEvent> onAuthStateChange) {
             path: '/budget',
             name: 'Budget',
             pageBuilder: (_, __) => const NoTransitionPage(child: BudgetPage()),
+            routes: [
+              GoRoute(
+                path: 'new',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: BudgetNewPage(),
+                ),
+              ),
+            ],
           ),
           GoRoute(
             path: '/reports',

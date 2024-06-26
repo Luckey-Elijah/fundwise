@@ -17,33 +17,31 @@ class LogoutButton extends StatelessWidget {
           icon: const Icon(Icons.logout),
         );
       },
-      overlayChildBuilder: (context, controller, size, origin) {
-        final bottomCenter = size.bottomCenter(origin);
-
-        return PositonedOverlayCard(
-          position: bottomCenter,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8),
-                child: Text('Are you sure?'),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                    onPressed: context.read<AuthRepository>().signOut,
-                    child: const Text('Logout'),
+      overlayChildBuilder: (context, controller) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Are you sure?'),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  onPressed: context.read<AuthRepository>().signOut,
+                  child: const Text('Logout'),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
                   ),
-                  TextButton(
-                    onPressed: controller.hide,
-                    child: const Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  onPressed: controller.hide,
+                  child: const Text('Cancel'),
+                ),
+              ],
+            ),
+          ],
         );
       },
     );

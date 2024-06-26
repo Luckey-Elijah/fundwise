@@ -43,10 +43,12 @@ class UrlRepository {
     if (url == null) {
       await _prefs.remove(key);
       _pb.baseUrl = '';
+      _pb.authStore.clear();
       return;
     }
 
     await _prefs.setString(key, '$url');
     _pb.baseUrl = '$url';
+    _pb.authStore.clear();
   }
 }
