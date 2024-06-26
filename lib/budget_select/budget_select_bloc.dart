@@ -43,11 +43,11 @@ class InitialBudgetSelectState extends BudgetSelectState {
 class DefaultBudgetSelected extends BudgetSelectState {
   DefaultBudgetSelected({required this.budget});
 
-  final BudgetModel budget;
+  final BudgetSummaryModel budget;
 }
 
 class ListBudgetSelection extends BudgetSelectState {
   ListBudgetSelection({required this.budgets});
 
-  final List<BudgetModel> budgets;
+  final List<BudgetSummaryModel> budgets;
 }

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:app/app/app.dart';
 import 'package:app/repository/auth.repo.dart';
 import 'package:app/repository/budget.repo.dart';
 import 'package:app/repository/health.repo.dart';
+import 'package:app/repository/logging.repo.dart';
 import 'package:app/repository/url.repo.dart';
 import 'package:app/repository/user.repo.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,19 @@ Future<void> main() async {
   );
 
   final pb = PocketBase('', authStore: store);
+
+  final logRepo = LoggingRepositoy(pb: pb);
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    unawaited(
+      logRepo.logException(
+        exception: details.exception,
+        stackTrace: details.stack,
+      ),
+    );
+  };
+
   final urlRepo = UrlRepository(pb: pb, prefs: prefs);
   final authRepo = AuthRepository(pb: pb);
   final url = await urlRepo.getUrl();
