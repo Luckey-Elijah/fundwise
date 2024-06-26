@@ -45,6 +45,7 @@ Future<void> main() async {
   return runApp(
     MultiRepositoryProvider(
       providers: [
+        RepositoryProvider.value(value: prefs),
         RepositoryProvider.value(value: urlRepo),
         RepositoryProvider.value(value: authRepo),
         RepositoryProvider(create: (_) => BudgetRepository(pb: pb)),

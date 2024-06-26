@@ -1,5 +1,6 @@
 import 'package:app/repository/auth.repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum LoginOrSignUp { login, signup }
 
@@ -10,6 +11,7 @@ class LoginState {
     required this.confirm,
     required this.username,
     required this.loginOrSignUp,
+    required this.rememberUsername,
     this.error,
     this.loading = false,
     this.signupSuccess,
@@ -21,6 +23,7 @@ class LoginState {
     username: '',
     confirm: '',
     loginOrSignUp: LoginOrSignUp.login,
+    rememberUsername: false,
   );
 
   final String email;
@@ -32,18 +35,71 @@ class LoginState {
   final bool loading;
   final String? error;
   final String? signupSuccess;
+  final bool rememberUsername;
 }
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({
     required this.authRepository,
+    required this.prefs,
   }) : super(LoginState.initial);
 
   final AuthRepository authRepository;
+  final SharedPreferences prefs;
 
-  void updateEmail(String email) {
+  Future<void> initialize() async {
+    if (!prefs.containsKey(_key)) return;
+
     emit(
       LoginState(
+        email: state.email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+        rememberUsername: true,
+      ),
+    );
+
+    final emailOrUserName = prefs.getString(_key);
+
+    emit(
+      LoginState(
+        email: emailOrUserName ?? state.email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+        rememberUsername: state.rememberUsername,
+      ),
+    );
+  }
+
+  Future<void> toggleRememberUsername() async {
+    emit(
+      LoginState(
+        email: state.email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+        rememberUsername: !state.rememberUsername,
+      ),
+    );
+
+    if (state.rememberUsername) {
+      await prefs.setString(_key, state.email);
+    } else {
+      await prefs.remove(_key);
+    }
+  }
+
+  static const _key = 'remember-username/email';
+
+  Future<void> updateEmail(String email) async {
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
         email: email,
         password: state.password,
         confirm: state.confirm,
@@ -51,11 +107,15 @@ class LoginCubit extends Cubit<LoginState> {
         loginOrSignUp: state.loginOrSignUp,
       ),
     );
+    if (state.rememberUsername) {
+      await prefs.setString(_key, state.email);
+    }
   }
 
   void updatePassword(String password) {
     emit(
       LoginState(
+        rememberUsername: state.rememberUsername,
         password: password,
         username: state.username,
         confirm: state.confirm,
@@ -68,6 +128,7 @@ class LoginCubit extends Cubit<LoginState> {
   void updateConfirm(String confirm) {
     emit(
       LoginState(
+        rememberUsername: state.rememberUsername,
         username: state.username,
         confirm: confirm,
         password: state.password,
@@ -80,6 +141,7 @@ class LoginCubit extends Cubit<LoginState> {
   void updateUsername(String username) {
     emit(
       LoginState(
+        rememberUsername: state.rememberUsername,
         username: username,
         confirm: state.confirm,
         password: state.password,
@@ -92,6 +154,7 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> loginOrSignup() async {
     emit(
       LoginState(
+        rememberUsername: state.rememberUsername,
         email: state.email,
         username: state.username,
         password: state.password,
@@ -116,6 +179,7 @@ class LoginCubit extends Cubit<LoginState> {
     } on Exception catch (e) {
       emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -133,6 +197,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (invalidPass) {
       return emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -146,6 +211,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (state.email.isEmpty) {
       return emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -159,6 +225,7 @@ class LoginCubit extends Cubit<LoginState> {
     if (state.username.isEmpty) {
       return emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -179,6 +246,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -189,6 +257,7 @@ class LoginCubit extends Cubit<LoginState> {
     } on Exception catch (e) {
       emit(
         LoginState(
+          rememberUsername: state.rememberUsername,
           email: state.email,
           username: state.username,
           password: state.password,
@@ -206,6 +275,7 @@ class LoginCubit extends Cubit<LoginState> {
         : LoginOrSignUp.login;
     emit(
       LoginState(
+        rememberUsername: state.rememberUsername,
         email: state.email,
         username: state.username,
         password: state.password,

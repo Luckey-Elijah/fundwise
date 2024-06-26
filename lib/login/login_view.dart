@@ -172,7 +172,7 @@ mixin ObscureState<T extends StatefulWidget> on State<T> {
   }
 }
 
-class EmailField extends StatelessWidget {
+class EmailField extends StatefulWidget {
   const EmailField({
     required this.enabled,
     required this.isLogin,
@@ -183,16 +183,57 @@ class EmailField extends StatelessWidget {
   final bool isLogin;
 
   @override
+  State<EmailField> createState() => _EmailFieldState();
+}
+
+class _EmailFieldState extends State<EmailField> {
+  late final controller =
+      TextEditingController(text: context.read<LoginCubit>().state.email);
+
+  @override
   Widget build(BuildContext context) {
-    return TextField(
-      enabled: enabled,
-      onChanged: context.read<LoginCubit>().updateEmail,
-      decoration: InputDecoration(
-        hintText: isLogin ? 'email/username' : 'email',
-      ),
-      autofillHints: [
-        if (!isLogin) AutofillHints.newUsername,
-        if (isLogin) AutofillHints.username,
+    return Column(
+      children: [
+        TextField(
+          controller: controller,
+          enabled: widget.enabled,
+          onChanged: context.read<LoginCubit>().updateEmail,
+          decoration: InputDecoration(
+            hintText: widget.isLogin ? 'email/username' : 'email',
+          ),
+          autofillHints: [
+            if (!widget.isLogin) AutofillHints.newUsername,
+            if (widget.isLogin) AutofillHints.username,
+          ],
+        ),
+        AnimatedSize(
+          duration: Durations.medium1,
+          child: widget.isLogin
+              ? const RememberUserNameCheckBox()
+              : const SizedBox.shrink(),
+        ),
+      ],
+    );
+  }
+}
+
+class RememberUserNameCheckBox extends StatelessWidget {
+  const RememberUserNameCheckBox({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text('remember username'),
+        Checkbox.adaptive(
+          value: context.select(
+            (LoginCubit cubit) => cubit.state.rememberUsername,
+          ),
+          onChanged: (_) => context.read<LoginCubit>().toggleRememberUsername(),
+        ),
       ],
     );
   }
