@@ -43,7 +43,6 @@ class SettingsView extends StatelessWidget {
                 child,
                 EditEmailButton(email: email, verified: verified),
                 Text(username),
-                const LogoutButton(),
                 Text(name),
               ],
             );
