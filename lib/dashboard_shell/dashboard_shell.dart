@@ -29,12 +29,10 @@ class DashboardShell extends StatelessWidget {
   }
 
   int? selectedIndex(String matchedLocation) {
-    return switch (matchedLocation) {
-      '/budget' => 0,
-      '/reports' => 1,
-      '/accounts' => 2,
-      _ => null,
-    };
+    if (matchedLocation.startsWith('/budget')) return 0;
+    if (matchedLocation.startsWith('/reports')) return 1;
+    if (matchedLocation.startsWith('/accounts')) return 2;
+    return null;
   }
 }
 
