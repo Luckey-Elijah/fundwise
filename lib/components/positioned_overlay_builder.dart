@@ -52,11 +52,9 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       overlayChildBuilder: (context) {
         final renderBox = getRenderBox();
         final origin = getWidgetOrigin(renderBox);
-
-        late final sizeOf = MediaQuery.sizeOf(context);
-
-        late final isTop = sizeOf.height / 2 > origin.dy;
-        late final isLeft = sizeOf.width / 2 > origin.dx;
+        final sizeOf = MediaQuery.sizeOf(context);
+        final isTop = sizeOf.height / 2 > origin.dy;
+        final isLeft = sizeOf.width / 2 > origin.dx;
 
         final position = switch ((isTop, isLeft)) {
           (true, true) => renderBox.size.bottomLeft(origin),
@@ -64,6 +62,13 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
           (false, true) => renderBox.size.topLeft(origin),
           (false, false) => renderBox.size.topRight(origin),
         };
+
+        final left = isLeft ? position.dx : null;
+        final right = isLeft ? null : sizeOf.width - position.dx;
+        final top = isTop ? position.dy : null;
+        final bottom = isTop ? null : sizeOf.height - origin.dy;
+
+        debugPrint('rebuilding');
 
         return Stack(
           children: [
@@ -73,10 +78,10 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
               color: widget.barrierColor,
             ),
             Positioned(
-              left: isLeft ? position.dx : null,
-              right: isLeft ? null : sizeOf.width - position.dx,
-              top: isTop ? position.dy : null,
-              bottom: isTop ? null : sizeOf.height - origin.dy,
+              left: left,
+              right: right,
+              top: top,
+              bottom: bottom,
               child: ConstrainedBox(
                 constraints: widget.overlayContraints,
                 child: Card(
