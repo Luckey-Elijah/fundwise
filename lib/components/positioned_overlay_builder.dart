@@ -68,8 +68,6 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
         final top = isTop ? position.dy : null;
         final bottom = isTop ? null : sizeOf.height - origin.dy;
 
-        debugPrint('rebuilding');
-
         return Stack(
           children: [
             ModalBarrier(
