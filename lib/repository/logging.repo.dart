@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class LoggingRepositoy {
-  LoggingRepositoy({required PocketBase pb}) : _pb = pb;
+class LoggingRepository {
+  LoggingRepository({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
   late final _col = _pb.collection('errors');
@@ -24,7 +24,7 @@ class LoggingRepositoy {
           'debug': kDebugMode,
         },
       );
-      debugPrint('sucessfully logged: $record');
+      debugPrint('successfully logged: ${record.id}');
     } on Exception catch (e, st) {
       debugPrint('Could not log an exception:');
       debugPrint('$exception');

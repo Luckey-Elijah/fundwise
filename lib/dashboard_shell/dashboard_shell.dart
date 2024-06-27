@@ -29,9 +29,10 @@ class DashboardShell extends StatelessWidget {
   }
 
   int? selectedIndex(String matchedLocation) {
-    if (matchedLocation.startsWith('/budget')) return 0;
-    if (matchedLocation.startsWith('/reports')) return 1;
-    if (matchedLocation.startsWith('/accounts')) return 2;
+    const io = ['/budget', '/reports', '/accounts'];
+    for (var i = 0; i < io.length; i++) {
+      if (matchedLocation.startsWith(io[i])) return i;
+    }
     return null;
   }
 }
@@ -44,6 +45,7 @@ class PrimaryScaffold extends StatelessWidget {
   });
 
   final Widget child;
+
   final int? index;
 
   @override
@@ -51,28 +53,19 @@ class PrimaryScaffold extends StatelessWidget {
     return AdaptiveScaffold(
       internalAnimations: false,
       onSelectedIndexChange: (int index) {
-        context.go(
-          switch (index) {
-            0 => '/budget',
-            1 => '/reports',
-            2 => '/accounts',
-            _ => '/404',
-          },
-        );
+        const io = ['/budget', '/reports', '/accounts'];
+        if (index > io.length) return context.go('/404');
+        context.go(io[index]);
       },
       body: (context) => child,
-      leadingExtendedNavRail: Center(
-        child: TextButton.icon(
-          onPressed: () => context.go('/settings'),
-          iconAlignment: IconAlignment.end,
-          label: const Text('Account'),
-          icon: const Icon(Icons.lightbulb),
-        ),
+      leadingExtendedNavRail: TextButton.icon(
+        onPressed: () => context.go('/settings'),
+        iconAlignment: IconAlignment.end,
+        label: const Text('Account'),
+        icon: const Icon(Icons.lightbulb),
       ),
       transitionDuration: Durations.short3,
-      trailingNavRail: const Center(
-        child: LogoutButton(),
-      ),
+      trailingNavRail: const LogoutButton(),
       selectedIndex: index,
       destinations: const [
         NavigationDestination(

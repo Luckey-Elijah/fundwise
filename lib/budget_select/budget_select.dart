@@ -36,14 +36,12 @@ class BudgetSelectView extends StatelessWidget {
           context.go('/budgets/${state.budget.id}');
         }
       },
-      listenWhen: (prev, next) =>
-          prev is! DefaultBudgetSelected || next is DefaultBudgetSelected,
+      listenWhen: (prev, next) => prev is! DefaultBudgetSelected,
       builder: (context, state) {
-        if (state is InitialBudgetSelectState ||
-            state is DefaultBudgetSelected) {
+        if (state is InitialBudgetSelectState) {
           return const CircularProgressIndicator.adaptive();
         }
-        if (state is ListBudgetSelection) {
+        if (state is ListBudgetSelection || state is InitialBudgetSelectState) {
           return ListView.builder(
             itemCount: state.budgets.length + 1,
             itemBuilder: (context, index) {
@@ -73,13 +71,13 @@ class BudgetSelectView extends StatelessWidget {
                                   const Gutter(),
                                   Text(
                                     currencyFormatter(
-                                      milliunits: 1456908,
+                                      milliunits: 1,
                                       format: FundwiseCurrencyFormat(
-                                        decimalDigits: 0,
-                                        groupSize: 3,
-                                        decimalSeperator: '.',
-                                        groupSeperator: ',',
+                                        decimalSeparator: '.',
+                                        groupSeparator: ',',
                                         symbol: r'$',
+                                        groupSize: 3,
+                                        decimalDigits: 3,
                                         displaySymbol: true,
                                         symbolFirst: true,
                                       ),
@@ -134,8 +132,8 @@ class BudgetSelectView extends StatelessWidget {
                                     format: FundwiseCurrencyFormat(
                                       decimalDigits: 2,
                                       groupSize: 3,
-                                      decimalSeperator: '.',
-                                      groupSeperator: ',',
+                                      decimalSeparator: '.',
+                                      groupSeparator: ',',
                                       symbol: r'$',
                                       displaySymbol: true,
                                       symbolFirst: true,

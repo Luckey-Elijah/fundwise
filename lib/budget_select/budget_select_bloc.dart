@@ -27,27 +27,26 @@ class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
     final budgets = await repo.getBudgets();
 
     emit(
-      ListBudgetSelection(budgets: budgets),
+      ListBudgetSelection(budgets),
     );
   }
 }
 
 abstract class BudgetSelectState {
-  const BudgetSelectState();
+  const BudgetSelectState(this.budgets);
+  final List<BudgetSummaryModel> budgets;
 }
 
 class InitialBudgetSelectState extends BudgetSelectState {
-  const InitialBudgetSelectState();
+  const InitialBudgetSelectState() : super(const []);
 }
 
 class DefaultBudgetSelected extends BudgetSelectState {
-  DefaultBudgetSelected({required this.budget});
+  const DefaultBudgetSelected({required this.budget}) : super(const []);
 
   final BudgetSummaryModel budget;
 }
 
 class ListBudgetSelection extends BudgetSelectState {
-  ListBudgetSelection({required this.budgets});
-
-  final List<BudgetSummaryModel> budgets;
+  const ListBudgetSelection(super.budgets);
 }

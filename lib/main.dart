@@ -23,7 +23,7 @@ Future<void> main() async {
 
   final pb = PocketBase('', authStore: store);
 
-  final logRepo = LoggingRepositoy(pb: pb);
+  final logRepo = LoggingRepository(pb: pb);
 
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);

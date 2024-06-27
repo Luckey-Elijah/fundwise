@@ -1,3 +1,5 @@
+import 'dart:math';
+
 String currencyFormatter({
   required FundwiseCurrencyFormat format,
   required int milliunits,
@@ -5,23 +7,24 @@ String currencyFormatter({
   final buff = StringBuffer();
   if (format.symbolFirst) buff.write(format.symbol);
 
-  final chars = '$milliunits'.split('');
+  final chars = '$milliunits'.padLeft(4, '0').split('');
 
   // split at decimal
-  final splitIndex = chars.length - 3;
+  final splitIndex = max(chars.length - 3, 0);
   final wholes = [...chars.take(splitIndex)];
 
   for (var i = 0; i < wholes.length; i++) {
-    final seperate = (i - 1) % format.groupSize == 0;
-    if (seperate) buff.write(format.groupSeperator);
+    final j = wholes.length - i;
+    final separate = (j % format.groupSize) == 0;
+    if (j < wholes.length && separate) buff.write(format.groupSeparator);
     buff.write(wholes[i]);
   }
 
   final decimals = [...chars.skip(splitIndex)];
 
-  if (format.decimalDigits > 0) buff.write(format.decimalSeperator);
+  if (format.decimalDigits > 0) buff.write(format.decimalSeparator);
 
-  for (var i = 0; i < format.decimalDigits; i++) {
+  for (var i = 0; i < min(format.decimalDigits, decimals.length); i++) {
     if (i > decimals.length) {
       buff.write('0');
     } else {
@@ -37,8 +40,8 @@ class FundwiseCurrencyFormat {
   FundwiseCurrencyFormat({
     required this.decimalDigits,
     required this.groupSize,
-    required this.decimalSeperator,
-    required this.groupSeperator,
+    required this.decimalSeparator,
+    required this.groupSeparator,
     required this.symbol,
     required this.displaySymbol,
     required this.symbolFirst,
@@ -47,8 +50,8 @@ class FundwiseCurrencyFormat {
 
   final int decimalDigits;
   final int groupSize;
-  final String decimalSeperator;
-  final String groupSeperator;
+  final String decimalSeparator;
+  final String groupSeparator;
   final String symbol;
   final bool displaySymbol;
   final bool symbolFirst;
