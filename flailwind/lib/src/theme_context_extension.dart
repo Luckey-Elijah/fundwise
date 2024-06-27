@@ -9,13 +9,16 @@ extension ThemeContextExtension on BuildContext {
   Color get primaryContainer => colorScheme.primaryContainer;
   Color get secondaryContainer => colorScheme.secondaryContainer;
   Color get errorContainer => colorScheme.errorContainer;
+  Color get tertiaryContainer => colorScheme.tertiaryContainer;
 
   Color get primary => colorScheme.primary;
   Color get secondary => colorScheme.secondary;
   Color get error => colorScheme.error;
+  Color get tertiary => colorScheme.tertiary;
 
   Color get onPrimaryContainer => colorScheme.onPrimaryContainer;
   Color get onSecondaryContainer => colorScheme.onSecondaryContainer;
+  Color get onTertiaryContainer => colorScheme.onTertiaryContainer;
   Color get onErrorContainer => colorScheme.onErrorContainer;
 
   TextTheme get textTheme => Theme.of(this).textTheme;

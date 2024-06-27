@@ -36,12 +36,19 @@ extension TextStyleHelper on TextStyleWithContext? {
         decorationColor: this?.context.error,
       );
 
+  TextStyleWithContext? get tertiary => this?.copyWith(
+        color: this?.context.tertiary,
+        decorationColor: this?.context.tertiary,
+      );
+
   TextStyleWithContext? get onPrimary =>
       this?.copyWith(color: this?.context.onPrimaryContainer);
   TextStyleWithContext? get onSecondary =>
       this?.copyWith(color: this?.context.onSecondaryContainer);
   TextStyleWithContext? get onError =>
       this?.copyWith(color: this?.context.onErrorContainer);
+  TextStyleWithContext? get onTertiary =>
+      this?.copyWith(color: this?.context.onTertiaryContainer);
 
   TextStyleWithContext? bg(Color color) =>
       this?.copyWith(backgroundColor: color);
@@ -52,6 +59,8 @@ extension TextStyleHelper on TextStyleWithContext? {
       this?.copyWith(backgroundColor: this?.context.secondaryContainer);
   TextStyleWithContext? get bgError =>
       this?.copyWith(backgroundColor: this?.context.errorContainer);
+  TextStyleWithContext? get bgTertiary =>
+      this?.copyWith(backgroundColor: this?.context.tertiaryContainer);
 
   TextStyleWithContext? decorationColor(Color decorationColor) =>
       this?.copyWith(decorationColor: decorationColor);
@@ -104,11 +113,11 @@ extension TextStyleHelper on TextStyleWithContext? {
         fontSize: this?.context.textTheme.titleLarge?.fontSize,
       );
 
-  TextStyleWithContext? get sizeXXl => this?.copyWith(
+  TextStyleWithContext? get size2xl => this?.copyWith(
         fontSize: this?.context.textTheme.headlineSmall?.fontSize,
       );
 
-  TextStyleWithContext? get size3Xl => this?.copyWith(
+  TextStyleWithContext? get size3xl => this?.copyWith(
         fontSize: this?.context.textTheme.headlineLarge?.fontSize,
       );
 }

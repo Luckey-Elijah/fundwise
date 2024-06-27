@@ -1,4 +1,4 @@
-/// A Very Good Project created by Very Good CLI.
+/// Tailwind-like styling in Flutter.
 library;
 
 export 'src/text_style_helper.dart';
