@@ -33,21 +33,11 @@ class LoginView extends StatelessWidget {
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
               child: Card.outlined(
                 color: context.primaryContainer,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const FormTitle(),
-                      const Gutter(),
-                      const LoginForm(),
-                      Text('sizeSm', style: context.p.ellipsis.sizeSm),
-                      Text('sizeMd', style: context.p.ellipsis.sizeMd),
-                      Text('sizeLg', style: context.p.ellipsis.sizeLg),
-                      Text('sizeXl', style: context.p.ellipsis.sizeXl),
-                      Text('sizeXXl', style: context.p.ellipsis.sizeXXl),
-                      Text('size3Xl', style: context.p.ellipsis.size3Xl),
-                    ],
+                    children: [FormTitle(), Gutter(), LoginForm()],
                   ),
                 ),
               ),
