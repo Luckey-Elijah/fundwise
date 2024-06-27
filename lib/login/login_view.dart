@@ -1,4 +1,3 @@
-// import 'package:app/components/theme_context_extension.dart';
 import 'package:app/login/login_cubit.dart';
 import 'package:app/server/server_url_field.dart';
 import 'package:flailwind/flailwind.dart';
@@ -20,9 +19,9 @@ class LoginView extends StatelessWidget {
             );
           }
 
-          if (state.signupSuccess != null) {
+          if (state.signUpSuccess != null) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.signupSuccess!)),
+              SnackBar(content: Text(state.signUpSuccess!)),
             );
           }
         },
@@ -152,7 +151,7 @@ class _PasswordFieldState extends State<PasswordField> with ObscureState {
         ),
       ),
       onSubmitted: (_) {
-        if (widget.isLogin) context.read<LoginCubit>().loginOrSignup();
+        if (widget.isLogin) context.read<LoginCubit>().loginOrSignUp();
       },
       autofillHints: [
         if (!widget.isLogin) AutofillHints.newPassword,
@@ -282,7 +281,7 @@ class UsernameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       enabled: enabled,
-      onSubmitted: (_) => context.read<LoginCubit>().loginOrSignup(),
+      onSubmitted: (_) => context.read<LoginCubit>().loginOrSignUp(),
       onChanged: context.read<LoginCubit>().updateUsername,
       decoration: const InputDecoration(hintText: 'username'),
       autofillHints: const [AutofillHints.newUsername],
@@ -303,7 +302,7 @@ class LoginOrSignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: enabled ? context.read<LoginCubit>().loginOrSignup : null,
+      onPressed: enabled ? context.read<LoginCubit>().loginOrSignUp : null,
       child: Text(isLogin ? 'login' : 'signup'),
     );
   }

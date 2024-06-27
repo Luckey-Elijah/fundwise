@@ -2,7 +2,7 @@ import 'package:app/repository/auth.repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum LoginOrSignUp { login, signup }
+enum LoginOrSignUp { login, signUp }
 
 class LoginState {
   const LoginState({
@@ -14,7 +14,7 @@ class LoginState {
     required this.rememberUsername,
     this.error,
     this.loading = false,
-    this.signupSuccess,
+    this.signUpSuccess,
   });
 
   static const initial = LoginState(
@@ -34,7 +34,7 @@ class LoginState {
 
   final bool loading;
   final String? error;
-  final String? signupSuccess;
+  final String? signUpSuccess;
   final bool rememberUsername;
 }
 
@@ -151,7 +151,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  Future<void> loginOrSignup() async {
+  Future<void> loginOrSignUp() async {
     emit(
       LoginState(
         rememberUsername: state.rememberUsername,
@@ -271,7 +271,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   void toggleLoginOrSignUp() {
     final next = state.loginOrSignUp == LoginOrSignUp.login
-        ? LoginOrSignUp.signup
+        ? LoginOrSignUp.signUp
         : LoginOrSignUp.login;
     emit(
       LoginState(
