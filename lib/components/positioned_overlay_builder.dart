@@ -31,18 +31,43 @@ class PositionedOverlayBuilder extends StatefulWidget {
       _PositionedOverlayBuilderState();
 }
 
-class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
+class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder>
+    with WidgetsBindingObserver {
   late final controller =
       OverlayPortalController(debugLabel: widget.debugLabel);
 
   late final key = GlobalKey(debugLabel: widget.debugLabel);
 
-  Offset getWidgetOrigin(RenderBox renderBox) {
+  Offset widgetOrigin(RenderBox renderBox) {
     return renderBox.localToGlobal(Offset.zero);
   }
 
   RenderBox getRenderBox() =>
       key.currentContext!.findRenderObject()! as RenderBox;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  late Size _lastSize =
+      View.of(context).physicalSize / View.of(context).devicePixelRatio;
+
+  @override
+  void didChangeMetrics() {
+    if (!controller.isShowing) return;
+    final view = View.of(context);
+    final size = view.physicalSize / view.devicePixelRatio;
+    if (_lastSize == size) return;
+    setState(() => _lastSize = size);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +76,9 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
       controller: controller,
       overlayChildBuilder: (context) {
         final renderBox = getRenderBox();
-        final origin = getWidgetOrigin(renderBox);
-
-        final sizeOf = MediaQuery.sizeOf(context);
-        final isTop = sizeOf.height / 2 > origin.dy;
-        final isLeft = sizeOf.width / 2 > origin.dx;
+        final origin = widgetOrigin(renderBox);
+        final isTop = _lastSize.height / 2 > origin.dy;
+        final isLeft = _lastSize.width / 2 > origin.dx;
 
         final position = switch ((isTop, isLeft)) {
           (true, true) => renderBox.size.bottomLeft(origin),
@@ -65,11 +88,11 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
         };
 
         final left = isLeft ? position.dx : null;
-        final right = isLeft ? null : sizeOf.width - position.dx;
+        final right = isLeft ? null : _lastSize.width - position.dx;
         final top = isTop ? position.dy : null;
-        final bottom = isTop ? null : sizeOf.height - origin.dy;
+        final bottom = isTop ? null : _lastSize.height - origin.dy;
         final constraints = widget.overlayConstraints;
-        final child = Card(
+        late final child = Card(
           clipBehavior: Clip.hardEdge,
           elevation: 20,
           child: widget.overlayChildBuilder(
