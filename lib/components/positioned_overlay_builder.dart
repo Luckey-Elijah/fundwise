@@ -4,7 +4,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
     required this.overlayChildBuilder,
-    this.overlayContraints = const BoxConstraints(),
+    this.overlayConstraints,
     this.dismissible = true,
     this.barrierColor,
     this.debugLabel,
@@ -14,7 +14,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   final String? debugLabel;
   final Color? barrierColor;
   final bool dismissible;
-  final BoxConstraints overlayContraints;
+  final BoxConstraints? overlayConstraints;
 
   final Widget Function(
     BuildContext context,
@@ -68,6 +68,15 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
         final right = isLeft ? null : sizeOf.width - position.dx;
         final top = isTop ? position.dy : null;
         final bottom = isTop ? null : sizeOf.height - origin.dy;
+        final constraints = widget.overlayConstraints;
+        final child = Card(
+          clipBehavior: Clip.hardEdge,
+          elevation: 20,
+          child: widget.overlayChildBuilder(
+            context,
+            controller,
+          ),
+        );
 
         return Stack(
           children: [
@@ -83,17 +92,9 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder> {
               right: right,
               top: top,
               bottom: bottom,
-              child: ConstrainedBox(
-                constraints: widget.overlayContraints,
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  elevation: 20,
-                  child: widget.overlayChildBuilder(
-                    context,
-                    controller,
-                  ),
-                ),
-              ),
+              child: constraints == null
+                  ? child
+                  : ConstrainedBox(constraints: constraints, child: child),
             ),
           ],
         );
