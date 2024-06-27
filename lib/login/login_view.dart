@@ -1,5 +1,7 @@
+// import 'package:app/components/theme_context_extension.dart';
 import 'package:app/login/login_cubit.dart';
 import 'package:app/server/server_url_field.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -30,12 +32,22 @@ class LoginView extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
               child: Card.outlined(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
+                color: context.primaryContainer,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [FormTitle(), Gutter(), LoginForm()],
+                    children: [
+                      const FormTitle(),
+                      const Gutter(),
+                      const LoginForm(),
+                      Text('sizeSm', style: context.p.ellipsis.sizeSm),
+                      Text('sizeMd', style: context.p.ellipsis.sizeMd),
+                      Text('sizeLg', style: context.p.ellipsis.sizeLg),
+                      Text('sizeXl', style: context.p.ellipsis.sizeXl),
+                      Text('sizeXXl', style: context.p.ellipsis.sizeXXl),
+                      Text('size3Xl', style: context.p.ellipsis.size3Xl),
+                    ],
                   ),
                 ),
               ),
@@ -56,14 +68,12 @@ class FormTitle extends StatelessWidget {
       (cubit) => cubit.state.loginOrSignUp == LoginOrSignUp.login,
     );
 
-    final style = Theme.of(context).textTheme.titleLarge;
-
     return AnimatedAlign(
       duration: Durations.short4,
       alignment: isLogin ? Alignment.topLeft : Alignment.topRight,
       child: AnimatedCrossFade(
-        firstChild: Text('login', style: style),
-        secondChild: Text('signup', style: style),
+        firstChild: Text('login', style: context.h1),
+        secondChild: Text('signup', style: context.h1),
         crossFadeState:
             isLogin ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         duration: Durations.short4,

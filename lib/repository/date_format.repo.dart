@@ -1,4 +1,5 @@
 import 'package:app/util.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:pocketbase/pocketbase.dart';
 
 class DateFormatRepository {
@@ -59,7 +60,7 @@ class DateFormat {
     required this.created,
     required this.updated,
     required this.description,
-    required this.format,
+    required this.pattern,
   });
 
   factory DateFormat.fromJson(Map<String, dynamic> map) {
@@ -70,7 +71,7 @@ class DateFormat {
       created: map.tryString('created') ?? '',
       updated: map.tryString('updated') ?? '',
       description: map.tryString('description') ?? '',
-      format: map.tryString('format') ?? '',
+      pattern: map.tryString('format') ?? '',
     );
   }
 
@@ -80,7 +81,9 @@ class DateFormat {
   final String created;
   final String updated;
   final String description;
-  final String format;
+  final String pattern;
+  String format(DateTime date) =>
+      intl.DateFormat(pattern).format(DateTime.now());
 
   DateFormat copyWith({
     String? id,
@@ -98,7 +101,7 @@ class DateFormat {
       created: created ?? this.created,
       updated: updated ?? this.updated,
       description: description ?? this.description,
-      format: format ?? this.format,
+      pattern: format ?? pattern,
     );
   }
 
@@ -110,7 +113,7 @@ class DateFormat {
       'created': created,
       'updated': updated,
       'description': description,
-      'format': format,
+      'format': pattern,
     };
   }
 }
