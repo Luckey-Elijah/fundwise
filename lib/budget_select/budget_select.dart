@@ -71,13 +71,13 @@ class BudgetSelectView extends StatelessWidget {
                                   const Gutter(),
                                   Text(
                                     currencyFormatter(
-                                      milliunits: 1,
+                                      milliunits: 10000,
                                       format: FundwiseCurrencyFormat(
                                         decimalSeparator: '.',
                                         groupSeparator: ',',
                                         symbol: r'$',
                                         groupSize: 3,
-                                        decimalDigits: 3,
+                                        decimalDigits: 2,
                                         displaySymbol: true,
                                         symbolFirst: true,
                                       ),

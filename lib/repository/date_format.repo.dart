@@ -32,24 +32,6 @@ class DateFormatRepository {
       return [];
     }
   }
-
-  Future<DateFormat?> create({
-    required String format,
-    required String? description,
-  }) async {
-    try {
-      final record = await _collection.create(
-        body: {
-          'description': description,
-          'format': format,
-        },
-      );
-
-      return DateFormat.fromJson(record.data);
-    } on ClientException {
-      return null;
-    }
-  }
 }
 
 class DateFormat {

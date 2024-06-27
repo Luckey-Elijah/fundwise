@@ -5,6 +5,12 @@ String currencyFormatter({
   required int milliunits,
 }) {
   final buff = StringBuffer();
+
+  if (milliunits < 0) {
+    milliunits = milliunits * -1;
+    buff.write('-');
+  }
+
   if (format.symbolFirst) buff.write(format.symbol);
 
   final chars = '$milliunits'.padLeft(4, '0').split('');
