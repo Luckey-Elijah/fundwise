@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Card;
+import 'package:flutter/widgets.dart';
 
 class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
