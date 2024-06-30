@@ -373,9 +373,9 @@
     ],
     "listRule": "",
     "viewRule": "",
-    "createRule": "",
-    "updateRule": "",
-    "deleteRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
     "options": {}
   },
   {
@@ -416,9 +416,9 @@
     "indexes": [],
     "listRule": "",
     "viewRule": "",
-    "createRule": "",
-    "updateRule": "",
-    "deleteRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
     "options": {}
   },
   {
@@ -534,7 +534,7 @@
     "indexes": [],
     "listRule": null,
     "viewRule": null,
-    "createRule": null,
+    "createRule": "",
     "updateRule": null,
     "deleteRule": null,
     "options": {}
@@ -547,7 +547,7 @@
     "schema": [
       {
         "system": false,
-        "id": "2acirfpd",
+        "id": "lc47e9yu",
         "name": "name",
         "type": "text",
         "required": true,
@@ -561,7 +561,7 @@
       },
       {
         "system": false,
-        "id": "uzstt4zn",
+        "id": "qqfyzaxg",
         "name": "date_format",
         "type": "text",
         "required": true,
@@ -575,23 +575,7 @@
       },
       {
         "system": false,
-        "id": "lqoybclm",
-        "name": "currency_example",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "j2s5hcp9b3xr640",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "jfbofym6",
+        "id": "6kmynau8",
         "name": "owner",
         "type": "email",
         "required": false,
@@ -600,6 +584,18 @@
         "options": {
           "exceptDomains": null,
           "onlyDomains": null
+        }
+      },
+      {
+        "system": false,
+        "id": "ksccsybg",
+        "name": "currency_format",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSize": 1
         }
       }
     ],
@@ -610,7 +606,80 @@
     "updateRule": null,
     "deleteRule": null,
     "options": {
-      "query": "SELECT\n    b.id as id,\n    b.name as name,\n    df.format AS date_format,\n    c.id AS currency_example,\n    o.email AS owner,\n    b.created,\n    b.updated\nFROM\n    budgets b\n    LEFT JOIN date_formats df ON b.date_format = df.id\n    LEFT JOIN currency_formats c ON b.currency_format = c.id\n    LEFT JOIN users o ON b.owner = o.id;\n"
+      "query": "SELECT\n    b.id as id,\n    b.name as name,\n    df.format AS date_format,\n    o.email AS owner,\n    json_object(\n      'decimal_digits', c.decimal_digits,\n      'group_size', c.group_size,\n      'decimal_separator', c.decimal_separator,\n      'group_separator', c.group_separator,\n      'symbol', c.symbol,\n      'display_symbol', c.display_symbol,\n      'symbol_first', c.symbol_first\n    ) as currency_format,\n    b.created AS created,\n    b.updated AS updated\nFROM\n    budgets b\n    LEFT JOIN date_formats df ON b.date_format = df.id\n    LEFT JOIN currency_formats c ON b.currency_format = c.id\n    LEFT JOIN users o ON b.owner = o.id;"
+    }
+  },
+  {
+    "id": "9q7cv317egnaan7",
+    "name": "default_budgets_view",
+    "type": "view",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "zughc8as",
+        "name": "name",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "pdkhg2op",
+        "name": "date_format",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "zgz7vt7o",
+        "name": "owner",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "xlkprl0a",
+        "name": "currency_format",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSize": 1
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "options": {
+      "query": "SELECT\n    b.id as id,\n    b.name as name,\n    df.format AS date_format,\n    o.id AS owner,\n    json_object(\n      'decimal_digits', c.decimal_digits,\n      'group_size', c.group_size,\n      'decimal_separator', c.decimal_separator,\n      'group_separator', c.group_separator,\n      'symbol', c.symbol,\n      'display_symbol', c.display_symbol,\n      'symbol_first', c.symbol_first\n    ) as currency_format,\n    b.created AS created,\n    b.updated AS updated\nFROM\n    budgets b\n    LEFT JOIN date_formats df ON b.date_format = df.id\n    LEFT JOIN currency_formats c ON b.currency_format = c.id\n    LEFT JOIN users o ON b.owner = o.id;"
     }
   }
 ]
