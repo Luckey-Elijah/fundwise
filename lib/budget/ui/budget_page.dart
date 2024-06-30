@@ -5,6 +5,7 @@ import 'package:app/budget/ui/list_view_actions.dart';
 import 'package:app/budget/ui/sidebar.dart';
 import 'package:app/budget/ui/top_navigator.dart';
 import 'package:app/budget_select/budget_select.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -18,16 +19,19 @@ class BudgetPage extends StatelessWidget {
 }
 
 class BudgetReady extends StatelessWidget {
-  const BudgetReady({super.key});
+  const BudgetReady({required this.id, super.key});
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        BudgetTopNavigator(),
-        GutterSmall(),
-        Divider(),
-        Expanded(child: BudgetContentBuilder()),
+        Text(id, style: context.h1.wide),
+        const BudgetTopNavigator(),
+        const GutterSmall(),
+        const Divider(),
+        const Expanded(child: BudgetContentBuilder()),
       ],
     );
   }

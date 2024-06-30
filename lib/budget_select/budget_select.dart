@@ -1,6 +1,8 @@
 import 'package:app/budget_select/budget_select_bloc.dart';
 import 'package:app/formatter.dart';
 import 'package:app/repository/budget.repo.dart';
+import 'package:app/repository/currency_format.model.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -33,12 +35,13 @@ class BudgetSelectView extends StatelessWidget {
     return BlocConsumer<BudgetSelectBloc, BudgetSelectState>(
       listener: (context, state) {
         if (state is DefaultBudgetSelected) {
-          context.go('/budgets/${state.budget.id}');
+          context.go('/budget/${state.budget.id}');
         }
       },
       listenWhen: (prev, next) => prev is! DefaultBudgetSelected,
       builder: (context, state) {
-        if (state is InitialBudgetSelectState) {
+        if (state is InitialBudgetSelectState ||
+            state is DefaultBudgetSelected) {
           return const CircularProgressIndicator.adaptive();
         }
         if (state is ListBudgetSelection || state is InitialBudgetSelectState) {
@@ -47,7 +50,7 @@ class BudgetSelectView extends StatelessWidget {
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Card.outlined(
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: context.primaryContainer,
                   child: InkWell(
                     onTap: () => context.go('/budget/new'),
                     child: Padding(
@@ -72,7 +75,7 @@ class BudgetSelectView extends StatelessWidget {
                                   Text(
                                     currencyFormatter(
                                       milliunits: 10000,
-                                      format: FundwiseCurrencyFormat(
+                                      format: CurrencyFormatModel(
                                         decimalSeparator: '.',
                                         groupSeparator: ',',
                                         symbol: r'$',
@@ -101,9 +104,12 @@ class BudgetSelectView extends StatelessWidget {
               final budget = state.budgets[index - 1];
               return Card.outlined(
                 key: ValueKey(budget.id),
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: context.secondaryContainer,
                 child: InkWell(
                   onTap: () {
+                    context
+                        .read<BudgetSelectBloc>()
+                        .add(SelectBudgetEvent(budget));
                     context.go('/budget/${budget.id}');
                   },
                   child: Padding(
@@ -126,20 +132,6 @@ class BudgetSelectView extends StatelessWidget {
                                       .format(DateTime.now()),
                                 ),
                                 const Gutter(),
-                                Text(
-                                  currencyFormatter(
-                                    milliunits: 1456908,
-                                    format: FundwiseCurrencyFormat(
-                                      decimalDigits: 2,
-                                      groupSize: 3,
-                                      decimalSeparator: '.',
-                                      groupSeparator: ',',
-                                      symbol: r'$',
-                                      displaySymbol: true,
-                                      symbolFirst: true,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ],
@@ -162,3 +154,28 @@ class BudgetSelectView extends StatelessWidget {
     );
   }
 }
+/*
+
+SELECT
+    b.id as id,
+    b.name as name,
+    df.format AS date_format,
+    o.email AS owner,
+    json_object(
+      'decimal_digits', c.decimal_digits,
+      'group_size', c.group_size,
+      'decimal_separator', c.decimal_separator,
+      'group_separator', c.group_separator,
+      'symbol', c.symbol,
+      'display_symbol', c.display_symbol,
+      'symbol_first', c.symbol_first
+    ) as currency_format,
+    b.created AS created,
+    b.updated AS updated
+FROM
+    budgets b
+    LEFT JOIN date_formats df ON b.date_format = df.id
+    LEFT JOIN currency_formats c ON b.currency_format = c.id
+    LEFT JOIN users o ON b.owner = o.id;
+
+ */

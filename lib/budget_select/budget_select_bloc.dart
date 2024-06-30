@@ -8,9 +8,16 @@ abstract class BudgetSelectEvent {}
 
 class InitializeBudgetSelectEvent extends BudgetSelectEvent {}
 
+class SelectBudgetEvent extends BudgetSelectEvent {
+  SelectBudgetEvent(this.budget);
+
+  final BudgetSummaryModel budget;
+}
+
 class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
   BudgetSelectBloc(this.repo) : super(const InitialBudgetSelectState()) {
     on<InitializeBudgetSelectEvent>(_onInitializeBudgetSelectEvent);
+    on<SelectBudgetEvent>(_onSelectBudgetEvent);
   }
 
   final BudgetRepository repo;
@@ -26,9 +33,15 @@ class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
 
     final budgets = await repo.getBudgets();
 
-    emit(
-      ListBudgetSelection(budgets),
-    );
+    emit(ListBudgetSelection(budgets));
+  }
+
+  Future<void> _onSelectBudgetEvent(
+    SelectBudgetEvent event,
+    Emitter<BudgetSelectState> emit,
+  ) async {
+    await repo.setDefault(event.budget);
+    return emit(DefaultBudgetSelected(budget: event.budget));
   }
 }
 

@@ -30,4 +30,10 @@ extension JsonExtension on Map<String, dynamic> {
     }
     return null;
   }
+
+  Map<String, dynamic>? tryMap(String key) {
+    final value = this[key];
+    if (value is Map<String, dynamic>) return value;
+    return null;
+  }
 }

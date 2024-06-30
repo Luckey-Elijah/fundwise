@@ -7,6 +7,7 @@ import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/repository/auth.repo.dart';
 import 'package:app/settings/settings_page.dart';
+import 'package:app/util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/url_strategy.dart' // ignore: depend_on_referenced_packages
@@ -61,6 +62,16 @@ GoRouter router(Stream<AuthStoreEvent> onAuthStateChange) {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: BudgetNewPage(),
                 ),
+              ),
+              GoRoute(
+                path: ':id',
+                pageBuilder: (context, state) {
+                  return NoTransitionPage(
+                    child: BudgetReady(
+                      id: state.pathParameters.tryString('id')!,
+                    ),
+                  );
+                },
               ),
             ],
           ),

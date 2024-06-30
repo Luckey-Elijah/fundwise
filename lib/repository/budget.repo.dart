@@ -10,10 +10,12 @@ class BudgetRepository {
     final model = _pb.authStore.model;
     if (model is! RecordModel) return null;
     try {
-      final record = await _pb
-          .collection('default_budgets')
-          .getFirstListItem('user=${model.id}');
-      return BudgetSummaryModel.fromJson(record.data);
+      final result = await _pb
+          .collection('default_budgets_view')
+          .getFirstListItem('user="${model.id}"');
+
+      final budget = BudgetSummaryModel.fromJson(forModel(result));
+      return budget;
     } on ClientException {
       return null;
     }
@@ -22,8 +24,26 @@ class BudgetRepository {
   Future<List<BudgetSummaryModel>> getBudgets() async {
     final records = await _pb.collection('budgets_view').getFullList();
 
-    return [
-      ...records.map((record) => record.data).map(BudgetSummaryModel.fromJson),
-    ];
+    final budgets = [...records.map(forModel).map(BudgetSummaryModel.fromJson)];
+    return budgets;
+  }
+
+  Future<void> setDefault(BudgetSummaryModel budget) async {
+    final model = _pb.authStore.model;
+    if (model is! RecordModel) return;
+
+    final body = {
+      'budget': budget.id,
+      'user': model.id,
+    };
+
+    await _pb.collection('default_budgets').create(body: body);
   }
 }
+
+Map<String, dynamic> forModel(RecordModel model) => {
+      ...model.data,
+      'id': model.id,
+      'created': model.created,
+      'updated': model.updated,
+    };
