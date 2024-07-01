@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:code_builder/code_builder.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:recase/recase.dart';
 
-final parser = ArgParser()
+var parser = ArgParser()
   ..addOption('output', abbr: 'o', help: 'path place generated files')
   ..addOption(
     'url',
@@ -29,106 +32,175 @@ final parser = ArgParser()
     help: 'pocketbase admin user login password',
   )
   ..addFlag(
-    'verbose',
-    abbr: 'v',
-    defaultsTo: false,
-    help: 'enable verbose logging',
-  )
-  ..addFlag(
     'help',
     abbr: 'h',
     help: 'show usage',
   );
 
-final logger = Logger();
+enum Foo {
+  bar;
+
+  static Foo? tryParse(String maybe) {
+    for (var value in Foo.values) {
+      if (value.name == maybe) return value;
+    }
+    return null;
+  }
+}
 
 void main(List<String> args) async {
-  final results = parser.parse(args);
+  var results = parser.parse(args);
 
   if (results.wasParsed('help')) {
-    final title = green.wrap(styleBold.wrap('generator: pocketbase models'));
-    logger.info(title);
-    logger.info(parser.usage);
+    stdout.writeln('generator: pocketbase models');
+    stdout.writeln(parser.usage);
     return;
   }
-
-  if (results.flag('verbose')) logger.level = Level.verbose;
-
-  final schema = results.option('schema');
+  var logger = Logger();
+  List<CollectionModel> collections;
+  var schema = results.option('schema');
   if (schema != null) {
-    var progress = logger.progress('parsing the schema $schema');
-    var contents = jsonDecode(File(schema).readAsStringSync());
-    progress.complete('$contents');
-    return;
+    var contents = jsonDecode(File(schema).readAsStringSync()) as List;
+
+    collections = contents
+        .cast<Map<String, dynamic>>()
+        .map(CollectionModel.fromJson)
+        .toList();
+  } else {
+    var url = results.option('url') ??
+        logger.prompt(
+          'pocketbase base url:',
+          defaultValue: 'http://127.0.0.1:8090',
+        );
+
+    var pb = PocketBase(url);
+    var email =
+        results.option('email') ?? logger.prompt('pocketbase admin email:');
+
+    var password = results.option('password') ??
+        logger.prompt('pocketbase admin password:', hidden: true);
+
+    await pb.admins.authWithPassword(email, password);
+    collections = await pb.collections.getFullList();
   }
 
-  final url = results.option('url') ??
-      logger.prompt(
-        'pocketbase base url',
-        defaultValue: 'http://127.0.0.1:8090',
-      );
+  var emitter = DartEmitter();
+  var formatter = DartFormatter();
+  var buff = StringBuffer();
 
-  final email =
-      results.option('email') ?? logger.prompt('pocketbase admin email');
+  for (var collection in collections) {
+    for (var column in collection.schema) {
+      if (column.type == 'select') {
+        var enu = buildEnumFromColumnSelect(column).accept(emitter);
+        buff.writeln(formatter.format('$enu'));
+      }
+    }
 
-  final password = results.option('password') ??
-      logger.prompt('pocketbase admin password', hidden: true);
+    var model = buildClassFromCollectionModel(collection).accept(emitter);
+    buff.write(formatter.format('$model'));
+  }
 
-  final pb = PocketBase(url);
-  var progress = logger.progress('logging into pocketbase ${pb.baseUrl}');
-  await pb.admins.authWithPassword(email, password);
-  progress.complete();
-  progress = logger.progress('collecting your schema');
-  final collections = await pb.collections.getFullList();
-  progress.complete();
-  final models = generateDateModels(collections).join('\n');
-  final output = results.option('output') ?? logger.prompt('path to output');
-  progress = logger.progress('writing to $output');
+  var output = results.option('output') ?? logger.prompt('path to output');
 
-  File(output)
+  var file = File(output)
     ..createSync(recursive: true)
-    ..writeAsStringSync(models);
+    ..writeAsStringSync('$buff');
 
-  progress.complete();
+  stdout.writeln('wrote generated files to ${file.path}');
 }
 
-Iterable<String> generateDateModels(List<CollectionModel> collections) sync* {
-  for (final collection in collections) {
-    final type = switch (collection.type) {
-      'base' => 'Base',
-      'view' => '',
-      'auth' => 'Auth',
-      _ => throw 'unknown collection type: ${collection.type}',
-    };
-    yield 'class ${collection.name.pascalCase}$type {';
-
-    yield '  ${collection.name.pascalCase}$type({';
-    for (var column in collection.schema) {
-      yield '    required this.${column.name.camelCase},';
-    }
-    yield '  });';
-
-    for (var column in collection.schema) {
-      yield '  final ${columnType(column.type)} ${column.name.camelCase};';
-    }
-    yield '}';
-    yield '';
-  }
+Enum buildEnumFromColumnSelect(SchemaField column) {
+  return Enum(
+    (builder) => builder
+      ..name = column.name.pascalCase
+      ..methods = ListBuilder([
+        Method(
+          (builder) => builder
+            ..name = 'tryParse'
+            ..static = true
+            ..requiredParameters = ListBuilder([
+              Parameter(
+                (builder) => builder
+                  ..type = refer('String')
+                  ..name = 'maybe',
+              ),
+            ])
+            ..returns = refer('${column.name.pascalCase}?')
+            ..body = Code(
+              '''
+              for (var value in ${column.name.pascalCase}.values) {
+                if (value.name == maybe) return value;
+              }
+              return null;
+              ''',
+            ),
+        ),
+      ])
+      ..values = ListBuilder(
+        [
+          for (var value in column.options['values'])
+            EnumValue((builder) => builder..name = '$value'.camelCase)
+        ],
+      ),
+  );
 }
 
-String columnType(String type) {
-  /* Plain, Rich, Number, Bool, Email, Url, DateTime, Select, File, Relation, JSON */
-  return switch (type) {
-    'text' => 'String',
-    'rich' => 'String',
-    'number' => 'num',
-    'bool' => 'bool',
-    'email' => 'String',
-    'url' => 'Uri',
-    'date_time' => 'DateTime',
-    'select' => 'String',
-    'file' => 'String',
-    'relation' => 'String',
-    _ => 'dynamic'
+Class buildClassFromCollectionModel(CollectionModel collection) {
+  var type = switch (collection.type) {
+    'base' => 'Base',
+    'view' => '',
+    'auth' => 'Auth',
+    _ => throw 'unknown collection type: ${collection.type}',
   };
+
+  return Class(
+    (builder) => builder
+      ..name = '${collection.name.pascalCase}$type'
+      ..fields = ListBuilder(
+        [
+          for (var column in collection.schema)
+            Field((builder) => builder
+              ..name = column.name.camelCase
+              ..modifier = FieldModifier.final$
+              ..type = columnToDartType(column))
+        ],
+      )
+      ..constructors = ListBuilder(
+        [
+          Constructor(
+            (builder) => builder
+              ..constant = true
+              ..optionalParameters = ListBuilder(
+                [
+                  for (var column in collection.schema)
+                    Parameter(
+                      (builder) => builder
+                        ..name = column.name.camelCase
+                        ..named = true
+                        ..toThis = true
+                        ..required = true,
+                    )
+                ],
+              ),
+          )
+        ],
+      ),
+  );
+}
+
+TypeReference columnToDartType(SchemaField column) {
+  var symbol = switch (column.type) {
+    'file' || 'text' || 'email' || 'relation' => 'String',
+    'bool' => 'bool',
+    'number' => 'int',
+    'select' => column.name.pascalCase,
+    'json' => 'Map<String, dynamic>',
+    _ => 'Object',
+  };
+
+  return TypeReference(
+    (builder) => builder
+      ..isNullable = column.required
+      ..symbol = symbol,
+  );
 }
