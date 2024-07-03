@@ -12,7 +12,7 @@ class BudgetRepository {
     try {
       final result = await _pb
           .collection('default_budgets_view')
-          .getFirstListItem('user="${model.id}"');
+          .getFirstListItem('owner="${model.id}"');
 
       final budget = BudgetSummaryModel.fromJson(forModel(result));
       return budget;
