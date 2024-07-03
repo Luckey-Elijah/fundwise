@@ -49,6 +49,15 @@ Future<void> main() async {
         RepositoryProvider.value(value: prefs),
         RepositoryProvider.value(value: urlRepo),
         RepositoryProvider.value(value: authRepo),
+        RepositoryProvider(
+          create: (_) => DateTime.now().copyWith(
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 0,
+            microsecond: 0,
+          ),
+        ),
         RepositoryProvider(create: (_) => DateFormatRepository(pb: pb)),
         RepositoryProvider(create: (_) => BudgetRepository(pb: pb)),
         RepositoryProvider(create: (_) => HealthRepository(pb: pb)),
