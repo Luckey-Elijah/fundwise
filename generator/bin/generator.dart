@@ -1,112 +1,84 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:args/args.dart';
+import 'package:args/src/arg_results.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:mason_logger/mason_logger.dart';
+import 'package:generator/logger.dart';
+import 'package:generator/parser.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:recase/recase.dart';
-
-var parser = ArgParser()
-  ..addOption('output', abbr: 'o', help: 'path place generated files')
-  ..addOption(
-    'url',
-    help: 'pocketbase base url',
-    defaultsTo: 'http://127.0.0.1:8090',
-  )
-  ..addOption(
-    'email',
-    abbr: 'u',
-    help: 'pocketbase admin user login email',
-  )
-  ..addOption(
-    'schema',
-    abbr: 's',
-    help: 'use a pocketbase schema to generate the models',
-  )
-  ..addOption(
-    'password',
-    abbr: 'p',
-    help: 'pocketbase admin user login password',
-  )
-  ..addFlag(
-    'help',
-    abbr: 'h',
-    help: 'show usage',
-  );
-
-enum Foo {
-  bar;
-
-  static Foo? tryParse(String maybe) {
-    for (var value in Foo.values) {
-      if (value.name == maybe) return value;
-    }
-    return null;
-  }
-}
 
 void main(List<String> args) async {
   var results = parser.parse(args);
 
-  if (results.wasParsed('help')) {
-    stdout.writeln('generator: pocketbase models');
-    stdout.writeln(parser.usage);
+  if (results.help) {
+    logger.info('generator: pocketbase models');
+    logger.info(parser.usage);
     return;
   }
-  var logger = Logger();
+
   List<CollectionModel> collections;
-  var schema = results.option('schema');
-  if (schema != null) {
-    var contents = jsonDecode(File(schema).readAsStringSync()) as List;
 
-    collections = contents
-        .cast<Map<String, dynamic>>()
-        .map(CollectionModel.fromJson)
-        .toList();
+  if (results.schema case String schema) {
+    collections = collectionsFromSchema(schema);
   } else {
-    var url = results.option('url') ??
-        logger.prompt(
-          'pocketbase base url:',
-          defaultValue: 'http://127.0.0.1:8090',
-        );
-
-    var pb = PocketBase(url);
-    var email =
-        results.option('email') ?? logger.prompt('pocketbase admin email:');
-
-    var password = results.option('password') ??
-        logger.prompt('pocketbase admin password:', hidden: true);
-
-    await pb.admins.authWithPassword(email, password);
-    collections = await pb.collections.getFullList();
+    collections = await collectionFromServer(results);
   }
 
-  var emitter = DartEmitter();
-  var formatter = DartFormatter();
-  var buff = StringBuffer();
+  final emitter = DartEmitter();
+  final formatter = DartFormatter();
+  final buff = StringBuffer();
 
-  for (var collection in collections) {
-    for (var column in collection.schema) {
+  for (final collection in collections) {
+    for (final column in collection.schema) {
       if (column.type == 'select') {
-        var enu = buildEnumFromColumnSelect(column).accept(emitter);
+        final enu = buildEnumFromColumnSelect(column).accept(emitter);
         buff.writeln(formatter.format('$enu'));
       }
     }
 
-    var model = buildClassFromCollectionModel(collection).accept(emitter);
+    final model = buildClassFromCollectionModel(collection).accept(emitter);
     buff.write(formatter.format('$model'));
   }
 
-  var output = results.option('output') ?? logger.prompt('path to output');
+  final output = results.option('output') ?? logger.prompt('path to output');
 
-  var file = File(output)
+  final file = File(output)
     ..createSync(recursive: true)
     ..writeAsStringSync('$buff');
 
   stdout.writeln('wrote generated files to ${file.path}');
+}
+
+Future<List<CollectionModel>> collectionFromServer(ArgResults results) async {
+  final prompt = logger.prompt;
+  final defaultUrl = 'http://127.0.0.1:8090';
+  final url = results.url ?? prompt('url:', defaultValue: defaultUrl);
+  final email = results.email ?? prompt('email:');
+  final password = results.password ?? prompt('password:', hidden: true);
+
+  final pb = PocketBase(url);
+  await pb.admins.authWithPassword(email, password);
+  final collections = await pb.collections.getFullList();
+  return collections;
+}
+
+List<CollectionModel> collectionsFromSchema(String schema) {
+  final progress = logger.progress('reading scheme: $schema');
+  final contents = jsonDecode(File(schema).readAsStringSync()) as List;
+
+  progress.update('parsing schema');
+
+  final collections = contents
+      .cast<Map<String, dynamic>>()
+      .map(CollectionModel.fromJson)
+      .toList();
+
+  progress.complete();
+
+  return collections;
 }
 
 Enum buildEnumFromColumnSelect(SchemaField column) {
