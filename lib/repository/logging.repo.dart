@@ -19,12 +19,15 @@ class LoggingRepository {
             final AdminModel model => model.id,
             _ => null,
           },
+          'runtime_type': '${exception.runtimeType}',
           'error': '$exception',
           'stack': '$stackTrace',
           'debug': kDebugMode,
         },
       );
       debugPrint('successfully logged: ${record.id}');
+      debugPrint('$exception');
+      debugPrint('$stackTrace');
     } on Exception catch (e, st) {
       debugPrint('Could not log an exception:');
       debugPrint('$exception');
