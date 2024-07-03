@@ -5,6 +5,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   const PositionedOverlayBuilder({
     required this.anchorBuilder,
     required this.overlayChildBuilder,
+    this.onHide,
     this.overlayConstraints,
     this.dismissible = true,
     this.barrierColor,
@@ -16,7 +17,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   final Color? barrierColor;
   final bool dismissible;
   final BoxConstraints? overlayConstraints;
-
+  final void Function()? onHide;
   final Widget Function(
     BuildContext context,
     OverlayPortalController controller,
@@ -108,7 +109,10 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder>
               Positioned.fill(
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => controller.hide(),
+                  onTap: () {
+                    widget.onHide?.call();
+                    controller.hide();
+                  },
                 ),
               ),
             Positioned(
