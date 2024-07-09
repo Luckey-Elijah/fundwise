@@ -5,7 +5,9 @@ description: Open source budgeting.
 environment: { sdk: ">=3.4.3 <4.0.0" }
 
 dependencies:
+  async: ^2.11.0
   bloc: ^8.1.4
+  context_plus: ^2.3.0
   flailwind: { path: ./flailwind }
   flex_color_scheme: ^7.3.1
   flutter: { sdk: flutter }
@@ -16,6 +18,7 @@ dependencies:
   intl: ^0.19.0
   pocketbase: ^0.18.1
   shared_preferences: ^2.2.3
+  stream_transform: ^2.1.0
 
 dev_dependencies:
   archive: ^3.6.1
