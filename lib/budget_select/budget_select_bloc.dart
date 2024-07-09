@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:app/repository/budget.model.dart';
-import 'package:app/repository/budget.repo.dart';
+import 'package:app/repository/budget_model.dart';
+import 'package:app/repository/budget_store.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class BudgetSelectEvent {}
@@ -15,23 +15,23 @@ class SelectBudgetEvent extends BudgetSelectEvent {
 }
 
 class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
-  BudgetSelectBloc(this.repo) : super(const InitialBudgetSelectState()) {
+  BudgetSelectBloc(this._budget$) : super(const InitialBudgetSelectState()) {
     on<InitializeBudgetSelectEvent>(_onInitializeBudgetSelectEvent);
     on<SelectBudgetEvent>(_onSelectBudgetEvent);
   }
 
-  final BudgetRepository repo;
+  final BudgetStore _budget$;
 
   Future<void> _onInitializeBudgetSelectEvent(
     InitializeBudgetSelectEvent event,
     Emitter<BudgetSelectState> emit,
   ) async {
-    final defaultBudget = await repo.getDefaultBudget();
+    final defaultBudget = await _budget$.getDefaultBudget();
     if (defaultBudget != null) {
       return emit(DefaultBudgetSelected(budget: defaultBudget));
     }
 
-    final budgets = await repo.getBudgets();
+    final budgets = await _budget$.getBudgets();
 
     emit(ListBudgetSelection(budgets));
   }
@@ -40,7 +40,7 @@ class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
     SelectBudgetEvent event,
     Emitter<BudgetSelectState> emit,
   ) async {
-    await repo.setDefault(event.budget);
+    await _budget$.setDefault(event.budget);
     return emit(DefaultBudgetSelected(budget: event.budget));
   }
 }

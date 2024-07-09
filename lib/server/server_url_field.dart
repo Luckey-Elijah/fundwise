@@ -1,5 +1,6 @@
 import 'package:app/components/status.dart';
 import 'package:app/server/server_cubit.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -56,7 +57,7 @@ class ServerUrlFieldState extends State<ServerUrlField> {
                     suffixIcon: switch (healthy) {
                       true => Icon(
                           Icons.verified,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: context.primary,
                         ),
                       false => const Icon(Icons.error),
                       _ => null,

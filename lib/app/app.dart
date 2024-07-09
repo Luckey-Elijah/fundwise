@@ -1,8 +1,8 @@
 import 'package:app/app/router.dart';
-import 'package:app/repository/auth.repo.dart';
+import 'package:app/repository/auth_store.dart';
+import 'package:context_plus/context_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FundwiseApp extends StatefulWidget {
   const FundwiseApp({super.key});
@@ -12,18 +12,20 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final _router = router(context.read<AuthRepository>().stream);
+  late final _router = router(authentication$.stream);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: lightTheme,
-      routerConfig: _router,
+    return ContextPlus.root(
+      child: MaterialApp.router(
+        theme: lightTheme,
+        routerConfig: _router,
+      ),
     );
   }
 
   ThemeData get lightTheme {
-    const defaulElevation = WidgetStatePropertyAll<double>(0);
+    const defaultElevation = WidgetStatePropertyAll<double>(0);
     final defaultShape = WidgetStatePropertyAll(
       ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -54,19 +56,19 @@ class _FundwiseAppState extends State<FundwiseApp> {
       ),
       splashFactory: NoSplash.splashFactory,
       cardTheme: CardTheme(
-        elevation: defaulElevation.value,
+        elevation: defaultElevation.value,
         shape: defaultShape.value,
       ),
       dividerTheme: const DividerThemeData(space: 0),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          elevation: defaulElevation,
+          elevation: defaultElevation,
           padding: defaultPadding,
           shape: defaultShape,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(elevation: defaulElevation, shape: defaultShape),
+        style: ButtonStyle(elevation: defaultElevation, shape: defaultShape),
       ),
     );
   }

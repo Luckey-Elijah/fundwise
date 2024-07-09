@@ -1,3 +1,4 @@
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -6,8 +7,6 @@ class BudgetFilterListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return ListView(
       scrollDirection: Axis.horizontal,
       children: [
@@ -16,13 +15,13 @@ class BudgetFilterListView extends StatelessWidget {
           label: const Text(
             'All',
           ),
-          backgroundColor: colorScheme.secondaryContainer,
+          backgroundColor: context.secondaryContainer,
         ),
         const GutterSmall(),
         RawChip(
           onPressed: () {},
           label: const Text('Overspent'),
-          backgroundColor: colorScheme.errorContainer,
+          backgroundColor: context.errorContainer,
         ),
         const GutterSmall(),
         RawChip(

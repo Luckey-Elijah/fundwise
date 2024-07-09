@@ -1,4 +1,4 @@
-import 'package:app/repository/auth.repo.dart';
+import 'package:app/repository/auth_store.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,7 +44,7 @@ class LoginCubit extends Cubit<LoginState> {
     required this.prefs,
   }) : super(LoginState.initial);
 
-  final AuthRepository authRepository;
+  final AuthenticationStore authRepository;
   final SharedPreferences prefs;
 
   Future<void> initialize() async {

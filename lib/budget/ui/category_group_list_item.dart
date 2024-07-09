@@ -1,5 +1,7 @@
 import 'dart:math' show pi;
 
+import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -13,7 +15,6 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
     required this.available,
     required this.onCheckboxChanged,
     required this.onExpandedPressed,
-    this.onAdd,
     this.categories = const [],
     super.key,
   });
@@ -27,7 +28,6 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
   final ValueChanged<bool?>? onCheckboxChanged;
   final VoidCallback? onExpandedPressed;
   final List<Widget> categories;
-  final VoidCallback? onAdd;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: groupExpanded != null
-                ? Theme.of(context).colorScheme.secondaryContainer
-                : null,
+            color: groupExpanded != null ? context.secondaryContainer : null,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -60,10 +58,8 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                       ),
                       Checkbox(value: selected, onChanged: onCheckboxChanged),
                       Text(name),
-                      if (onAdd != null) ...[
-                        const GutterTiny(),
-                        AddNewCategoryButton(onPressed: onAdd!),
-                      ],
+                      const GutterTiny(),
+                      const AddNewCategoryButton(),
                     ],
                   ),
                 ),
@@ -111,9 +107,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
 }
 
 class AddNewCategoryButton extends StatefulWidget {
-  const AddNewCategoryButton({required this.onPressed, super.key});
-
-  final VoidCallback onPressed;
+  const AddNewCategoryButton({super.key});
 
   @override
   State<AddNewCategoryButton> createState() => _AddNewCategoryButtonState();
@@ -124,18 +118,32 @@ class _AddNewCategoryButtonState extends State<AddNewCategoryButton> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => visible = true),
-      onExit: (_) => setState(() => visible = false),
-      child: Visibility.maintain(
-        visible: visible,
-        child: TextButton.icon(
-          iconAlignment: IconAlignment.end,
-          onPressed: widget.onPressed,
-          label: const Text('Add New Category'),
-          icon: const Icon(Icons.add),
-        ),
-      ),
+    return PositionedOverlayBuilder(
+      onHide: () => setState(() => visible = false),
+      anchorBuilder: (context, controller) {
+        return MouseRegion(
+          onEnter: (_) => setState(() => visible = true),
+          onExit: (_) => setState(() => visible = false),
+          child: Visibility.maintain(
+            visible: visible || controller.isShowing,
+            child: TextButton.icon(
+              iconAlignment: IconAlignment.end,
+              onPressed: controller.toggle,
+              label: const Text('Add New Category'),
+              icon: const Icon(Icons.add),
+            ),
+          ),
+        );
+      },
+      overlayChildBuilder: (context, controller) {
+        return Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            'todo',
+            style: context.h2.italic.tertiary,
+          ),
+        );
+      },
     );
   }
 }

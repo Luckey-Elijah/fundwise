@@ -1,7 +1,7 @@
 import 'package:app/components/positioned_overlay_builder.dart';
-import 'package:app/repository/auth.repo.dart';
+import 'package:app/repository/auth_store.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -29,12 +29,12 @@ class LogoutButton extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextButton(
-                  onPressed: context.read<AuthRepository>().signOut,
+                  onPressed: authentication$.signOut,
                   child: const Text('Logout'),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.error,
+                    foregroundColor: context.error,
                   ),
                   onPressed: controller.hide,
                   child: const Text('Cancel'),

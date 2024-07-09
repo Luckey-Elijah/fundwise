@@ -1,4 +1,5 @@
-import 'package:app/repository/date_format.repo.dart';
+import 'package:app/repository/date_format_store.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
@@ -23,7 +24,7 @@ class BudgetNewPage extends StatelessWidget {
               ),
               Text(
                 'New Budget',
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: context.h3,
               ),
               const Gutter(),
               Expanded(
@@ -33,9 +34,9 @@ class BudgetNewPage extends StatelessWidget {
                     FormRow(
                       label: 'Date Format',
                       child: BlocProvider(
-                        create: (context) => DateFormatPickerCubit(
-                          repo: context.read<DateFormatRepository>(),
-                        )..initialize(),
+                        create: (context) =>
+                            DateFormatPickerCubit(repo: dateFormat$)
+                              ..initialize(),
                         child: const DateFormatPicker(),
                       ),
                     ),
@@ -123,7 +124,7 @@ class DateFormatPickerCubit extends Cubit<DateFormatPickerCubitState> {
           ),
         );
 
-  final DateFormatRepository repo;
+  final DateFormatStore repo;
 
   Future<void> initialize() async {
     final dateFormats = await repo.list();

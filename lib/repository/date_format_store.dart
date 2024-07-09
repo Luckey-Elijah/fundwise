@@ -1,9 +1,12 @@
+import 'package:app/repository/pocketbase.dart';
 import 'package:app/util.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pocketbase/pocketbase.dart';
 
-class DateFormatRepository {
-  DateFormatRepository({required PocketBase pb}) : _pb = pb;
+final dateFormat$ = DateFormatStore(pb: pocketbase$);
+
+class DateFormatStore {
+  DateFormatStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
   late final _collection = _pb.collection('date_formats');

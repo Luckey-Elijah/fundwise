@@ -1,8 +1,11 @@
-import 'package:app/repository/budget.model.dart';
+import 'package:app/repository/budget_model.dart';
+import 'package:app/repository/pocketbase.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class BudgetRepository {
-  BudgetRepository({required PocketBase pb}) : _pb = pb;
+final budgetStore$ = BudgetStore(pb: pocketbase$);
+
+class BudgetStore {
+  BudgetStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 
@@ -41,9 +44,11 @@ class BudgetRepository {
   }
 }
 
-Map<String, dynamic> forModel(RecordModel model) => {
-      ...model.data,
-      'id': model.id,
-      'created': model.created,
-      'updated': model.updated,
-    };
+Map<String, dynamic> forModel(RecordModel model) {
+  return <String, dynamic>{
+    ...model.data,
+    'id': model.id,
+    'created': model.created,
+    'updated': model.updated,
+  };
+}

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:app/budget/ui/budget_page.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -167,7 +168,7 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.primaryContainer,
+      color: context.primaryContainer,
       child: Column(
         children: [
           InkWell(

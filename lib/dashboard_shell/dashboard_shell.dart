@@ -1,4 +1,5 @@
 import 'package:app/dashboard_shell/logout_button.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
@@ -92,9 +93,9 @@ class TopBarNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final segments = url.pathSegments;
-    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
-      color: colorScheme.inversePrimary,
+      color: context.colorScheme.inversePrimary,
       child: Row(
         children: [
           TextButton(

@@ -1,10 +1,13 @@
-import 'package:app/repository/user.model.dart';
+import 'package:app/repository/pocketbase.dart';
+import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 export 'package:pocketbase/pocketbase.dart' show AuthStoreEvent;
 
-class AuthRepository {
-  AuthRepository({required PocketBase pb}) : _pb = pb;
+final authentication$ = AuthenticationStore(pb: pocketbase$);
+
+class AuthenticationStore {
+  AuthenticationStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 

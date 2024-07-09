@@ -1,9 +1,10 @@
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/status.dart';
 import 'package:app/dashboard_shell/logout_button.dart';
-import 'package:app/repository/user.model.dart';
-import 'package:app/repository/user.repo.dart';
+import 'package:app/repository/user_model.dart';
+import 'package:app/repository/user_store.dart';
 import 'package:app/user/user_bloc.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,8 +15,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          UserBloc(userRepository: context.read<UserRepository>())
-            ..add(InitilaizeUserEvent()),
+          UserBloc(userRepository: user$)..add(InitializeUserEvent()),
       child: const SettingsView(),
     );
   }
@@ -67,14 +67,13 @@ class EditEmailButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
       anchorBuilder: (context, controller) {
-        final colors = Theme.of(context).colorScheme;
         return TextButton.icon(
           iconAlignment: IconAlignment.end,
           onPressed: controller.toggle,
           label: Text(email),
           icon: Icon(
             verified ? Icons.verified : Icons.warning,
-            color: verified ? colors.primary : colors.secondary,
+            color: verified ? context.primary : context.secondary,
           ),
         );
       },
@@ -95,9 +94,7 @@ class EditEmailButton extends StatelessWidget {
             ),
             TextButton(
               onPressed: controller.hide,
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
+              style: TextButton.styleFrom(foregroundColor: context.error),
               child: const Text('Cancel'),
             ),
           ],

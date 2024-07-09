@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';

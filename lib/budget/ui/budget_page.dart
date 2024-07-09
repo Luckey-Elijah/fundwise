@@ -169,10 +169,7 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
     return Column(
       children: [
         DefaultTextStyle(
-          style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                fontWeight: FontWeight.w300,
-                letterSpacing: 2,
-              ),
+          style: context.h1.wide.thin.lg.orDefault(),
           child: BudgetCategoryGroupListItem(
             groupExpanded: allGroupsExpanded,
             selected: allCategoriesSelected,
@@ -206,7 +203,6 @@ class _BudgetListViewContentState extends State<BudgetListViewContent> {
                   assigned: group.assigned,
                   activity: group.activity,
                   available: group.available,
-                  onAdd: () {},
                   onCheckboxChanged: (value) {
                     setState(() => group.selected = value ?? !group.selected);
                   },

@@ -1,4 +1,4 @@
-import 'package:app/repository/currency_format.model.dart';
+import 'package:app/repository/currency_format_model.dart';
 import 'package:app/util.dart';
 
 class BudgetSummaryModel {

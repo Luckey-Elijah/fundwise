@@ -1,8 +1,11 @@
-import 'package:app/repository/user.model.dart';
+import 'package:app/repository/pocketbase.dart';
+import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class UserRepository {
-  UserRepository({required PocketBase pb}) : _pb = pb;
+final user$ = UserStore(pb: pocketbase$);
+
+class UserStore {
+  UserStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 

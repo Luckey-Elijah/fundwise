@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class LoggingRepository {
-  LoggingRepository({required PocketBase pb}) : _pb = pb;
+class LoggingStore {
+  LoggingStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
   late final _col = _pb.collection('errors');

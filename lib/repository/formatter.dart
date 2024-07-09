@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:app/repository/currency_format.model.dart';
+import 'package:app/repository/currency_format_model.dart';
 
 String currencyFormatter({
   required CurrencyFormatModel format,

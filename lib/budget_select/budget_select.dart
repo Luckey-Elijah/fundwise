@@ -1,7 +1,7 @@
 import 'package:app/budget_select/budget_select_bloc.dart';
-import 'package:app/formatter.dart';
-import 'package:app/repository/budget.repo.dart';
-import 'package:app/repository/currency_format.model.dart';
+import 'package:app/repository/budget_store.dart';
+import 'package:app/repository/currency_format_model.dart';
+import 'package:app/repository/formatter.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ class BudgetSelectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       lazy: false,
-      create: (context) => BudgetSelectBloc(context.read<BudgetRepository>())
+      create: (context) => BudgetSelectBloc(budgetStore$)
         ..add(
           InitializeBudgetSelectEvent(),
         ),
@@ -63,7 +63,7 @@ class BudgetSelectView extends StatelessWidget {
                             children: [
                               Text(
                                 'New Budget',
-                                style: Theme.of(context).textTheme.titleLarge,
+                                style: context.h3,
                               ),
                               Row(
                                 children: [
@@ -122,7 +122,7 @@ class BudgetSelectView extends StatelessWidget {
                           children: [
                             Text(
                               budget.name,
-                              style: Theme.of(context).textTheme.titleLarge,
+                              style: context.h3,
                             ),
                             Row(
                               children: [

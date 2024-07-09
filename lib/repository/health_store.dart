@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:app/repository/pocketbase.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class HealthRepository {
-  HealthRepository({required PocketBase pb}) : _pb = pb;
+final health$ = HealthStore(pb: pocketbase$);
+
+class HealthStore {
+  HealthStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 

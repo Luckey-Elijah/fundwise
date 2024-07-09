@@ -1,5 +1,6 @@
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
@@ -9,7 +10,7 @@ class BudgetReadyToAssign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Theme.of(context).colorScheme.primaryContainer,
+      color: context.primaryContainer,
       child: Row(
         children: [
           InkWell(
@@ -19,11 +20,8 @@ class BudgetReadyToAssign extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(r(), style: Theme.of(context).textTheme.headlineSmall),
-                  Text(
-                    'Ready to assign',
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
+                  Text(r(), style: context.p.xxl),
+                  Text('Ready to assign', style: context.p.xl),
                 ],
               ),
             ),
@@ -48,8 +46,8 @@ class BudgetAssignButton extends StatelessWidget {
         return TextButton.icon(
           style: TextButton.styleFrom(
             padding: const EdgeInsets.all(16),
-            foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            foregroundColor: context.onTertiaryContainer,
+            backgroundColor: context.colorScheme.inversePrimary,
           ),
           iconAlignment: IconAlignment.end,
           label: const Text('Assign'),

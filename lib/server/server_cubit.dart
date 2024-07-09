@@ -1,6 +1,6 @@
 import 'package:app/components/status.dart';
-import 'package:app/repository/health.repo.dart';
-import 'package:app/repository/url.repo.dart';
+import 'package:app/repository/health_store.dart';
+import 'package:app/repository/url_store.dart';
 import 'package:flutter/widgets.dart' show ValueGetter;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,8 +40,8 @@ class ServerCubit extends Cubit<ServerState> {
           ),
         );
 
-  final UrlRepository urlRepository;
-  final HealthRepository healthRepository;
+  final UrlStore urlRepository;
+  final HealthStore healthRepository;
 
   Future<void> initialize() async {
     final url = await urlRepository.getUrl();
