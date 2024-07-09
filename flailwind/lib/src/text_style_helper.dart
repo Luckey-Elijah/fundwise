@@ -97,27 +97,30 @@ extension TextStyleHelper on TextStyleWithContext? {
   TextStyleWithContext? get visible =>
       this?.copyWith(overflow: TextOverflow.visible);
 
-  TextStyleWithContext? get sizeSm => this?.copyWith(
+  TextStyleWithContext? get sm => this?.copyWith(
         fontSize: this?.context.textTheme.bodySmall?.fontSize,
       );
 
-  TextStyleWithContext? get sizeMd => this?.copyWith(
+  TextStyleWithContext? get md => this?.copyWith(
         fontSize: this?.context.textTheme.bodyMedium?.fontSize,
       );
 
-  TextStyleWithContext? get sizeLg => this?.copyWith(
+  TextStyleWithContext? get lg => this?.copyWith(
         fontSize: this?.context.textTheme.bodyLarge?.fontSize,
       );
 
-  TextStyleWithContext? get sizeXl => this?.copyWith(
+  TextStyleWithContext? get xl => this?.copyWith(
         fontSize: this?.context.textTheme.titleLarge?.fontSize,
       );
 
-  TextStyleWithContext? get size2xl => this?.copyWith(
+  TextStyleWithContext? get xxl => this?.copyWith(
         fontSize: this?.context.textTheme.headlineSmall?.fontSize,
       );
 
-  TextStyleWithContext? get size3xl => this?.copyWith(
+  TextStyleWithContext? get xxxl => this?.copyWith(
         fontSize: this?.context.textTheme.headlineLarge?.fontSize,
       );
+
+  TextStyle orDefault([TextStyle? textStyle]) =>
+      this ?? textStyle ?? const TextStyle();
 }

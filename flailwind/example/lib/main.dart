@@ -67,12 +67,12 @@ class BaseStyles extends StatelessWidget {
         Text('h3.tight', style: context.h3.tight),
         Text('p.tight', style: context.p.tight),
         const Divider(),
-        Text('p.size3xl', style: context.p.size3xl),
-        Text('p.size2xl', style: context.p.size2xl),
-        Text('p.sizeXl', style: context.p.sizeXl),
-        Text('p.sizeLg', style: context.p.sizeLg),
-        Text('p.sizeMd', style: context.p.sizeMd),
-        Text('p.sizeSm', style: context.p.sizeSm),
+        Text('p.size3xl', style: context.p.xxxl),
+        Text('p.size2xl', style: context.p.xxl),
+        Text('p.sizeXl', style: context.p.xl),
+        Text('p.sizeLg', style: context.p.lg),
+        Text('p.sizeMd', style: context.p.md),
+        Text('p.sizeSm', style: context.p.sm),
       ],
     );
   }
