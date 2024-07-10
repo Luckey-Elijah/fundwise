@@ -1,43 +1,35 @@
+import 'package:app/components/value_notifier_listener.dart';
 import 'package:app/login/login_cubit.dart';
 import 'package:app/server/server_url_field.dart';
+import 'package:context_plus/context_plus.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
   @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView>
+    with ValueNotifierListener<LoginState, LoginStore, LoginView> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<LoginCubit, LoginState>(
-        listener: (context, state) {
-          if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error!)),
-            );
-          }
-
-          if (state.signUpSuccess != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.signUpSuccess!)),
-            );
-          }
-        },
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: ConstrainedBox(
-              constraints: BoxConstraints.loose(const Size.fromWidth(480)),
-              child: Card.outlined(
-                color: context.primaryContainer,
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [FormTitle(), Gutter(), LoginForm()],
-                  ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ConstrainedBox(
+            constraints: BoxConstraints.loose(const Size.fromWidth(480)),
+            child: Card.outlined(
+              color: context.primaryContainer,
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [FormTitle(), Gutter(), LoginForm()],
                 ),
               ),
             ),
@@ -46,6 +38,24 @@ class LoginView extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void listen(LoginState previous, LoginState next) {
+    if (next.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(next.error!)),
+      );
+    }
+
+    if (next.signUpSuccess != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(next.signUpSuccess!)),
+      );
+    }
+  }
+
+  @override
+  LoginStore get notifier => login$;
 }
 
 class FormTitle extends StatelessWidget {
@@ -53,8 +63,9 @@ class FormTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLogin = context.select<LoginCubit, bool>(
-      (cubit) => cubit.state.loginOrSignUp == LoginOrSignUp.login,
+    final isLogin = login$.watchOnly(
+      context,
+      (store) => store.value.loginOrSignUp == LoginOrSignUp.login,
     );
 
     return AnimatedAlign(
@@ -76,12 +87,14 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLogin = context.select<LoginCubit, bool>(
-      (cubit) => cubit.state.loginOrSignUp == LoginOrSignUp.login,
+    final isLogin = login$.watchOnly(
+      context,
+      (store) => store.value.loginOrSignUp == LoginOrSignUp.login,
     );
 
-    final enabled = context.select<LoginCubit, bool>(
-      (cubit) => !cubit.state.loading,
+    final enabled = login$.watchOnly(
+      context,
+      (store) => !store.value.loading,
     );
 
     return AutofillGroup(
@@ -139,7 +152,7 @@ class _PasswordFieldState extends State<PasswordField> with ObscureState {
   Widget build(BuildContext context) {
     return TextField(
       enabled: widget.enabled,
-      onChanged: context.read<LoginCubit>().updatePassword,
+      onChanged: login$.updatePassword,
       obscureText: obscure,
       decoration: InputDecoration(
         hintText: 'password',
@@ -151,7 +164,7 @@ class _PasswordFieldState extends State<PasswordField> with ObscureState {
         ),
       ),
       onSubmitted: (_) {
-        if (widget.isLogin) context.read<LoginCubit>().loginOrSignUp();
+        if (widget.isLogin) login$.loginOrSignUp();
       },
       autofillHints: [
         if (!widget.isLogin) AutofillHints.newPassword,
@@ -186,8 +199,7 @@ class EmailField extends StatefulWidget {
 }
 
 class _EmailFieldState extends State<EmailField> {
-  late final controller =
-      TextEditingController(text: context.read<LoginCubit>().state.email);
+  late final controller = TextEditingController(text: login$.value.email);
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +208,7 @@ class _EmailFieldState extends State<EmailField> {
         TextField(
           controller: controller,
           enabled: widget.enabled,
-          onChanged: context.read<LoginCubit>().updateEmail,
+          onChanged: login$.updateEmail,
           decoration: InputDecoration(
             hintText: widget.isLogin ? 'email/username' : 'email',
           ),
@@ -223,15 +235,15 @@ class RememberUserNameCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final value =
+        login$.watchOnly(context, (store) => store.value.rememberUsername);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text('remember username'),
         Checkbox.adaptive(
-          value: context.select(
-            (LoginCubit cubit) => cubit.state.rememberUsername,
-          ),
-          onChanged: (_) => context.read<LoginCubit>().toggleRememberUsername(),
+          value: value,
+          onChanged: (_) => login$.toggleRememberUsername(),
         ),
       ],
     );
@@ -255,7 +267,7 @@ class _ConfirmFieldState extends State<ConfirmField> with ObscureState {
     return TextField(
       obscureText: obscure,
       enabled: widget.enabled,
-      onChanged: context.read<LoginCubit>().updateConfirm,
+      onChanged: login$.updateConfirm,
       decoration: InputDecoration(
         hintText: 'confirm',
         suffixIcon: IconButton(
@@ -281,8 +293,8 @@ class UsernameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       enabled: enabled,
-      onSubmitted: (_) => context.read<LoginCubit>().loginOrSignUp(),
-      onChanged: context.read<LoginCubit>().updateUsername,
+      onSubmitted: (_) => login$.loginOrSignUp(),
+      onChanged: login$.updateUsername,
       decoration: const InputDecoration(hintText: 'username'),
       autofillHints: const [AutofillHints.newUsername],
     );
@@ -302,7 +314,7 @@ class LoginOrSignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: enabled ? context.read<LoginCubit>().loginOrSignUp : null,
+      onPressed: enabled ? login$.loginOrSignUp : null,
       child: Text(isLogin ? 'login' : 'signup'),
     );
   }
@@ -321,8 +333,7 @@ class ToggleLoginSignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed:
-          enabled ? context.read<LoginCubit>().toggleLoginOrSignUp : null,
+      onPressed: enabled ? login$.toggleLoginOrSignUp : null,
       child: Text(isLogin ? 'go to sign up' : 'go to login'),
     );
   }

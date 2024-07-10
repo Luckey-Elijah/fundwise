@@ -1,6 +1,6 @@
 import 'package:app/repository/auth_store.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app/repository/pocketbase.dart';
+import 'package:flutter/foundation.dart';
 
 enum LoginOrSignUp { login, signUp }
 
@@ -38,132 +38,112 @@ class LoginState {
   final bool rememberUsername;
 }
 
-class LoginCubit extends Cubit<LoginState> {
-  LoginCubit({
-    required this.authRepository,
-    required this.prefs,
-  }) : super(LoginState.initial);
+final login$ = LoginStore()..initialize();
 
-  final AuthenticationStore authRepository;
-  final SharedPreferences prefs;
+class LoginStore extends ValueNotifier<LoginState> {
+  LoginStore() : super(LoginState.initial);
 
   Future<void> initialize() async {
-    if (!prefs.containsKey(_key)) return;
+    if (!preferences$.containsKey(_key)) return;
 
-    emit(
-      LoginState(
-        email: state.email,
-        password: state.password,
-        confirm: state.confirm,
-        username: state.username,
-        loginOrSignUp: state.loginOrSignUp,
-        rememberUsername: true,
-      ),
+    value = LoginState(
+      email: value.email,
+      password: value.password,
+      confirm: value.confirm,
+      username: value.username,
+      loginOrSignUp: value.loginOrSignUp,
+      rememberUsername: true,
     );
 
-    final emailOrUserName = prefs.getString(_key);
+    final emailOrUserName = preferences$.getString(_key);
 
-    emit(
-      LoginState(
-        email: emailOrUserName ?? state.email,
-        password: state.password,
-        confirm: state.confirm,
-        username: state.username,
-        loginOrSignUp: state.loginOrSignUp,
-        rememberUsername: state.rememberUsername,
-      ),
+    value = LoginState(
+      email: emailOrUserName ?? value.email,
+      password: value.password,
+      confirm: value.confirm,
+      username: value.username,
+      loginOrSignUp: value.loginOrSignUp,
+      rememberUsername: value.rememberUsername,
     );
   }
 
   Future<void> toggleRememberUsername() async {
-    emit(
-      LoginState(
-        email: state.email,
-        password: state.password,
-        confirm: state.confirm,
-        username: state.username,
-        loginOrSignUp: state.loginOrSignUp,
-        rememberUsername: !state.rememberUsername,
-      ),
+    value = LoginState(
+      email: value.email,
+      password: value.password,
+      confirm: value.confirm,
+      username: value.username,
+      loginOrSignUp: value.loginOrSignUp,
+      rememberUsername: !value.rememberUsername,
     );
 
-    if (state.rememberUsername) {
-      await prefs.setString(_key, state.email);
+    if (value.rememberUsername) {
+      await preferences$.setString(_key, value.email);
     } else {
-      await prefs.remove(_key);
+      await preferences$.remove(_key);
     }
   }
 
   static const _key = 'remember-username/email';
 
   Future<void> updateEmail(String email) async {
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        email: email,
-        password: state.password,
-        confirm: state.confirm,
-        username: state.username,
-        loginOrSignUp: state.loginOrSignUp,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      email: email,
+      password: value.password,
+      confirm: value.confirm,
+      username: value.username,
+      loginOrSignUp: value.loginOrSignUp,
     );
-    if (state.rememberUsername) {
-      await prefs.setString(_key, state.email);
+    if (value.rememberUsername) {
+      await preferences$.setString(_key, value.email);
     }
   }
 
   void updatePassword(String password) {
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        password: password,
-        username: state.username,
-        confirm: state.confirm,
-        loginOrSignUp: state.loginOrSignUp,
-        email: state.email,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      password: password,
+      username: value.username,
+      confirm: value.confirm,
+      loginOrSignUp: value.loginOrSignUp,
+      email: value.email,
     );
   }
 
   void updateConfirm(String confirm) {
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        username: state.username,
-        confirm: confirm,
-        password: state.password,
-        loginOrSignUp: state.loginOrSignUp,
-        email: state.email,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      username: value.username,
+      confirm: confirm,
+      password: value.password,
+      loginOrSignUp: value.loginOrSignUp,
+      email: value.email,
     );
   }
 
   void updateUsername(String username) {
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        username: username,
-        confirm: state.confirm,
-        password: state.password,
-        loginOrSignUp: state.loginOrSignUp,
-        email: state.email,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      username: username,
+      confirm: value.confirm,
+      password: value.password,
+      loginOrSignUp: value.loginOrSignUp,
+      email: value.email,
     );
   }
 
   Future<void> loginOrSignUp() async {
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        loginOrSignUp: state.loginOrSignUp,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      email: value.email,
+      username: value.username,
+      password: value.password,
+      confirm: value.confirm,
+      loginOrSignUp: value.loginOrSignUp,
     );
 
-    if (state.loginOrSignUp == LoginOrSignUp.login) {
+    if (value.loginOrSignUp == LoginOrSignUp.login) {
       await _login();
     } else {
       await _signUp();
@@ -172,116 +152,102 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> _login() async {
     try {
-      await authRepository.signIn(
-        usernameOrEmail: state.email,
-        password: state.password,
+      await authentication$.signIn(
+        usernameOrEmail: value.email,
+        password: value.password,
       );
     } on Exception catch (e) {
-      emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          loginOrSignUp: state.loginOrSignUp,
-          error: 'Could not login: $e',
-        ),
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        loginOrSignUp: value.loginOrSignUp,
+        error: 'Could not login: $e',
       );
     }
   }
 
   Future<void> _signUp() async {
-    final invalidPass = (state.password.isEmpty || state.confirm.isEmpty) &&
-        (state.confirm != state.password);
+    final invalidPass = (value.password.isEmpty || value.confirm.isEmpty) &&
+        (value.confirm != value.password);
     if (invalidPass) {
-      return emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          error: 'provide matching password',
-          loginOrSignUp: state.loginOrSignUp,
-        ),
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        error: 'provide matching password',
+        loginOrSignUp: value.loginOrSignUp,
       );
     }
 
-    if (state.email.isEmpty) {
-      return emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          error: 'provide a email',
-          loginOrSignUp: state.loginOrSignUp,
-        ),
+    if (value.email.isEmpty) {
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        error: 'provide a email',
+        loginOrSignUp: value.loginOrSignUp,
       );
     }
 
-    if (state.username.isEmpty) {
-      return emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          error: 'provide a username',
-          loginOrSignUp: state.loginOrSignUp,
-        ),
+    if (value.username.isEmpty) {
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        error: 'provide a username',
+        loginOrSignUp: value.loginOrSignUp,
       );
     }
 
     try {
-      await authRepository.signUp(
-        username: state.username,
-        email: state.email,
-        password: state.password,
-        confirm: state.confirm,
+      await authentication$.signUp(
+        username: value.username,
+        email: value.email,
+        password: value.password,
+        confirm: value.confirm,
       );
 
-      emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          loginOrSignUp: state.loginOrSignUp,
-        ),
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        loginOrSignUp: value.loginOrSignUp,
       );
     } on Exception catch (e) {
-      emit(
-        LoginState(
-          rememberUsername: state.rememberUsername,
-          email: state.email,
-          username: state.username,
-          password: state.password,
-          confirm: state.confirm,
-          loginOrSignUp: state.loginOrSignUp,
-          error: 'Could not sign up: $e',
-        ),
+      value = LoginState(
+        rememberUsername: value.rememberUsername,
+        email: value.email,
+        username: value.username,
+        password: value.password,
+        confirm: value.confirm,
+        loginOrSignUp: value.loginOrSignUp,
+        error: 'Could not sign up: $e',
       );
     }
   }
 
   void toggleLoginOrSignUp() {
-    final next = state.loginOrSignUp == LoginOrSignUp.login
+    final next = value.loginOrSignUp == LoginOrSignUp.login
         ? LoginOrSignUp.signUp
         : LoginOrSignUp.login;
-    emit(
-      LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: next == LoginOrSignUp.login ? '' : state.confirm,
-        loginOrSignUp: next,
-      ),
+    value = LoginState(
+      rememberUsername: value.rememberUsername,
+      email: value.email,
+      username: value.username,
+      password: value.password,
+      confirm: next == LoginOrSignUp.login ? '' : value.confirm,
+      loginOrSignUp: next,
     );
   }
 }

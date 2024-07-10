@@ -13,10 +13,8 @@ class ServerUrlField extends StatefulWidget {
   State<ServerUrlField> createState() => ServerUrlFieldState();
 }
 
-typedef _Listener
-    = ValueNotifierListener<ServerState, ServerStore, ServerUrlField>;
-
-class ServerUrlFieldState extends State<ServerUrlField> with _Listener {
+class ServerUrlFieldState extends State<ServerUrlField>
+    with ValueNotifierListener<ServerState, ServerStore, ServerUrlField> {
   @override
   ServerStore get notifier => server$;
 
