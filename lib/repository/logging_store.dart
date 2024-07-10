@@ -11,21 +11,25 @@ class LoggingStore {
     required Object? exception,
     required StackTrace? stackTrace,
   }) async {
+    return;
+    // ignore: dead_code
     try {
-      final record = await _col.create(
-        body: {
-          'reporter': switch (_pb.authStore.model) {
-            final RecordModel model => model.id,
-            final AdminModel model => model.id,
-            _ => null,
+      if (exception! is FlutterError) {
+        final record = await _col.create(
+          body: {
+            'reporter': switch (_pb.authStore.model) {
+              final RecordModel model => model.id,
+              final AdminModel model => model.id,
+              _ => null,
+            },
+            'runtime_type': '${exception.runtimeType}',
+            'error': '$exception',
+            'stack': '$stackTrace',
+            'debug': kDebugMode,
           },
-          'runtime_type': '${exception.runtimeType}',
-          'error': '$exception',
-          'stack': '$stackTrace',
-          'debug': kDebugMode,
-        },
-      );
-      debugPrint('successfully logged: ${record.id}');
+        );
+        debugPrint('successfully logged: ${record.id}');
+      }
       debugPrint('$exception');
       debugPrint('$stackTrace');
     } on Exception catch (e, st) {

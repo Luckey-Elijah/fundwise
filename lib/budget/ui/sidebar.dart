@@ -33,18 +33,28 @@ class BudgetAvailabilityInspector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BudgetSidebarInspector(
-      trailing: Text(r(), overflow: TextOverflow.clip),
+      trailing: const Tooltip(
+        message: r'$901,123.09',
+        child: Text(
+          r'$901,901,901,123.09',
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+      ),
       title: const Text(
         'Available in Jun',
         overflow: TextOverflow.clip,
+        maxLines: 1,
       ),
-      children: [
-        SidebarInspectionRow(label: 'Left Over from Last Month', amount: r()),
-        const GutterTiny(),
-        SidebarInspectionRow(label: 'Assigned in June', amount: r()),
-        const GutterTiny(),
-        SidebarInspectionRow(label: 'Activity', amount: r()),
-      ],
+      content: Column(
+        children: [
+          SidebarInspectionRow(label: 'Left Over from Last Month', amount: r()),
+          const GutterTiny(),
+          SidebarInspectionRow(label: 'Assigned in June', amount: r()),
+          const GutterTiny(),
+          SidebarInspectionRow(label: 'Activity', amount: r()),
+        ],
+      ),
     );
   }
 }
@@ -84,63 +94,65 @@ class AutoAssignInspector extends StatelessWidget {
           Text('Auto-Assign'),
         ],
       ),
-      children: [
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Underfunded',
-            amount: r(),
+      content: Column(
+        children: [
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Underfunded',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const Gutter(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Assign Last Month',
-            amount: r(),
+          const Gutter(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Assign Last Month',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const GutterTiny(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Spent Last Month',
-            amount: r(),
+          const GutterTiny(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Spent Last Month',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const GutterTiny(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Average Assigned',
-            amount: r(),
+          const GutterTiny(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Average Assigned',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const GutterTiny(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Average Spent',
-            amount: r(),
+          const GutterTiny(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Average Spent',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const Gutter(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Reset Available Amounts',
-            amount: r(),
+          const Gutter(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Reset Available Amounts',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-        const GutterTiny(),
-        ElevatedButton(
-          child: SidebarInspectionRow(
-            label: 'Reset Assigned Amounts',
-            amount: r(),
+          const GutterTiny(),
+          ElevatedButton(
+            child: SidebarInspectionRow(
+              label: 'Reset Assigned Amounts',
+              amount: r(),
+            ),
+            onPressed: () {},
           ),
-          onPressed: () {},
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -148,14 +160,14 @@ class AutoAssignInspector extends StatelessWidget {
 class BudgetSidebarInspector extends StatefulWidget {
   const BudgetSidebarInspector({
     required this.title,
-    required this.children,
+    required this.content,
     this.trailing,
     super.key,
   });
 
   final Widget title;
   final Widget? trailing;
-  final List<Widget> children;
+  final Widget content;
 
   @override
   State<BudgetSidebarInspector> createState() => _BudgetSidebarInspectorState();
@@ -184,8 +196,14 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
                     child: const Icon(Icons.chevron_right),
                   ),
                   if (widget.trailing != null) ...[
-                    const Spacer(),
-                    widget.trailing!,
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Spacer(),
+                          widget.trailing!,
+                        ],
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -195,11 +213,7 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
             const Divider(),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  ...widget.children,
-                ],
-              ),
+              child: widget.content,
             ),
           ],
         ],

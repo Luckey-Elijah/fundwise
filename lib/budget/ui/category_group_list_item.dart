@@ -46,20 +46,22 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                   child: Row(
                     children: [
                       const GutterTiny(),
-                      Visibility.maintain(
-                        visible: groupExpanded != null,
-                        child: IconButton(
-                          onPressed: onExpandedPressed,
-                          icon: Transform.rotate(
-                            angle: (groupExpanded ?? false) ? pi / 2 : 0,
-                            child: const Icon(Icons.chevron_right),
+                      Flexible(
+                        child: Visibility.maintain(
+                          visible: groupExpanded != null,
+                          child: IconButton(
+                            onPressed: onExpandedPressed,
+                            icon: Transform.rotate(
+                              angle: (groupExpanded ?? false) ? pi / 2 : 0,
+                              child: const Icon(Icons.chevron_right),
+                            ),
                           ),
                         ),
                       ),
                       Checkbox(value: selected, onChanged: onCheckboxChanged),
                       Text(name),
                       const GutterTiny(),
-                      const AddNewCategoryButton(),
+                      const Flexible(child: AddNewCategoryButton()),
                     ],
                   ),
                 ),
@@ -71,7 +73,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                         child: Text(
                           assigned,
                           textAlign: TextAlign.end,
-                          overflow: TextOverflow.clip,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ),
@@ -79,7 +81,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                         child: Text(
                           activity,
                           textAlign: TextAlign.end,
-                          overflow: TextOverflow.clip,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ),
@@ -87,7 +89,7 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
                         child: Text(
                           available,
                           textAlign: TextAlign.end,
-                          overflow: TextOverflow.clip,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ),
@@ -129,7 +131,10 @@ class _AddNewCategoryButtonState extends State<AddNewCategoryButton> {
             child: TextButton.icon(
               iconAlignment: IconAlignment.end,
               onPressed: controller.toggle,
-              label: const Text('Add New Category'),
+              label: const Text(
+                'Add New Category',
+                maxLines: 1,
+              ),
               icon: const Icon(Icons.add),
             ),
           ),

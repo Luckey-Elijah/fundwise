@@ -2,7 +2,6 @@ import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gutter/flutter_gutter.dart';
 
 class BudgetReadyToAssign extends StatelessWidget {
   const BudgetReadyToAssign({super.key});
@@ -16,19 +15,19 @@ class BudgetReadyToAssign extends StatelessWidget {
           InkWell(
             onTap: () {},
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(r(), style: context.p.xxl),
-                  Text('Ready to assign', style: context.p.xl),
+                  Text(r(), style: context.h2.thin),
                 ],
               ),
             ),
           ),
-          const Gutter(),
-          const BudgetAssignButton(),
-          const Gutter(),
+          const Padding(
+            padding: EdgeInsets.all(6),
+            child: BudgetAssignButton(),
+          ),
         ],
       ),
     );

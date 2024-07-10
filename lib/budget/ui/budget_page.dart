@@ -25,13 +25,12 @@ class BudgetReady extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        Text(id, style: context.h1.wide),
-        const BudgetTopNavigator(),
-        const GutterSmall(),
-        const Divider(),
-        const Expanded(child: BudgetContentBuilder()),
+        BudgetTopNavigator(),
+        GutterSmall(),
+        Divider(),
+        Expanded(child: BudgetContentBuilder()),
       ],
     );
   }

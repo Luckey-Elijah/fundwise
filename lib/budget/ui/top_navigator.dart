@@ -3,6 +3,7 @@ import 'package:app/budget/ui/filter_list_view.dart';
 import 'package:app/budget/ui/month_navigator.dart';
 import 'package:app/budget/ui/ready_to_assign.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class BudgetTopNavigator extends StatelessWidget {
@@ -22,7 +23,7 @@ class BudgetTopNavigator extends StatelessWidget {
               child: BudgetReadyToAssign(),
             ),
             Gutter(),
-            BudgetAgeOfMoneyLabel(),
+            Flexible(child: BudgetAgeOfMoneyLabel()),
           ],
         ),
         SizedBox(

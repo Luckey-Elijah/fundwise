@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_positional_boolean_parameters
-
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +8,18 @@ class BudgetAgeOfMoneyLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text('${rand.nextInt(30) + 1} days', style: context.h1),
-        Text('Age of Money', style: context.h2),
+        Text(
+          '${rand.nextInt(30) + 1} days',
+          style: context.h2.thin,
+          maxLines: 1,
+        ),
+        Text(
+          'Age of Money',
+          style: context.h3.thin,
+          maxLines: 2,
+        ),
       ],
     );
   }
