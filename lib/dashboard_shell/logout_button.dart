@@ -33,9 +33,7 @@ class LogoutButton extends StatelessWidget {
                   child: const Text('Logout'),
                 ),
                 TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: context.error,
-                  ),
+                  style: TextButton.styleFrom(foregroundColor: context.error),
                   onPressed: controller.hide,
                   child: const Text('Cancel'),
                 ),

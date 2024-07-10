@@ -1,8 +1,9 @@
 import 'package:app/components/status.dart';
-import 'package:app/server/server_cubit.dart';
+import 'package:app/components/value_notifier_listener.dart';
+import 'package:app/server/server_store.dart';
+import 'package:context_plus/context_plus.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class ServerUrlField extends StatefulWidget {
@@ -12,8 +13,24 @@ class ServerUrlField extends StatefulWidget {
   State<ServerUrlField> createState() => ServerUrlFieldState();
 }
 
-class ServerUrlFieldState extends State<ServerUrlField> {
+typedef _Listener
+    = ValueNotifierListener<ServerState, ServerStore, ServerUrlField>;
+
+class ServerUrlFieldState extends State<ServerUrlField> with _Listener {
+  @override
+  ServerStore get notifier => server$;
+
   final controller = TextEditingController();
+
+  @override
+  void listen(ServerState previous, ServerState next) {
+    if (previous.url == null &&
+        previous.status == FundwiseStatus.initial &&
+        next.status == FundwiseStatus.loaded &&
+        next.url != null) {
+      controller.text = '${next.url}';
+    }
+  }
 
   @override
   void initState() {
@@ -21,9 +38,7 @@ class ServerUrlFieldState extends State<ServerUrlField> {
     super.initState();
   }
 
-  void listener() {
-    context.read<ServerCubit>().updateUrl(controller.text);
-  }
+  void listener() => server$.updateUrl(controller.text);
 
   @override
   void dispose() {
@@ -33,56 +48,38 @@ class ServerUrlFieldState extends State<ServerUrlField> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ServerCubit, ServerState>(
-      listener: (context, state) {
-        final url = state.url;
-        if (url != null) controller.text = '$url';
-      },
-      listenWhen: (prev, next) =>
-          prev.url == null &&
-          prev.status == FundwiseStatus.initial &&
-          next.status == FundwiseStatus.loaded,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: BlocSelector<ServerCubit, ServerState, bool?>(
-              selector: (state) => state.healthy,
-              builder: (context, healthy) {
-                return TextField(
-                  controller: controller,
-                  autofillHints: const [AutofillHints.url],
-                  decoration: InputDecoration(
-                    hintText: 'server url',
-                    suffixIcon: switch (healthy) {
-                      true => Icon(
-                          Icons.verified,
-                          color: context.primary,
-                        ),
-                      false => const Icon(Icons.error),
-                      _ => null,
-                    },
-                    errorText: switch (healthy) {
-                      false => 'API is not healthy',
-                      _ => null,
-                    },
+    final state = server$.watch(context);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            autofillHints: const [AutofillHints.url],
+            decoration: InputDecoration(
+              hintText: 'server url',
+              suffixIcon: switch (state.healthy) {
+                true => Icon(
+                    Icons.verified,
+                    color: context.primary,
                   ),
-                );
+                false => const Icon(Icons.error),
+                _ => null,
+              },
+              errorText: switch (state.healthy) {
+                false => 'API is not healthy',
+                _ => null,
               },
             ),
           ),
-          const Gutter(),
-          BlocSelector<ServerCubit, ServerState, bool>(
-            selector: (state) => state.url != null,
-            builder: (context, canTest) {
-              return ElevatedButton(
-                onPressed: canTest ? context.read<ServerCubit>().check : null,
-                child: const Text('test'),
-              );
-            },
-          ),
-        ],
-      ),
+        ),
+        const Gutter(),
+        ElevatedButton(
+          onPressed: state.url != null ? server$.check : null,
+          child: const Text('test'),
+        ),
+      ],
     );
   }
 }
