@@ -1,6 +1,7 @@
 import 'package:app/repository/auth_store.dart';
 import 'package:app/repository/pocketbase.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
 enum LoginOrSignUp { login, signUp }
 
@@ -36,48 +37,69 @@ class LoginState {
   final String? error;
   final String? signUpSuccess;
   final bool rememberUsername;
+
+  LoginState copyWith({
+    String? email,
+    String? password,
+    String? confirm,
+    String? username,
+    LoginOrSignUp? loginOrSignUp,
+    bool? loading,
+    ValueGetter<String?>? error,
+    ValueGetter<String?>? signUpSuccess,
+    bool? rememberUsername,
+  }) {
+    return LoginState(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      confirm: confirm ?? this.confirm,
+      username: username ?? this.username,
+      loginOrSignUp: loginOrSignUp ?? this.loginOrSignUp,
+      loading: loading ?? this.loading,
+      error: error != null //
+
+          ? error.call()
+          : this.error,
+      signUpSuccess: signUpSuccess != null //
+          ? signUpSuccess()
+          : this.signUpSuccess,
+      rememberUsername: rememberUsername ?? this.rememberUsername,
+    );
+  }
 }
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginState.initial);
 
-  // ignore: avoid_setters_without_getters
-  set value(LoginState value) {
-    emit(value);
-  }
-
   Future<void> initialize() async {
     if (!preferences$.containsKey(_key)) return;
 
-    value = LoginState(
-      email: state.email,
-      password: state.password,
-      confirm: state.confirm,
-      username: state.username,
-      loginOrSignUp: state.loginOrSignUp,
-      rememberUsername: true,
-    );
+    emit(state.copyWith(rememberUsername: true));
 
     final emailOrUserName = preferences$.getString(_key);
 
-    value = LoginState(
-      email: emailOrUserName ?? state.email,
-      password: state.password,
-      confirm: state.confirm,
-      username: state.username,
-      loginOrSignUp: state.loginOrSignUp,
-      rememberUsername: state.rememberUsername,
+    emit(
+      LoginState(
+        email: emailOrUserName ?? state.email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+        rememberUsername: state.rememberUsername,
+      ),
     );
   }
 
   Future<void> toggleRememberUsername() async {
-    value = LoginState(
-      email: state.email,
-      password: state.password,
-      confirm: state.confirm,
-      username: state.username,
-      loginOrSignUp: state.loginOrSignUp,
-      rememberUsername: !state.rememberUsername,
+    emit(
+      LoginState(
+        email: state.email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+        rememberUsername: !state.rememberUsername,
+      ),
     );
 
     if (state.rememberUsername) {
@@ -90,13 +112,15 @@ class LoginCubit extends Cubit<LoginState> {
   static const _key = 'remember-username/email';
 
   Future<void> updateEmail(String email) async {
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      email: email,
-      password: state.password,
-      confirm: state.confirm,
-      username: state.username,
-      loginOrSignUp: state.loginOrSignUp,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        email: email,
+        password: state.password,
+        confirm: state.confirm,
+        username: state.username,
+        loginOrSignUp: state.loginOrSignUp,
+      ),
     );
     if (state.rememberUsername) {
       await preferences$.setString(_key, state.email);
@@ -104,46 +128,54 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void updatePassword(String password) {
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      password: password,
-      username: state.username,
-      confirm: state.confirm,
-      loginOrSignUp: state.loginOrSignUp,
-      email: state.email,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        password: password,
+        username: state.username,
+        confirm: state.confirm,
+        loginOrSignUp: state.loginOrSignUp,
+        email: state.email,
+      ),
     );
   }
 
   void updateConfirm(String confirm) {
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      username: state.username,
-      confirm: confirm,
-      password: state.password,
-      loginOrSignUp: state.loginOrSignUp,
-      email: state.email,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        username: state.username,
+        confirm: confirm,
+        password: state.password,
+        loginOrSignUp: state.loginOrSignUp,
+        email: state.email,
+      ),
     );
   }
 
   void updateUsername(String username) {
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      username: username,
-      confirm: state.confirm,
-      password: state.password,
-      loginOrSignUp: state.loginOrSignUp,
-      email: state.email,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        username: username,
+        confirm: state.confirm,
+        password: state.password,
+        loginOrSignUp: state.loginOrSignUp,
+        email: state.email,
+      ),
     );
   }
 
   Future<void> loginOrSignUp() async {
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      email: state.email,
-      username: state.username,
-      password: state.password,
-      confirm: state.confirm,
-      loginOrSignUp: state.loginOrSignUp,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
+        loginOrSignUp: state.loginOrSignUp,
+      ),
     );
 
     if (state.loginOrSignUp == LoginOrSignUp.login) {
@@ -160,14 +192,16 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password,
       );
     } on Exception catch (e) {
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        loginOrSignUp: state.loginOrSignUp,
-        error: 'Could not login: $e',
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          loginOrSignUp: state.loginOrSignUp,
+          error: 'Could not login: $e',
+        ),
       );
     }
   }
@@ -176,38 +210,44 @@ class LoginCubit extends Cubit<LoginState> {
     final invalidPass = (state.password.isEmpty || state.confirm.isEmpty) &&
         (state.confirm != state.password);
     if (invalidPass) {
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        error: 'provide matching password',
-        loginOrSignUp: state.loginOrSignUp,
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          error: 'provide matching password',
+          loginOrSignUp: state.loginOrSignUp,
+        ),
       );
     }
 
     if (state.email.isEmpty) {
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        error: 'provide a email',
-        loginOrSignUp: state.loginOrSignUp,
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          error: 'provide a email',
+          loginOrSignUp: state.loginOrSignUp,
+        ),
       );
     }
 
     if (state.username.isEmpty) {
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        error: 'provide a username',
-        loginOrSignUp: state.loginOrSignUp,
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          error: 'provide a username',
+          loginOrSignUp: state.loginOrSignUp,
+        ),
       );
     }
 
@@ -219,23 +259,27 @@ class LoginCubit extends Cubit<LoginState> {
         confirm: state.confirm,
       );
 
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        loginOrSignUp: state.loginOrSignUp,
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          loginOrSignUp: state.loginOrSignUp,
+        ),
       );
     } on Exception catch (e) {
-      value = LoginState(
-        rememberUsername: state.rememberUsername,
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        confirm: state.confirm,
-        loginOrSignUp: state.loginOrSignUp,
-        error: 'Could not sign up: $e',
+      emit(
+        LoginState(
+          rememberUsername: state.rememberUsername,
+          email: state.email,
+          username: state.username,
+          password: state.password,
+          confirm: state.confirm,
+          loginOrSignUp: state.loginOrSignUp,
+          error: 'Could not sign up: $e',
+        ),
       );
     }
   }
@@ -244,13 +288,15 @@ class LoginCubit extends Cubit<LoginState> {
     final next = state.loginOrSignUp == LoginOrSignUp.login
         ? LoginOrSignUp.signUp
         : LoginOrSignUp.login;
-    value = LoginState(
-      rememberUsername: state.rememberUsername,
-      email: state.email,
-      username: state.username,
-      password: state.password,
-      confirm: next == LoginOrSignUp.login ? '' : state.confirm,
-      loginOrSignUp: next,
+    emit(
+      LoginState(
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: next == LoginOrSignUp.login ? '' : state.confirm,
+        loginOrSignUp: next,
+      ),
     );
   }
 }
