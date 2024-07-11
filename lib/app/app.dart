@@ -1,6 +1,5 @@
 import 'package:app/app/router.dart';
 import 'package:app/repository/auth_store.dart';
-import 'package:context_plus/context_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
@@ -16,11 +15,9 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ContextPlus.root(
-      child: MaterialApp.router(
-        theme: lightTheme,
-        routerConfig: _router,
-      ),
+    return MaterialApp.router(
+      theme: lightTheme,
+      routerConfig: _router,
     );
   }
 
