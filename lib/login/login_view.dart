@@ -1,9 +1,11 @@
 import 'package:app/components/value_notifier_listener.dart';
 import 'package:app/login/login_cubit.dart';
+import 'package:app/server/server_cubit.dart';
 import 'package:app/server/server_url_field.dart';
 import 'package:context_plus/context_plus.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class LoginView extends StatefulWidget {
@@ -40,16 +42,16 @@ class _LoginViewState extends State<LoginView>
   }
 
   @override
-  void listen(LoginState previous, LoginState next) {
-    if (next.error != null) {
+  void listen(LoginState state) {
+    if (state.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(next.error!)),
+        SnackBar(content: Text(state.error!)),
       );
     }
 
-    if (next.signUpSuccess != null) {
+    if (state.signUpSuccess != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(next.signUpSuccess!)),
+        SnackBar(content: Text(state.signUpSuccess!)),
       );
     }
   }
@@ -118,7 +120,10 @@ class LoginForm extends StatelessWidget {
                     ],
                   ),
           ),
-          const ServerUrlField(),
+          BlocProvider(
+            create: (_) => ServerCubit()..initialize(),
+            child: const ServerUrlField(),
+          ),
           const Gutter(),
           Row(
             children: [

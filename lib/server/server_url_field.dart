@@ -1,34 +1,18 @@
-import 'package:app/components/status.dart';
-import 'package:app/components/value_notifier_listener.dart';
-import 'package:app/server/server_store.dart';
-import 'package:context_plus/context_plus.dart';
+import 'package:app/server/server_cubit.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class ServerUrlField extends StatefulWidget {
   const ServerUrlField({super.key});
 
   @override
-  State<ServerUrlField> createState() => ServerUrlFieldState();
+  State<ServerUrlField> createState() => _ServerUrlFieldState();
 }
 
-class ServerUrlFieldState extends State<ServerUrlField>
-    with ValueNotifierListener<ServerState, ServerStore, ServerUrlField> {
-  @override
-  ServerStore get notifier => server$;
-
+class _ServerUrlFieldState extends State<ServerUrlField> {
   final controller = TextEditingController();
-
-  @override
-  void listen(ServerState previous, ServerState next) {
-    if (previous.url == null &&
-        previous.status == FundwiseStatus.initial &&
-        next.status == FundwiseStatus.loaded &&
-        next.url != null) {
-      controller.text = '${next.url}';
-    }
-  }
 
   @override
   void initState() {
@@ -36,7 +20,9 @@ class ServerUrlFieldState extends State<ServerUrlField>
     super.initState();
   }
 
-  void listener() => server$.updateUrl(controller.text);
+  ServerCubit get cubit => context.read<ServerCubit>();
+
+  void listener() => cubit.updateUrl(controller.text);
 
   @override
   void dispose() {
@@ -46,38 +32,43 @@ class ServerUrlFieldState extends State<ServerUrlField>
 
   @override
   Widget build(BuildContext context) {
-    final state = server$.watch(context);
+    final state = context.select<ServerCubit, ServerState>((c) => c.state);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: TextField(
-            controller: controller,
-            autofillHints: const [AutofillHints.url],
-            decoration: InputDecoration(
-              hintText: 'server url',
-              suffixIcon: switch (state.healthy) {
-                true => Icon(
-                    Icons.verified,
-                    color: context.primary,
-                  ),
-                false => const Icon(Icons.error),
-                _ => null,
-              },
-              errorText: switch (state.healthy) {
-                false => 'API is not healthy',
-                _ => null,
-              },
+    return BlocListener<ServerCubit, ServerState>(
+      listenWhen: (previous, next) =>
+          next.url.valid && ('${next.url}' != controller.text),
+      listener: (context, state) => controller.text = '${state.url}',
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              autofillHints: const [AutofillHints.url],
+              decoration: InputDecoration(
+                hintText: 'server url',
+                suffixIcon: switch (state.healthy) {
+                  true => Icon(
+                      Icons.verified,
+                      color: context.primary,
+                    ),
+                  false => const Icon(Icons.error),
+                  _ => null,
+                },
+                errorText: switch (state.healthy) {
+                  false => 'API is not healthy',
+                  _ => null,
+                },
+              ),
             ),
           ),
-        ),
-        const Gutter(),
-        ElevatedButton(
-          onPressed: state.url != null ? server$.check : null,
-          child: const Text('test'),
-        ),
-      ],
+          const Gutter(),
+          ElevatedButton(
+            onPressed: state.url != null ? cubit.check : null,
+            child: const Text('test'),
+          ),
+        ],
+      ),
     );
   }
 }

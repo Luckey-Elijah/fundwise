@@ -9,6 +9,7 @@ dependencies:
   bloc: ^8.1.4
   boxy: ^2.2.0
   context_plus: ^2.3.0
+  context_watch_bloc: ^1.0.5
   flailwind: { path: ./flailwind }
   flex_color_scheme: ^7.3.1
   flutter: { sdk: flutter }

@@ -113,6 +113,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  context_watch_bloc:
+    dependency: "direct main"
+    description:
+      name: context_watch_bloc
+      sha256: "44a6f1dfca78ff46a41648a86ae9e32d48073b1d15cb7a47adc13fa6f3134c36"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   crypto:
     dependency: transitive
     description:

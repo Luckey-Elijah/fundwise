@@ -1,12 +1,19 @@
-import 'package:app/components/status.dart';
+import 'package:app/components/status.dart' show FundwiseStatus;
 import 'package:app/repository/health_store.dart';
 import 'package:app/repository/url_store.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart' show ValueGetter;
 
-final server$ = ServerStore()..initialize();
+extension ValidUrl on Uri? {
+  bool get valid {
+    final url = this;
+    if (url == null) return false;
+    return url.isScheme('HTTP') || url.isScheme('HTTPS');
+  }
+}
 
-class ServerStore extends ValueNotifier<ServerState> {
-  ServerStore()
+class ServerCubit extends Cubit<ServerState> {
+  ServerCubit()
       : super(
           const ServerState(
             healthy: null,
@@ -17,9 +24,11 @@ class ServerStore extends ValueNotifier<ServerState> {
 
   Future<void> initialize() async {
     final url = await url$.getUrl();
-    value = value.copyWith(
-      url: () => url,
-      status: FundwiseStatus.loaded,
+    emit(
+      state.copyWith(
+        url: () => url,
+        status: FundwiseStatus.loaded,
+      ),
     );
 
     await check();
@@ -27,25 +36,28 @@ class ServerStore extends ValueNotifier<ServerState> {
 
   Future<void> updateUrl(String text) async {
     final url = Uri.tryParse(text);
-    await url$.setUrl(url);
-
-    value = value.copyWith(url: () => url);
-    return;
+    if (state.url == url) return;
+    if (url.valid) {
+      await url$.setUrl(url);
+      emit(state.copyWith(url: () => url));
+    }
   }
 
   Future<void> check() async {
     var healthy = false;
 
     try {
-      value = value.copyWith(status: FundwiseStatus.loading);
+      emit(state.copyWith(status: FundwiseStatus.loading));
       healthy = await health$.check();
     } on Exception {
       healthy = false;
     }
 
-    value = value.copyWith(
-      healthy: () => healthy,
-      status: FundwiseStatus.loaded,
+    emit(
+      state.copyWith(
+        healthy: () => healthy,
+        status: FundwiseStatus.loaded,
+      ),
     );
   }
 }
