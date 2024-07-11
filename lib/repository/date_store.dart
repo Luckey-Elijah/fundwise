@@ -4,7 +4,7 @@ import 'package:stream_transform/stream_transform.dart';
 
 final date$ = DateStore();
 
-class DateStore extends Stream<DateTime> {
+class DateStore {
   var _now = _dateOnly(DateTime.now());
 
   static DateTime _dateOnly(DateTime dateTime) =>
@@ -16,7 +16,7 @@ class DateStore extends Stream<DateTime> {
         previous.day == next.day;
   }
 
-  Stream<DateTime> get _stream async* {
+  Stream<DateTime> get stream async* {
     yield _now;
 
     const five = Duration(seconds: 5);
@@ -25,20 +25,5 @@ class DateStore extends Stream<DateTime> {
         .scan(_now, (date, duration) => _now = _dateOnly(DateTime.now()))
         .distinct(_dateEquals)
         .asBroadcastStream();
-  }
-
-  @override
-  StreamSubscription<DateTime> listen(
-    void Function(DateTime event)? onData, {
-    Function? onError,
-    void Function()? onDone,
-    bool? cancelOnError,
-  }) {
-    return _stream.listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError,
-    );
   }
 }
