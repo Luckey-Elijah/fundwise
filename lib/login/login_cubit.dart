@@ -1,6 +1,6 @@
 import 'package:app/repository/auth_store.dart';
 import 'package:app/repository/pocketbase.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bloc/bloc.dart';
 
 enum LoginOrSignUp { login, signUp }
 
@@ -38,47 +38,50 @@ class LoginState {
   final bool rememberUsername;
 }
 
-final login$ = LoginStore()..initialize();
+class LoginCubit extends Cubit<LoginState> {
+  LoginCubit() : super(LoginState.initial);
 
-class LoginStore extends ValueNotifier<LoginState> {
-  LoginStore() : super(LoginState.initial);
+  // ignore: avoid_setters_without_getters
+  set value(LoginState value) {
+    emit(value);
+  }
 
   Future<void> initialize() async {
     if (!preferences$.containsKey(_key)) return;
 
     value = LoginState(
-      email: value.email,
-      password: value.password,
-      confirm: value.confirm,
-      username: value.username,
-      loginOrSignUp: value.loginOrSignUp,
+      email: state.email,
+      password: state.password,
+      confirm: state.confirm,
+      username: state.username,
+      loginOrSignUp: state.loginOrSignUp,
       rememberUsername: true,
     );
 
     final emailOrUserName = preferences$.getString(_key);
 
     value = LoginState(
-      email: emailOrUserName ?? value.email,
-      password: value.password,
-      confirm: value.confirm,
-      username: value.username,
-      loginOrSignUp: value.loginOrSignUp,
-      rememberUsername: value.rememberUsername,
+      email: emailOrUserName ?? state.email,
+      password: state.password,
+      confirm: state.confirm,
+      username: state.username,
+      loginOrSignUp: state.loginOrSignUp,
+      rememberUsername: state.rememberUsername,
     );
   }
 
   Future<void> toggleRememberUsername() async {
     value = LoginState(
-      email: value.email,
-      password: value.password,
-      confirm: value.confirm,
-      username: value.username,
-      loginOrSignUp: value.loginOrSignUp,
-      rememberUsername: !value.rememberUsername,
+      email: state.email,
+      password: state.password,
+      confirm: state.confirm,
+      username: state.username,
+      loginOrSignUp: state.loginOrSignUp,
+      rememberUsername: !state.rememberUsername,
     );
 
-    if (value.rememberUsername) {
-      await preferences$.setString(_key, value.email);
+    if (state.rememberUsername) {
+      await preferences$.setString(_key, state.email);
     } else {
       await preferences$.remove(_key);
     }
@@ -88,62 +91,62 @@ class LoginStore extends ValueNotifier<LoginState> {
 
   Future<void> updateEmail(String email) async {
     value = LoginState(
-      rememberUsername: value.rememberUsername,
+      rememberUsername: state.rememberUsername,
       email: email,
-      password: value.password,
-      confirm: value.confirm,
-      username: value.username,
-      loginOrSignUp: value.loginOrSignUp,
+      password: state.password,
+      confirm: state.confirm,
+      username: state.username,
+      loginOrSignUp: state.loginOrSignUp,
     );
-    if (value.rememberUsername) {
-      await preferences$.setString(_key, value.email);
+    if (state.rememberUsername) {
+      await preferences$.setString(_key, state.email);
     }
   }
 
   void updatePassword(String password) {
     value = LoginState(
-      rememberUsername: value.rememberUsername,
+      rememberUsername: state.rememberUsername,
       password: password,
-      username: value.username,
-      confirm: value.confirm,
-      loginOrSignUp: value.loginOrSignUp,
-      email: value.email,
+      username: state.username,
+      confirm: state.confirm,
+      loginOrSignUp: state.loginOrSignUp,
+      email: state.email,
     );
   }
 
   void updateConfirm(String confirm) {
     value = LoginState(
-      rememberUsername: value.rememberUsername,
-      username: value.username,
+      rememberUsername: state.rememberUsername,
+      username: state.username,
       confirm: confirm,
-      password: value.password,
-      loginOrSignUp: value.loginOrSignUp,
-      email: value.email,
+      password: state.password,
+      loginOrSignUp: state.loginOrSignUp,
+      email: state.email,
     );
   }
 
   void updateUsername(String username) {
     value = LoginState(
-      rememberUsername: value.rememberUsername,
+      rememberUsername: state.rememberUsername,
       username: username,
-      confirm: value.confirm,
-      password: value.password,
-      loginOrSignUp: value.loginOrSignUp,
-      email: value.email,
+      confirm: state.confirm,
+      password: state.password,
+      loginOrSignUp: state.loginOrSignUp,
+      email: state.email,
     );
   }
 
   Future<void> loginOrSignUp() async {
     value = LoginState(
-      rememberUsername: value.rememberUsername,
-      email: value.email,
-      username: value.username,
-      password: value.password,
-      confirm: value.confirm,
-      loginOrSignUp: value.loginOrSignUp,
+      rememberUsername: state.rememberUsername,
+      email: state.email,
+      username: state.username,
+      password: state.password,
+      confirm: state.confirm,
+      loginOrSignUp: state.loginOrSignUp,
     );
 
-    if (value.loginOrSignUp == LoginOrSignUp.login) {
+    if (state.loginOrSignUp == LoginOrSignUp.login) {
       await _login();
     } else {
       await _signUp();
@@ -153,100 +156,100 @@ class LoginStore extends ValueNotifier<LoginState> {
   Future<void> _login() async {
     try {
       await authentication$.signIn(
-        usernameOrEmail: value.email,
-        password: value.password,
+        usernameOrEmail: state.email,
+        password: state.password,
       );
     } on Exception catch (e) {
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
-        loginOrSignUp: value.loginOrSignUp,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
+        loginOrSignUp: state.loginOrSignUp,
         error: 'Could not login: $e',
       );
     }
   }
 
   Future<void> _signUp() async {
-    final invalidPass = (value.password.isEmpty || value.confirm.isEmpty) &&
-        (value.confirm != value.password);
+    final invalidPass = (state.password.isEmpty || state.confirm.isEmpty) &&
+        (state.confirm != state.password);
     if (invalidPass) {
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
         error: 'provide matching password',
-        loginOrSignUp: value.loginOrSignUp,
+        loginOrSignUp: state.loginOrSignUp,
       );
     }
 
-    if (value.email.isEmpty) {
+    if (state.email.isEmpty) {
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
         error: 'provide a email',
-        loginOrSignUp: value.loginOrSignUp,
+        loginOrSignUp: state.loginOrSignUp,
       );
     }
 
-    if (value.username.isEmpty) {
+    if (state.username.isEmpty) {
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
         error: 'provide a username',
-        loginOrSignUp: value.loginOrSignUp,
+        loginOrSignUp: state.loginOrSignUp,
       );
     }
 
     try {
       await authentication$.signUp(
-        username: value.username,
-        email: value.email,
-        password: value.password,
-        confirm: value.confirm,
+        username: state.username,
+        email: state.email,
+        password: state.password,
+        confirm: state.confirm,
       );
 
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
-        loginOrSignUp: value.loginOrSignUp,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
+        loginOrSignUp: state.loginOrSignUp,
       );
     } on Exception catch (e) {
       value = LoginState(
-        rememberUsername: value.rememberUsername,
-        email: value.email,
-        username: value.username,
-        password: value.password,
-        confirm: value.confirm,
-        loginOrSignUp: value.loginOrSignUp,
+        rememberUsername: state.rememberUsername,
+        email: state.email,
+        username: state.username,
+        password: state.password,
+        confirm: state.confirm,
+        loginOrSignUp: state.loginOrSignUp,
         error: 'Could not sign up: $e',
       );
     }
   }
 
   void toggleLoginOrSignUp() {
-    final next = value.loginOrSignUp == LoginOrSignUp.login
+    final next = state.loginOrSignUp == LoginOrSignUp.login
         ? LoginOrSignUp.signUp
         : LoginOrSignUp.login;
     value = LoginState(
-      rememberUsername: value.rememberUsername,
-      email: value.email,
-      username: value.username,
-      password: value.password,
-      confirm: next == LoginOrSignUp.login ? '' : value.confirm,
+      rememberUsername: state.rememberUsername,
+      email: state.email,
+      username: state.username,
+      password: state.password,
+      confirm: next == LoginOrSignUp.login ? '' : state.confirm,
       loginOrSignUp: next,
     );
   }
