@@ -1,11 +1,7 @@
-// ignore_for_file: public_member_api_docs
-
 import 'package:flutter/material.dart';
 
-extension WidgetStatePropertyColorNullable on Color? {
-  WidgetStateProperty<Color?> get all => WidgetStatePropertyAll(this);
-}
-
-extension WidgetStatePropertyColor on Color {
-  WidgetStateProperty<Color> get all => WidgetStatePropertyAll(this);
+/// A property that can be used to set a color for a widget.
+extension WidgetStatePropertyColor<T extends Color?> on T {
+  /// Helper ot set all the states of a widget.
+  WidgetStateProperty<T> get all => WidgetStatePropertyAll(this);
 }

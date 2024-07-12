@@ -1,6 +1,6 @@
 name: flailwind
-description: A Very Good Project created by Very Good CLI.
-version: 0.1.0+1
+description: Tailwind-like styling in Flutter.
+version: 0.0.1
 publish_to: none
 
 environment:
@@ -8,11 +8,8 @@ environment:
   flutter: ^3.22.0
 
 dependencies:
-  flutter:
-    sdk: flutter
+  flutter: { sdk: flutter }
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  mocktail: ^1.0.3
+  flutter_test: { sdk: flutter }
   very_good_analysis: ^5.1.0
