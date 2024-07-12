@@ -1,15 +1,14 @@
 name: flailwind
 description: Tailwind-like styling in Flutter.
 version: 0.0.1
-publish_to: none
+homepage: https://github.com/Luckey-Elijah/fundwise/tree/main/flailwind
 
 environment:
   sdk: ^3.4.0
-  flutter: ^3.22.0
+  flutter: ">=3.22.0"
 
-dependencies:
-  flutter: { sdk: flutter }
+dependencies: { flutter: { sdk: flutter } }
 
 dev_dependencies:
   flutter_test: { sdk: flutter }
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^6.0.0
