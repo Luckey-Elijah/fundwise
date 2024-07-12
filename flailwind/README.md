@@ -71,6 +71,8 @@ Text('bgTertiary', style: context.p.bgTertiary),
 
 ## Colors
 
+Easier access to common colors.
+
 ```dart
 Card(child: child, color: context.primary)
 Card(child: child, color: context.secondary)
