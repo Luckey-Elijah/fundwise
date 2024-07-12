@@ -7,6 +7,12 @@ Tailwind-like styling in Flutter.
 
 ## Text Styling
 
+Styling aligned to how tailwind does it.
+
+```dart
+Text('my fancy header', style: context.h1.thin.wide.primary.underline)
+```
+
 ```dart
 Text('header 1', style: context.h1)
 Text('header 2', style: context.h2)
@@ -61,12 +67,6 @@ Text('bgPrimary', style: context.p.bgPrimary),
 Text('bgSecondary', style: context.p.bgSecondary),
 Text('bgError', style: context.p.bgError),
 Text('bgTertiary', style: context.p.bgTertiary),
-```
-
-Nearly all of these can be combined together to style text.
-
-```dart
-Text('my fancy header', style: context.h1.thin.wide.primary.underline)
 ```
 
 ## Colors
