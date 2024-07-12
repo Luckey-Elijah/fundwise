@@ -73,6 +73,7 @@ class TextStyleWithContext extends TextStyle {
   }) {
     return TextStyleWithContext(
       context: _context,
+      inherit: inherit ?? this.inherit,
       textStyle: TextStyle(
         inherit: inherit ?? this.inherit,
         color: color ?? this.color,
