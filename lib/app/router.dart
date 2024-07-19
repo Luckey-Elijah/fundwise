@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/accounts/accounts_page.dart';
 import 'package:app/app/auth_listenable.dart';
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
@@ -84,8 +85,8 @@ GoRouter router(Stream<AuthStoreEvent> onAuthStateChange) {
           GoRoute(
             path: '/accounts',
             name: 'Accounts',
-            pageBuilder: (_, state) => NoTransitionPage(
-              child: Center(child: Text('${state.name}')),
+            pageBuilder: (_, state) => const NoTransitionPage(
+              child: AccountsPage(),
             ),
           ),
           GoRoute(
