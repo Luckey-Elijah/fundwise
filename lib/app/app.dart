@@ -1,6 +1,4 @@
 import 'package:app/app/router.dart';
-import 'package:app/repository/auth_store.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 class FundwiseApp extends StatefulWidget {
@@ -11,7 +9,8 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final _router = router(authentication$.stream);
+  // late final _router = router(authentication$.stream);
+  late final _router = duckRouter;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +22,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   ThemeData get lightTheme {
     const defaultElevation = WidgetStatePropertyAll<double>(0);
+
     final defaultShape = WidgetStatePropertyAll(
       ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -30,22 +30,11 @@ class _FundwiseAppState extends State<FundwiseApp> {
     );
 
     const defaultPadding = WidgetStatePropertyAll(EdgeInsets.all(16));
-    return FlexThemeData.light(
-      scheme: FlexScheme.dellGenoa,
-      surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-      blendLevel: 7,
-      subThemesData: const FlexSubThemesData(
-        elevatedButtonRadius: 8,
-        blendOnLevel: 10,
-        blendOnColors: false,
-        useTextTheme: true,
-        useM2StyleDividerInM3: true,
-        alignedDropdown: true,
-        useInputDecoratorThemeInDialogs: true,
-      ),
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
+
+    return ThemeData(
+      colorScheme: _scheme,
+      visualDensity: VisualDensity.comfortable,
       useMaterial3: true,
-      swapLegacyOnMaterial3: true,
     ).copyWith(
       dialogTheme: DialogTheme(
         shape: defaultShape.value,
@@ -70,3 +59,35 @@ class _FundwiseAppState extends State<FundwiseApp> {
     );
   }
 }
+
+const _scheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xff386a20),
+  onPrimary: Color(0xffffffff),
+  primaryContainer: Color(0xffb7f397),
+  onPrimaryContainer: Color(0xff0f140d),
+  secondary: Color(0xff55624c),
+  onSecondary: Color(0xffffffff),
+  secondaryContainer: Color(0xffd9e7cb),
+  onSecondaryContainer: Color(0xff121311),
+  tertiary: Color(0xff19686a),
+  onTertiary: Color(0xffffffff),
+  tertiaryContainer: Color(0xffa8eff0),
+  onTertiaryContainer: Color(0xff0e1414),
+  error: Color(0xffba1a1a),
+  onError: Color(0xffffffff),
+  errorContainer: Color(0xffffdad6),
+  onErrorContainer: Color(0xff141212),
+  surface: Color(0xfff9faf8),
+  onSurface: Color(0xff090909),
+  surfaceContainerHighest: Color(0xffe4e6e2),
+  onSurfaceVariant: Color(0xff111211),
+  outline: Color(0xff7c7c7c),
+  outlineVariant: Color(0xffc8c8c8),
+  shadow: Color(0xff000000),
+  scrim: Color(0xff000000),
+  inverseSurface: Color(0xff121311),
+  onInverseSurface: Color(0xfff5f5f5),
+  inversePrimary: Color(0xffbbdeab),
+  surfaceTint: Color(0xff386a20),
+);

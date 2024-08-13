@@ -1,9 +1,9 @@
 import 'package:app/repository/date_format_store.dart';
+import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
-import 'package:go_router/go_router.dart';
 
 class BudgetNewPage extends StatelessWidget {
   const BudgetNewPage({super.key});
@@ -18,14 +18,11 @@ class BudgetNewPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextButton.icon(
-                onPressed: () => context.go('/budget'),
+                onPressed: DuckRouter.of(context).pop,
                 label: const Text('Back'),
                 icon: const Icon(Icons.chevron_left),
               ),
-              Text(
-                'New Budget',
-                style: context.h3,
-              ),
+              Text('New Budget', style: context.h3),
               const Gutter(),
               Expanded(
                 child: ListView(
@@ -69,10 +66,7 @@ class FormRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(label)),
-          Expanded(
-            flex: 3,
-            child: child,
-          ),
+          Expanded(flex: 3, child: child),
         ],
       ),
     );

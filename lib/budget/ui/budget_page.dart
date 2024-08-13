@@ -9,8 +9,8 @@ import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
-class BudgetPage extends StatelessWidget {
-  const BudgetPage({super.key});
+class BudgetLandingPage extends StatelessWidget {
+  const BudgetLandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +18,8 @@ class BudgetPage extends StatelessWidget {
   }
 }
 
-class BudgetReady extends StatelessWidget {
-  const BudgetReady({required this.id, super.key});
+class BudgetPage extends StatelessWidget {
+  const BudgetPage({required this.id, super.key});
 
   final String id;
 

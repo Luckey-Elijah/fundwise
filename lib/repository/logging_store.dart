@@ -1,18 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:pocketbase/pocketbase.dart';
+
+late final LoggingStore logging$;
 
 class LoggingStore {
   LoggingStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
   late final _col = _pb.collection('errors');
-
+  var _sequence = 0;
   Future<void> logException({
     required Object? exception,
     required StackTrace? stackTrace,
   }) async {
-    return;
-    // ignore: dead_code
     try {
       if (exception! is FlutterError) {
         final record = await _col.create(
@@ -28,15 +30,28 @@ class LoggingStore {
             'debug': kDebugMode,
           },
         );
-        debugPrint('successfully logged: ${record.id}');
+        log(
+          'successfully logged: ${record.id}',
+          time: DateTime.now(),
+          error: exception,
+          name: 'pb.errors',
+          sequenceNumber: _sequence++,
+        );
       }
       debugPrint('$exception');
       debugPrint('$stackTrace');
     } on Exception catch (e, st) {
-      debugPrint('Could not log an exception:');
+      debugPrint('Could not log an [exception]:');
       debugPrint('$exception');
       debugPrint('$stackTrace');
       debugPrint('Due to another exception:');
+      debugPrint('$e');
+      debugPrint('$st');
+    } catch (e, st) {
+      debugPrint('Could not log an [exception]:');
+      debugPrint('$exception');
+      debugPrint('$stackTrace');
+      debugPrint('Due to another unknown thrown Object:');
       debugPrint('$e');
       debugPrint('$st');
     }

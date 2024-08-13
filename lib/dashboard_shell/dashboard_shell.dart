@@ -1,7 +1,9 @@
-import 'package:app/dashboard_shell/logout_button.dart';
+import 'package:app/app/router.dart';
+import 'package:app/components/scaffold.dart';
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gutter/flutter_gutter.dart';
 
 class DashboardShell extends StatelessWidget {
   const DashboardShell({
@@ -17,11 +19,17 @@ class DashboardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = selectedIndex(matchedLocation);
-    return PrimaryScaffold(
-      key: ValueKey(index),
-      index: index,
-      child: child,
+    return FundwiseResponsiveScaffold(
+      sidebarLeading: (context, expanded) {
+        return SidebarLeading(
+          expanded: expanded,
+          matchedLocation: matchedLocation,
+        );
+      },
+      sidebarLeadingCollapseButton: (context, toggle, expanded) {
+        return ExpandButton(expanded: expanded, onPressed: toggle);
+      },
+      body: (context) => child,
     );
   }
 
@@ -34,49 +42,114 @@ class DashboardShell extends StatelessWidget {
   }
 }
 
-class PrimaryScaffold extends StatelessWidget {
-  const PrimaryScaffold({
-    required this.child,
-    required this.index,
+class SidebarLeading extends StatelessWidget {
+  const SidebarLeading({
+    required this.expanded,
+    required this.matchedLocation,
     super.key,
   });
 
-  final Widget child;
-  final int? index;
+  final String? matchedLocation;
+  final bool expanded;
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveScaffold(
-      internalAnimations: false,
-      onSelectedIndexChange: (int index) {
-        const io = ['/budget', '/reports', '/accounts'];
-        if (index > io.length) return context.go('/404');
-        context.go(io[index]);
-      },
-      body: (context) => child,
-      leadingExtendedNavRail: TextButton.icon(
-        onPressed: () => context.go('/settings'),
-        iconAlignment: IconAlignment.end,
-        label: const Text('Account'),
-        icon: const Icon(Icons.lightbulb),
+    Color? color(String route) {
+      return matchedLocation?.startsWith(route) ?? false
+          ? context.colorScheme.secondaryContainer
+          : null;
+    }
+
+    final router = duckRouter; // ?? DuckRouter.of(context);
+
+    return BlocProvider(
+      create: _createAccountSummaries,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const FundwiseLeadingNavigationAction(),
+          const Divider(height: 0),
+          SidebarRoute(
+            label: 'BUDGET',
+            icon: Icons.wallet,
+            color: color('/budget'),
+            onTap: () => router.navigate(
+              to: const BudgetLocation(),
+              clearStack: true,
+            ),
+          ),
+          SidebarRoute(
+            label: 'REPORTS',
+            icon: Icons.analytics,
+            color: color('/reports'),
+            onTap: () => router.navigate(
+              to: const ReportingLocation(),
+              clearStack: true,
+            ),
+          ),
+          SidebarRoute(
+            label: 'ACCOUNTS',
+            icon: Icons.account_balance,
+            color: color('/accounts'),
+            onTap: () => router.navigate(
+              to: const AccountsLocation(),
+              clearStack: true,
+            ),
+          ),
+          if (expanded) ...[
+            const Gutter(),
+            const Expanded(
+              child: AccountGroupList(),
+            ),
+          ],
+        ],
       ),
-      transitionDuration: Durations.short3,
-      trailingNavRail: const LogoutButton(),
-      selectedIndex: index,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.wallet),
-          label: 'Budget',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.bar_chart),
-          label: 'Reports',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.account_balance),
-          label: 'Accounts',
-        ),
-      ],
+    );
+  }
+
+  AccountSummariesBloc _createAccountSummaries(BuildContext context) {
+    return AccountSummariesBloc()..add(AccountSummariesInitialize());
+  }
+}
+
+class FundwiseBodyBuilder extends StatelessWidget {
+  const FundwiseBodyBuilder({
+    super.key,
+    this.header,
+    this.primary,
+    this.secondary,
+  });
+
+  final WidgetBuilder? header;
+  final WidgetBuilder? primary;
+  final WidgetBuilder? secondary;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(
+          children: [
+            if (constraints.maxHeight > 720 && header != null)
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 192),
+                child: header!(context),
+              ),
+            Expanded(
+              child: Row(
+                children: [
+                  if (primary != null) Expanded(child: primary!(context)),
+                  if (constraints.maxWidth > 960 && secondary != null)
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 456),
+                      child: secondary!(context),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

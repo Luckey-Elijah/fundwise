@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:app/components/status.dart' show FundwiseStatus;
 import 'package:app/repository/health_store.dart';
 import 'package:app/repository/url_store.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart' show ValueGetter;
+import 'package:flutter/material.dart';
 
 extension ValidUrl on Uri? {
   bool get valid {
@@ -12,7 +15,24 @@ extension ValidUrl on Uri? {
   }
 }
 
-class ServerCubit extends Cubit<ServerState> {
+mixin SubscriptionClosable<T> on BlocBase<T> {
+  final _subscriptions = <StreamSubscription<Object?>>[];
+
+  void registerSubscription(StreamSubscription<Object?> subscription) {
+    _subscriptions.add(subscription);
+  }
+
+  @override
+  Future<void> close() async {
+    for (final sub in _subscriptions) {
+      await sub.cancel();
+    }
+    return super.close();
+  }
+}
+
+class ServerCubit extends Cubit<ServerState>
+    with SubscriptionClosable<ServerState> {
   ServerCubit()
       : super(
           const ServerState(

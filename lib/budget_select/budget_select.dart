@@ -1,12 +1,12 @@
+import 'package:app/app/router.dart';
 import 'package:app/budget_select/budget_select_bloc.dart';
-import 'package:app/repository/budget_store.dart';
 import 'package:app/repository/currency_format_model.dart';
 import 'package:app/repository/formatter.dart';
+import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class BudgetSelectPage extends StatelessWidget {
@@ -14,14 +14,7 @@ class BudgetSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      lazy: false,
-      create: (context) => BudgetSelectBloc(budgetStore$)
-        ..add(
-          InitializeBudgetSelectEvent(),
-        ),
-      child: const BudgetSelectView(),
-    );
+    return const BudgetSelectView();
   }
 }
 
@@ -33,9 +26,11 @@ class BudgetSelectView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BudgetSelectBloc, BudgetSelectState>(
+      bloc: budgetSelectBloc$,
       listener: (context, state) {
         if (state is DefaultBudgetSelected) {
-          context.go('/budget/${state.budget.id}');
+          DuckRouter.of(context)
+              .navigate(to: BudgetLocation(id: state.budget.id));
         }
       },
       builder: (context, state) {
@@ -53,7 +48,8 @@ class BudgetSelectView extends StatelessWidget {
                 return Card.outlined(
                   color: context.primaryContainer,
                   child: InkWell(
-                    onTap: () => context.go('/budget/new'),
+                    onTap: () => DuckRouter.of(context)
+                        .navigate(to: const BudgetNewPageLocation()),
                     child: Padding(
                       padding: const EdgeInsets.all(8),
                       child: Row(
@@ -111,7 +107,8 @@ class BudgetSelectView extends StatelessWidget {
                     context
                         .read<BudgetSelectBloc>()
                         .add(SelectBudgetEvent(budget));
-                    context.go('/budget/${budget.id}');
+                    DuckRouter.of(context)
+                        .navigate(to: BudgetLocation(id: budget.id));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8),
@@ -150,7 +147,9 @@ class BudgetSelectView extends StatelessWidget {
             },
           );
         }
-        throw UnimplementedError('$state');
+        return const Center(
+          child: Text("Oops! Something went wrong :'["),
+        );
       },
     );
   }

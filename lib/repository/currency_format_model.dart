@@ -9,6 +9,8 @@ class CurrencyFormatModel {
     required this.symbol,
     required this.displaySymbol,
     required this.symbolFirst,
+    this.negativeSymbol = '-',
+    this.negativeSymbolFirst = true,
   })  : assert(decimalDigits >= 0, '[decimalDigits] must be non-negative.'),
         assert(groupSize >= 0, '[groupSize] must be non-negative.');
 
@@ -29,6 +31,8 @@ class CurrencyFormatModel {
   final String decimalSeparator;
   final String groupSeparator;
   final String symbol;
+  final String negativeSymbol;
   final bool displaySymbol;
   final bool symbolFirst;
+  final bool negativeSymbolFirst;
 }

@@ -14,33 +14,40 @@ class SelectBudgetEvent extends BudgetSelectEvent {
   final BudgetSummaryModel budget;
 }
 
+final budgetSelectBloc$ = BudgetSelectBloc(budgetStore$)
+  ..add(InitializeBudgetSelectEvent());
+
 class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
-  BudgetSelectBloc(this._budget$) : super(const InitialBudgetSelectState()) {
+  BudgetSelectBloc(this._budgetStore$)
+      : super(const InitialBudgetSelectState()) {
     on<InitializeBudgetSelectEvent>(_onInitializeBudgetSelectEvent);
     on<SelectBudgetEvent>(_onSelectBudgetEvent);
   }
 
-  final BudgetStore _budget$;
+  final BudgetStore _budgetStore$;
 
   Future<void> _onInitializeBudgetSelectEvent(
     InitializeBudgetSelectEvent event,
     Emitter<BudgetSelectState> emit,
   ) async {
-    final defaultBudget = await _budget$.getDefaultBudget();
+    final defaultBudget = await _budgetStore$.getDefaultBudget();
     if (defaultBudget != null) {
       return emit(DefaultBudgetSelected(budget: defaultBudget));
     }
 
-    final budgets = await _budget$.getBudgets();
-
-    emit(ListBudgetSelection(budgets));
+    try {
+      final budgets = await _budgetStore$.getBudgets();
+      emit(ListBudgetSelection(budgets));
+    } on Exception {
+      emit(const ErrorBudgetSelection());
+    }
   }
 
   Future<void> _onSelectBudgetEvent(
     SelectBudgetEvent event,
     Emitter<BudgetSelectState> emit,
   ) async {
-    await _budget$.setDefault(event.budget);
+    await _budgetStore$.setDefault(event.budget);
     return emit(DefaultBudgetSelected(budget: event.budget));
   }
 }
@@ -62,4 +69,8 @@ class DefaultBudgetSelected extends BudgetSelectState {
 
 class ListBudgetSelection extends BudgetSelectState {
   const ListBudgetSelection(super.budgets);
+}
+
+class ErrorBudgetSelection extends BudgetSelectState {
+  const ErrorBudgetSelection() : super(const []);
 }

@@ -10,8 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   preferences$ = await SharedPreferences.getInstance();
-
-  final logging$ = LoggingStore(pb: pocketbase$);
+  logging$ = LoggingStore(pb: pocketbase$);
 
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);

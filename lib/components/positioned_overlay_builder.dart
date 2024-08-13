@@ -110,8 +110,8 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder>
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () {
-                    widget.onHide?.call();
                     controller.hide();
+                    if (!controller.isShowing) widget.onHide?.call();
                   },
                 ),
               ),

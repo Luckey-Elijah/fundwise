@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:app/budget/ui/budget_page.dart';
@@ -36,7 +37,7 @@ class BudgetAvailabilityInspector extends StatelessWidget {
       trailing: const Tooltip(
         message: r'$901,123.09',
         child: Text(
-          r'$901,901,901,123.09',
+          r'$901,901',
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
@@ -197,11 +198,9 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
                   ),
                   if (widget.trailing != null) ...[
                     Expanded(
-                      child: Row(
-                        children: [
-                          const Spacer(),
-                          widget.trailing!,
-                        ],
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: widget.trailing,
                       ),
                     ),
                   ],
@@ -210,7 +209,10 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
             ),
           ),
           if (expanded) ...[
-            const Divider(),
+            const Divider(
+              endIndent: 4,
+              indent: 4,
+            ),
             Padding(
               padding: const EdgeInsets.all(16),
               child: widget.content,
@@ -220,4 +222,26 @@ class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
       ),
     );
   }
+}
+
+class ListStreamProcessing<T> {
+  final _controller = StreamController<List<T>>();
+
+  void add(List<T> data) {
+    _controller.add(data);
+  }
+
+  T? _latest;
+
+  Stream<T> get _stream async* {
+    if (_latest != null) yield _latest!;
+    await for (final list in _controller.stream) {
+      for (final element in list) {
+        yield element;
+        _latest = element;
+      }
+    }
+  }
+
+  Stream<T> get stream => _stream.asBroadcastStream();
 }
