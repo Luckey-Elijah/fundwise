@@ -22,7 +22,11 @@ Future<void> main() async {
     );
   };
 
-  final url = await url$.getUrl();
+  final (url, _) = await (
+    url$.getUrl(),
+    authentication$.refresh(),
+  ).wait;
+
   if (url == null) authentication$.signOut();
 
   return runApp(const FundwiseApp());

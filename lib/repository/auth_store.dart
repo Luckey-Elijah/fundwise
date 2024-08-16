@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/repository/pocketbase.dart';
 import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
@@ -24,7 +26,12 @@ class AuthenticationStore {
   }
 
   Future<void> refresh() async {
-    await _pb.collection('users').authRefresh();
+    try {
+      await _pb.collection('users').authRefresh();
+    } on ClientException catch (e) {
+      if (e.statusCode == 401) return signOut();
+      rethrow;
+    }
   }
 
   Future<void> signIn({

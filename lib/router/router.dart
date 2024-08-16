@@ -1,6 +1,9 @@
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
 import 'package:app/budget_select/budget_select_bloc.dart';
+import 'package:app/components/fundwise_ink.dart';
+import 'package:app/components/fundwise_logo.dart';
+import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
@@ -16,6 +19,7 @@ class AuthenticationLocationInterceptor extends LocationInterceptor {
   @override
   Location? execute(Location to, Location? from) {
     if (authenticationStore.user != null) {
+      if (to is SplashLocation) return HomeLocation();
       return null;
     }
     return LoginLocation();
@@ -51,8 +55,17 @@ class BudgetLocationInterceptor extends LocationInterceptor {
   }
 }
 
+class SplashLocation extends Location {
+  @override
+  LocationBuilder? get builder =>
+      (_) => const Center(child: FundwiseLogo(size: 48));
+
+  @override
+  String get path => '/splash';
+}
+
 final DuckRouter duckRouter = DuckRouter(
-  initialLocation: HomeLocation(),
+  initialLocation: SplashLocation(),
   interceptors: [
     AuthenticationLocationInterceptor(authentication$),
     LoginLocationInterceptor(authentication$),
@@ -121,10 +134,35 @@ class ReportingLocation extends Location {
   @override
   LocationBuilder? get builder => _builder;
 
-  Widget _builder(BuildContext context) => const Placeholder();
+  Widget _builder(BuildContext context) => const Center(
+        child: _Test(),
+      );
 
   @override
   String get path => '/reports';
+}
+
+class _Test extends StatelessWidget {
+  const _Test();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: PositionedOverlayBuilder(
+        anchorBuilder: (context, controller) => FundwiseInk.primary(
+          onSecondary: controller.show,
+          child: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Text('hi, mom'),
+          ),
+        ),
+        overlayChildBuilder: (context, controller) {
+          return const _Test();
+        },
+      ),
+    );
+  }
 }
 
 class LoginLocation extends Location {

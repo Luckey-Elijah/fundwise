@@ -8,6 +8,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
     this.onHide,
     this.overlayConstraints,
     this.dismissible = true,
+    this.withCard = true,
     this.barrierColor,
     this.debugLabel,
     super.key,
@@ -16,6 +17,7 @@ class PositionedOverlayBuilder extends StatefulWidget {
   final String? debugLabel;
   final Color? barrierColor;
   final bool dismissible;
+  final bool withCard;
   final BoxConstraints? overlayConstraints;
   final void Function()? onHide;
   final Widget Function(
@@ -94,14 +96,19 @@ class _PositionedOverlayBuilderState extends State<PositionedOverlayBuilder>
         final top = isTop ? position.dy : null;
         final bottom = isTop ? null : _lastSize.height - origin.dy;
         final constraints = widget.overlayConstraints;
-        late final child = Card(
-          clipBehavior: Clip.hardEdge,
-          elevation: 20,
-          child: widget.overlayChildBuilder(
-            context,
-            controller,
-          ),
+
+        var child = widget.overlayChildBuilder(
+          context,
+          controller,
         );
+
+        if (widget.withCard) {
+          child = Card(
+            clipBehavior: Clip.hardEdge,
+            elevation: 20,
+            child: child,
+          );
+        }
 
         return Stack(
           children: [

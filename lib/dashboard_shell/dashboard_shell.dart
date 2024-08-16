@@ -1,5 +1,5 @@
-import 'package:app/app/router.dart';
 import 'package:app/components/scaffold.dart';
+import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,8 +60,6 @@ class SidebarLeading extends StatelessWidget {
           : null;
     }
 
-    final router = duckRouter; // ?? DuckRouter.of(context);
-
     return BlocProvider(
       create: _createAccountSummaries,
       child: Column(
@@ -73,7 +71,7 @@ class SidebarLeading extends StatelessWidget {
             label: 'BUDGET',
             icon: Icons.wallet,
             color: color('/budget'),
-            onTap: () => router.navigate(
+            onTap: () => duckRouter.navigate(
               to: const BudgetLocation(),
               clearStack: true,
             ),
@@ -82,7 +80,7 @@ class SidebarLeading extends StatelessWidget {
             label: 'REPORTS',
             icon: Icons.analytics,
             color: color('/reports'),
-            onTap: () => router.navigate(
+            onTap: () => duckRouter.navigate(
               to: const ReportingLocation(),
               clearStack: true,
             ),
@@ -91,7 +89,7 @@ class SidebarLeading extends StatelessWidget {
             label: 'ACCOUNTS',
             icon: Icons.account_balance,
             color: color('/accounts'),
-            onTap: () => router.navigate(
+            onTap: () => duckRouter.navigate(
               to: const AccountsLocation(),
               clearStack: true,
             ),

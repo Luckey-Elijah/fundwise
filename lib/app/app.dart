@@ -1,4 +1,4 @@
-import 'package:app/app/router.dart';
+import 'package:app/router/router.dart';
 import 'package:flutter/material.dart';
 
 class FundwiseApp extends StatefulWidget {

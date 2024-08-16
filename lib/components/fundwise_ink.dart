@@ -19,6 +19,7 @@ class FundwiseInk extends StatelessWidget {
     super.key,
   })  : _type = _FundwiseInkType.primary,
         color = null;
+
   const FundwiseInk.secondary({
     required this.child,
     this.onPrimary,

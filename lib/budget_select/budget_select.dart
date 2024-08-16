@@ -1,7 +1,7 @@
-import 'package:app/app/router.dart';
 import 'package:app/budget_select/budget_select_bloc.dart';
 import 'package:app/repository/currency_format_model.dart';
 import 'package:app/repository/formatter.dart';
+import 'package:app/router/router.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
