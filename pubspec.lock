@@ -210,10 +210,10 @@ packages:
     dependency: "direct main"
     description:
       name: duck_router
-      sha256: a34c0b3943b2428995b85ef2da3f996d540e152dab4d29d0fbb6c44a4a16be79
+      sha256: "292f0a92680569e780dee1a56f5367ce4f2e89d3483ce64a160463d89495029d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   equatable:
     dependency: transitive
     description:
@@ -270,10 +270,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_adaptive_scaffold
-      sha256: "2a878750aae90b6b5f509c723cfb693c32541bbcc747ec5f81cfadc5d54b3e8c"
+      sha256: "3b8f56e0282659db2ebb2edacf61332c1178e8dc03d933709c5af88f92f31dd5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -286,10 +286,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_gutter
-      sha256: "5a8f8e76ef38b9e8e2454cecd135255f5fa4621036a6a29a9235dbf182acdbf3"
+      sha256: "22d898d2ffafd686a1df82725ddcc1012c0418afbf0804347e656b0be03cc91c"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -448,10 +448,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   nested:
     dependency: transitive
     description:
@@ -568,10 +568,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: a7e8467e9181cef109f601e3f65765685786c1a738a83d7fbbde377589c0d974
+      sha256: "480ba4345773f56acda9abf5f50bd966f581dac5d514e5fc4a18c62976bbba7e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -741,10 +741,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
+      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.4"
+    version: "14.2.5"
   watcher:
     dependency: transitive
     description:
@@ -794,5 +794,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0-259.0.dev <4.0.0"
+  dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.22.0"

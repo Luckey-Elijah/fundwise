@@ -22,12 +22,16 @@ Future<void> main() async {
     );
   };
 
-  final (url, _) = await (
-    url$.getUrl(),
-    authentication$.refresh(),
-  ).wait;
+  try {
+    final (url, _) = await (
+      url$.getUrl(),
+      authentication$.refresh(),
+    ).wait;
 
-  if (url == null) authentication$.signOut();
+    if (url == null) authentication$.signOut();
+  } catch (e, s) {
+    unawaited(logging$.logException(exception: e, stackTrace: s));
+  }
 
   return runApp(const FundwiseApp());
 }

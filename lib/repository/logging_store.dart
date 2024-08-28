@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show FlutterError, kDebugMode;
 import 'package:pocketbase/pocketbase.dart';
 
 late final LoggingStore logging$;
@@ -9,15 +9,15 @@ class LoggingStore {
   LoggingStore({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
-  late final _col = _pb.collection('errors');
   var _sequence = 0;
+
   Future<void> logException({
     required Object? exception,
     required StackTrace? stackTrace,
   }) async {
     try {
-      if (exception! is FlutterError) {
-        final record = await _col.create(
+      if (exception is! FlutterError) {
+        final record = await _pb.collection('errors').create(
           body: {
             'reporter': switch (_pb.authStore.model) {
               final RecordModel model => model.id,
@@ -30,30 +30,24 @@ class LoggingStore {
             'debug': kDebugMode,
           },
         );
+
         log(
           'successfully logged: ${record.id}',
           time: DateTime.now(),
           error: exception,
-          name: 'pb.errors',
+          name: 'pb.errors ${_sequence.toString().padLeft(4, '0')}',
           sequenceNumber: _sequence++,
         );
       }
-      debugPrint('$exception');
-      debugPrint('$stackTrace');
-    } on Exception catch (e, st) {
-      debugPrint('Could not log an [exception]:');
-      debugPrint('$exception');
-      debugPrint('$stackTrace');
-      debugPrint('Due to another exception:');
-      debugPrint('$e');
-      debugPrint('$st');
+      log('$exception', name: 'exception');
+      log('$stackTrace', name: 'stackTrace');
     } catch (e, st) {
-      debugPrint('Could not log an [exception]:');
-      debugPrint('$exception');
-      debugPrint('$stackTrace');
-      debugPrint('Due to another unknown thrown Object:');
-      debugPrint('$e');
-      debugPrint('$st');
+      log('Could not log an [exception]:');
+      log('$exception', name: 'exception');
+      log('$stackTrace', name: 'stackTrace');
+      log('Due to another unknown thrown Object:');
+      log('$e');
+      log('$st');
     }
   }
 }

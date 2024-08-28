@@ -2,12 +2,12 @@ name: app
 version: 0.0.1
 publish_to: "none"
 description: Open source budgeting.
-environment: { sdk: ">=3.4.3 <4.0.0" }
+environment: { sdk: ">=3.5.1 <4.0.0" }
 
 dependencies:
   bloc: ^8.1.4
   dart_mappable: ^4.2.2
-  duck_router: ^3.0.0
+  duck_router: ^4.0.0
   flailwind: { path: ./flailwind }
   flutter: { sdk: flutter }
   flutter_adaptive_scaffold: ^0.2.0

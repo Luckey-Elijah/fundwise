@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
+import 'package:app/repository/logging_store.dart';
 import 'package:app/repository/pocketbase.dart';
 import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
@@ -28,9 +31,17 @@ class AuthenticationStore {
   Future<void> refresh() async {
     try {
       await _pb.collection('users').authRefresh();
-    } on ClientException catch (e) {
+    } on ClientException catch (e, s) {
       if (e.statusCode == 401) return signOut();
-      rethrow;
+      final error = e.originalError;
+      if (error is SocketException) {
+        unawaited(logging$.logException(exception: error, stackTrace: s));
+        throw error;
+      } else {
+        unawaited(logging$.logException(exception: error, stackTrace: s));
+        log(error.toString());
+        rethrow;
+      }
     }
   }
 
