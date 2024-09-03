@@ -7,7 +7,8 @@ Open source budgeting at home.
 > [!NOTE]
 > 🚧 This project is still in development.
 
+<img src="./demo-screnshot.png" alt="J" width="800"/>
+
 [fundwise_dev]: https://fundwise.dev
 [mit_badge]: https://img.shields.io/badge/license-MIT-blue
 [mit_license]: https://opensource.org/licenses/MIT
-[LICENSE](LICENSE)
