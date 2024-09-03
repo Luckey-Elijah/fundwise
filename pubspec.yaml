@@ -25,3 +25,105 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/Raleway-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+        - asset: assets/fonts/Raleway-Bold.ttf
+          weight: 700
+
+        - asset: assets/fonts/Raleway-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+
+        - asset: assets/fonts/Raleway-ExtraLight.ttf
+          weight: 200
+
+        - asset: assets/fonts/Raleway-Italic.ttf
+          weight: 400
+          style: italic
+
+        - asset: assets/fonts/Raleway-LightItalic.ttf
+          weight: 300
+          style: italic
+
+        - asset: assets/fonts/Raleway-Light.ttf
+          weight: 300
+
+        - asset: assets/fonts/Raleway-MediumItalic.ttf
+          weight: 500
+          style: italic
+
+        - asset: assets/fonts/Raleway-Medium.ttf
+          weight: 500
+
+        - asset: assets/fonts/Raleway-Regular.ttf
+          weight: 400
+
+        - asset: assets/fonts/Raleway-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+
+        - asset: assets/fonts/Raleway-SemiBold.ttf
+          weight: 600
+
+        - asset: assets/fonts/Raleway-ThinItalic.ttf
+          weight: 100
+          style: italic
+
+        - asset: assets/fonts/Raleway-Thin.ttf
+          weight: 100
+
+    - family: PlexMono
+      fonts:
+        - asset: assets/fonts/IBMPlexMono-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-Bold.ttf
+          weight: 700
+
+        - asset: assets/fonts/IBMPlexMono-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-ExtraLight.ttf
+          weight: 200
+
+        - asset: assets/fonts/IBMPlexMono-Italic.ttf
+          weight: 400
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-LightItalic.ttf
+          weight: 300
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-Light.ttf
+          weight: 300
+
+        - asset: assets/fonts/IBMPlexMono-MediumItalic.ttf
+          weight: 500
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-Medium.ttf
+          weight: 500
+
+        - asset: assets/fonts/IBMPlexMono-Regular.ttf
+          weight: 400
+
+        - asset: assets/fonts/IBMPlexMono-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-SemiBold.ttf
+          weight: 600
+
+        - asset: assets/fonts/IBMPlexMono-ThinItalic.ttf
+          weight: 100
+          style: italic
+
+        - asset: assets/fonts/IBMPlexMono-Thin.ttf
+          weight: 100

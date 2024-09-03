@@ -16,6 +16,7 @@ class BudgetTopNavigator extends StatelessWidget {
       children: [
         Row(
           children: [
+            Gutter(),
             BudgetMonthNavigator(),
             Gutter(),
             Padding(
