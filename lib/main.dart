@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:app/app/app.dart';
 import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/licensing_store.dart';
 import 'package:app/repository/logging_store.dart';
 import 'package:app/repository/pocketbase.dart';
 import 'package:app/repository/url_store.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  LicenseRegistry.addLicense(licensing$.fontLicenses);
   preferences$ = await SharedPreferences.getInstance();
   logging$ = LoggingStore(pb: pocketbase$);
 

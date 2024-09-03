@@ -154,29 +154,6 @@ class SidebarRoute extends StatelessWidget {
         ),
       ),
     );
-    // return Material(
-    //   color: color,
-    //   child: InkWell(
-    //     onTap: onTap,
-    //     child: Padding(
-    //       padding: const EdgeInsets.all(8),
-    //       child: LayoutBuilder(
-    //         builder: (context, constraints) {
-    //           if (constraints.maxWidth < 96) {
-    //             return Center(child: Icon(icon, size: 40));
-    //           }
-    //           return Row(
-    //             children: [
-    //               Icon(icon, size: 40),
-    //               const Gutter(),
-    //               Text(label),
-    //             ],
-    //           );
-    //         },
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
 

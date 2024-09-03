@@ -9,7 +9,6 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  // late final _router = router(authentication$.stream);
   late final _router = duckRouter;
 
   @override
@@ -32,6 +31,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
     const defaultPadding = WidgetStatePropertyAll(EdgeInsets.all(16));
 
     return ThemeData(
+      fontFamily: 'Raleway',
       colorScheme: _scheme,
       visualDensity: VisualDensity.comfortable,
       useMaterial3: true,
