@@ -14,12 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main(List<String> args) {
-  runApp(const AnimatedSplash());
-}
-
-Future<void> __main() async {
-  runApp(const AnimatedSplash());
+Future<void> main() async {
+  runApp(
+    const AnimatedSplash(),
+  );
 
   final licensing = LicensingStore(rootBundle: rootBundle);
   final preferences = await SharedPreferences.getInstance();

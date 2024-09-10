@@ -19,9 +19,8 @@ class _FundwiseAppState extends State<FundwiseApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
-      builder: (context, child) {
-        return _AuthListenable(router: router, child: child);
-      },
+      builder: (context, child) =>
+          _AuthListenable(router: router, child: child),
     );
   }
 }
@@ -42,7 +41,6 @@ class _AuthListenable extends StatelessWidget {
           prev is! AuthenticatedState && next is AuthenticatedState ||
           prev is! NotAuthenticatedState && next is NotAuthenticatedState,
       listener: (context, state) {
-        final router = DuckRouter.maybeOf(context) ?? this.router;
         if (state is AuthenticatedState) {
           router.navigate(
             to: HomeLocation(),

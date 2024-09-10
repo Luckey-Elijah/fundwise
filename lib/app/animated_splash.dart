@@ -1,10 +1,19 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:app/components/fundwise_logo.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedSplash extends StatefulWidget {
-  const AnimatedSplash({super.key});
+  const AnimatedSplash({
+    super.key,
+    this.initializationFuture,
+    this.completer,
+  });
+
+  final Future<void>? initializationFuture;
+  final Completer<void>? completer;
+
   @override
   State<AnimatedSplash> createState() => _AnimatedSplashState();
 }
@@ -46,16 +55,21 @@ class _AnimatedSplashState extends State<AnimatedSplash>
 
   @override
   Widget build(BuildContext context) {
+    const fundwiseLogo = FundwiseLogo(size: 48);
     return Material(
-      child: Center(
-        child: AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) => Transform.rotate(
-            angle: animation.value * 2.0 * pi,
-            child: child,
-          ),
-          child: const FundwiseLogo(size: 48),
-        ),
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          final a = animation;
+
+          return Center(
+            child: Transform.rotate(
+              angle: a.value * 2.0 * pi,
+              child: child,
+            ),
+          );
+        },
+        child: fundwiseLogo,
       ),
     );
   }
