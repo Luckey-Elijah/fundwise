@@ -16,6 +16,7 @@ dependencies:
   mix: ^1.4.6
   pocketbase: ^0.18.1
   shared_preferences: ^2.2.3
+  stack_trace: ^1.11.1
   stream_transform: ^2.1.0
 
 dev_dependencies:

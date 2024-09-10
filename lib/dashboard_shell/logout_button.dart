@@ -4,6 +4,7 @@ import 'package:app/router/router.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -32,7 +33,7 @@ class LogoutButton extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    authentication$.signOut();
+                    context.read<AuthenticationStore>().signOut();
                     DuckRouter.of(context)
                         .navigate(to: LoginLocation(), root: true);
                   },

@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:app/components/fundwise_ink.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:mix/mix.dart';
 
 part 'scaffold.mapper.dart';
 
@@ -18,19 +17,11 @@ class FundwiseResponsiveScaffold extends StatefulWidget {
   const FundwiseResponsiveScaffold({
     super.key,
     this.sidebarLeading,
-    this.sidebarLeadingCollapseButton,
-    this.sidebarTrailing,
     this.sidebarTrailingCollapseButton,
     this.body,
   });
 
   final ExpandableWidgetBuilder? sidebarLeading;
-  final Widget Function(
-    BuildContext context,
-    VoidCallback toggle,
-    bool expanded,
-  )? sidebarLeadingCollapseButton;
-  final ExpandableWidgetBuilder? sidebarTrailing;
   final ExpandableWidgetBuilder? sidebarTrailingCollapseButton;
   final WidgetBuilder? body;
 
@@ -64,15 +55,19 @@ class _FundwiseResponsiveScaffoldState
               if (!sm) ...[
                 ConstrainedBox(
                   constraints: constr,
-                  child: Stack(
+                  child: Column(
                     children: [
                       if (widget.sidebarLeading != null)
-                        widget.sidebarLeading!(context, leadingExpanded),
-                      if (!md && widget.sidebarLeadingCollapseButton != null)
-                        widget.sidebarLeadingCollapseButton!(
-                          context,
-                          toggle,
-                          leadingExpanded,
+                        Expanded(
+                          child: widget.sidebarLeading!(
+                            context,
+                            leadingExpanded,
+                          ),
+                        ),
+                      if (!md)
+                        SidebarExpandButton(
+                          expanded: leadingExpanded,
+                          onPressed: toggle,
                         ),
                     ],
                   ),
@@ -168,28 +163,32 @@ class AccountGroupSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
+    return PressableBox(
+      style: Style(
+        $box.padding.all(8),
+        $on.hover($box.color.darken(10)),
+      ),
+      onPress: () {
+        context
+            .read<AccountSummariesBloc>()
+            .add(AccountSummaryToggleExpand(index));
+      },
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {
-              context
-                  .read<AccountSummariesBloc>()
-                  .add(AccountSummaryToggleExpand(index));
-            },
-            icon: Transform.rotate(
-              angle: group.expanded ? pi / 2 : 0,
-              child: const Icon(Icons.chevron_right),
+          PressableBox(
+            child: StyledIcon(
+              Icons.chevron_right,
+              style: Style(
+                $icon.wrap.padding.all(8),
+                $with.rotate(group.expanded ? 1 : 0),
+              ),
             ),
           ),
           Text(group.label.toUpperCase()),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text(
-                group.balance,
-              ),
+              child: Text(group.balance),
             ),
           ),
         ],
@@ -276,7 +275,8 @@ class SidebarExpandButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return AnimatedAlign(
+      duration: Durations.medium1,
       alignment: expanded ? Alignment.bottomRight : Alignment.bottomCenter,
       child: IconButton(
         tooltip: expanded ? 'Collapse' : 'Expand',

@@ -1,8 +1,5 @@
 import 'package:app/repository/budget_model.dart';
-import 'package:app/repository/pocketbase.dart';
 import 'package:pocketbase/pocketbase.dart';
-
-final budgetStore$ = BudgetStore(pb: pocketbase$);
 
 class BudgetStore {
   BudgetStore({required PocketBase pb}) : _pb = pb;

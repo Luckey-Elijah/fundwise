@@ -15,26 +15,13 @@ extension ValidUrl on Uri? {
   }
 }
 
-mixin SubscriptionClosable<T> on BlocBase<T> {
-  final _subscriptions = <StreamSubscription<Object?>>[];
-
-  void registerSubscription(StreamSubscription<Object?> subscription) {
-    _subscriptions.add(subscription);
-  }
-
-  @override
-  Future<void> close() async {
-    for (final sub in _subscriptions) {
-      await sub.cancel();
-    }
-    return super.close();
-  }
-}
-
-class ServerCubit extends Cubit<ServerState>
-    with SubscriptionClosable<ServerState> {
-  ServerCubit()
-      : super(
+class ServerCubit extends Cubit<ServerState> {
+  ServerCubit({
+    required UrlStore url,
+    required HealthStore health,
+  })  : _url = url,
+        _health = health,
+        super(
           const ServerState(
             healthy: null,
             url: null,
@@ -42,8 +29,10 @@ class ServerCubit extends Cubit<ServerState>
           ),
         );
 
+  final UrlStore _url;
+  final HealthStore _health;
   Future<void> initialize() async {
-    final url = await url$.getUrl();
+    final url = await _url.getUrl();
     emit(
       state.copyWith(
         url: () => url,
@@ -58,7 +47,7 @@ class ServerCubit extends Cubit<ServerState>
     final url = Uri.tryParse(text);
     if (state.url == url) return;
     if (url.valid) {
-      await url$.setUrl(url);
+      await _url.setUrl(url);
       emit(state.copyWith(url: () => url));
     }
   }
@@ -68,7 +57,7 @@ class ServerCubit extends Cubit<ServerState>
 
     try {
       emit(state.copyWith(status: FundwiseStatus.loading));
-      healthy = await health$.check();
+      healthy = await _health.check();
     } on Exception {
       healthy = false;
     }

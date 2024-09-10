@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
-import 'package:app/budget_select/budget_select_bloc.dart';
 import 'package:app/components/fundwise_logo.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
@@ -21,7 +20,9 @@ class AuthenticationLocationInterceptor extends LocationInterceptor {
   @override
   Location? execute(Location to, Location? from) {
     if (authenticationStore.user != null) {
-      if (to is SplashLocation) return HomeLocation();
+      if (to is SplashLocation) {
+        return HomeLocation();
+      }
       return null;
     }
     return LoginLocation();
@@ -29,29 +30,14 @@ class AuthenticationLocationInterceptor extends LocationInterceptor {
 }
 
 class LoginLocationInterceptor extends LocationInterceptor {
-  LoginLocationInterceptor(this.authenticationStore);
+  LoginLocationInterceptor(this.auth);
 
-  final AuthenticationStore authenticationStore;
+  final AuthenticationStore auth;
 
   @override
   Location? execute(Location to, Location? from) {
-    if (from is LoginLocation &&
-        to is! LoginLocation &&
-        authentication$.user == null) {
+    if (from is LoginLocation && to is! LoginLocation && auth.user == null) {
       return LoginLocation();
-    }
-    return null;
-  }
-}
-
-class BudgetLocationInterceptor extends LocationInterceptor {
-  @override
-  Location? execute(Location to, Location? from) {
-    final state = budgetSelectBloc$.state;
-    if (to is BudgetLocation &&
-        to.id == null &&
-        state is DefaultBudgetSelected) {
-      return BudgetLocation(id: state.budget.id);
     }
     return null;
   }
@@ -66,15 +52,17 @@ class SplashLocation extends Location {
   String get path => '/splash';
 }
 
-final DuckRouter duckRouter = DuckRouter(
-  initialLocation: SplashLocation(),
-  interceptors: [
-    LoggingLocationInterceptor(),
-    AuthenticationLocationInterceptor(authentication$),
-    LoginLocationInterceptor(authentication$),
-    BudgetLocationInterceptor(),
-  ],
-);
+DuckRouter duckRouter({
+  required AuthenticationStore auth,
+}) =>
+    DuckRouter(
+      initialLocation: SplashLocation(),
+      interceptors: [
+        LoggingLocationInterceptor(),
+        AuthenticationLocationInterceptor(auth),
+        LoginLocationInterceptor(auth),
+      ],
+    );
 
 class LoggingLocationInterceptor extends LocationInterceptor {
   @override
@@ -87,21 +75,18 @@ class LoggingLocationInterceptor extends LocationInterceptor {
 
 class HomeLocation extends StatefulLocation {
   @override
-  StatefulLocationBuilder get childBuilder => _builder;
-
-  Widget _builder(BuildContext context, DuckShell shell) {
-    return FundwiseResponsiveScaffold(
-      sidebarLeading: (context, expanded) {
-        return SidebarLeading(
-          expanded: expanded,
-          matchedLocation: '',
-        );
-      },
-      sidebarLeadingCollapseButton: (context, toggle, expanded) {
-        return SidebarExpandButton(expanded: expanded, onPressed: toggle);
-      },
-      body: (context) => shell,
-    );
+  StatefulLocationBuilder get childBuilder {
+    return (BuildContext context, DuckShell shell) {
+      return FundwiseResponsiveScaffold(
+        sidebarLeading: (context, expanded) {
+          return SidebarLeading(
+            expanded: expanded,
+            matchedLocation: '',
+          );
+        },
+        body: (context) => shell,
+      );
+    };
   }
 
   @override

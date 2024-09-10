@@ -1,16 +1,19 @@
 import 'dart:async';
 
 import 'package:app/repository/logging_store.dart';
-import 'package:app/repository/pocketbase.dart';
 import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 export 'package:pocketbase/pocketbase.dart' show AuthStoreEvent;
 
-final authentication$ = AuthenticationStore(pb: pocketbase$);
-
 class AuthenticationStore {
-  AuthenticationStore({required PocketBase pb}) : _pb = pb;
+  AuthenticationStore({
+    required LoggingStore loggingStore,
+    required PocketBase pb,
+  })  : _loggingStore = loggingStore,
+        _pb = pb;
+
+  final LoggingStore _loggingStore;
 
   final PocketBase _pb;
 
@@ -36,7 +39,7 @@ class AuthenticationStore {
         return null;
       }
       final error = e.originalError;
-      unawaited(logging$.logException(exception: error, stackTrace: s));
+      unawaited(_loggingStore.logException(exception: error, stackTrace: s));
       rethrow;
     }
   }

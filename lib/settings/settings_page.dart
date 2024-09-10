@@ -14,8 +14,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          UserBloc(userRepository: user$)..add(InitializeUserEvent()),
+      create: (context) => UserBloc(userRepository: context.read<UserStore>())
+        ..add(InitializeUserEvent()),
       child: const SettingsView(),
     );
   }

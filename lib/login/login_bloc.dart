@@ -1,7 +1,7 @@
 import 'package:app/login/login_state.dart';
 import 'package:app/repository/auth_store.dart';
-import 'package:app/repository/pocketbase.dart';
 import 'package:bloc/bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LoginEvent {}
 
@@ -28,20 +28,25 @@ class UpdateLoginDetailEvent extends LoginEvent {
 }
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginState.initial) {
+  LoginBloc({
+    required SharedPreferences prefs,
+    required AuthenticationStore auth,
+  })  : _prefs = prefs,
+        _auth = auth,
+        super(LoginState.initial) {
     on<InitializeLoginEvent>((event, emit) {
-      if (!preferences$.containsKey(_key)) return;
+      if (!_prefs.containsKey(_key)) return;
       emit(state.copyWith(rememberUsername: true));
-      final emailOrUserName = preferences$.getString(_key);
+      final emailOrUserName = _prefs.getString(_key);
       emit(state.copyWith(email: emailOrUserName));
     });
     on<ToggleRememberUsernameEvent>((event, emit) async {
       emit(state.copyWith(rememberUsername: !state.rememberUsername));
 
       if (state.rememberUsername) {
-        await preferences$.setString(_key, state.email);
+        await _prefs.setString(_key, state.email);
       } else {
-        await preferences$.remove(_key);
+        await _prefs.remove(_key);
       }
     });
     on<UpdateLoginDetailEvent>((event, emit) async {
@@ -54,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (email != null) {
         emit(state.copyWith(email: email));
         if (state.rememberUsername) {
-          await preferences$.setString(_key, state.email);
+          await _prefs.setString(_key, state.email);
         }
       }
       if (password != null) emit(state.copyWith(password: password));
@@ -68,7 +73,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (state.loginOrSignUp == LoginOrSignUpState.login) {
         try {
-          await authentication$.signIn(
+          await _auth.signIn(
             usernameOrEmail: state.email,
             password: state.password,
           );
@@ -95,7 +100,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       try {
         emit(state.copyWith(loading: true));
-        await authentication$.signUp(
+        await _auth.signUp(
           username: state.username,
           email: state.email,
           password: state.password,
@@ -119,6 +124,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
     });
   }
+  final AuthenticationStore _auth;
+  final SharedPreferences _prefs;
 
   static const _key = 'remember-username/email';
 }

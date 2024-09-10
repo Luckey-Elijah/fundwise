@@ -14,9 +14,6 @@ class SelectBudgetEvent extends BudgetSelectEvent {
   final BudgetSummaryModel budget;
 }
 
-final budgetSelectBloc$ = BudgetSelectBloc(budgetStore$)
-  ..add(InitializeBudgetSelectEvent());
-
 class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
   BudgetSelectBloc(this._budgetStore$)
       : super(const InitialBudgetSelectState()) {

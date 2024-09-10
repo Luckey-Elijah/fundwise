@@ -1,47 +1,11 @@
 import 'package:app/components/fundwise_leading_navigation_action.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/router/router.dart';
+import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
-
-class DashboardShell extends StatelessWidget {
-  const DashboardShell({
-    required this.child,
-    required this.matchedLocation,
-    required this.url,
-    super.key,
-  });
-
-  final String matchedLocation;
-  final Widget child;
-  final Uri url;
-
-  @override
-  Widget build(BuildContext context) {
-    return FundwiseResponsiveScaffold(
-      sidebarLeading: (context, expanded) {
-        return SidebarLeading(
-          expanded: expanded,
-          matchedLocation: matchedLocation,
-        );
-      },
-      sidebarLeadingCollapseButton: (context, toggle, expanded) {
-        return SidebarExpandButton(expanded: expanded, onPressed: toggle);
-      },
-      body: (context) => child,
-    );
-  }
-
-  int? selectedIndex(String matchedLocation) {
-    const io = ['/budget', '/reports', '/accounts'];
-    for (var i = 0; i < io.length; i++) {
-      if (matchedLocation.startsWith(io[i])) return i;
-    }
-    return null;
-  }
-}
 
 class SidebarLeading extends StatelessWidget {
   const SidebarLeading({
@@ -61,6 +25,8 @@ class SidebarLeading extends StatelessWidget {
           : null;
     }
 
+    final router = DuckRouter.of(context);
+
     return BlocProvider(
       create: _createAccountSummaries,
       child: Column(
@@ -72,34 +38,23 @@ class SidebarLeading extends StatelessWidget {
             label: 'BUDGET',
             icon: Icons.wallet,
             color: color('/budget'),
-            onTap: () => duckRouter.navigate(
-              to: const BudgetLocation(),
-              clearStack: true,
-            ),
+            onTap: () => router.navigate(to: const BudgetLocation()),
           ),
           SidebarRoute(
             label: 'REPORTS',
             icon: Icons.analytics,
             color: color('/reports'),
-            onTap: () => duckRouter.navigate(
-              to: const ReportingLocation(),
-              clearStack: true,
-            ),
+            onTap: () => router.navigate(to: const ReportingLocation()),
           ),
           SidebarRoute(
             label: 'ACCOUNTS',
             icon: Icons.account_balance,
             color: color('/accounts'),
-            onTap: () => duckRouter.navigate(
-              to: const AccountsLocation(),
-              clearStack: true,
-            ),
+            onTap: () => router.navigate(to: const AccountsLocation()),
           ),
           if (expanded) ...[
             const Gutter(),
-            const Expanded(
-              child: AccountGroupList(),
-            ),
+            const Expanded(child: AccountGroupList()),
           ],
         ],
       ),

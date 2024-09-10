@@ -31,9 +31,9 @@ class BudgetNewPage extends StatelessWidget {
                     FormRow(
                       label: 'Date Format',
                       child: BlocProvider(
-                        create: (context) =>
-                            DateFormatPickerCubit(repo: dateFormat$)
-                              ..initialize(),
+                        create: (context) => DateFormatPickerCubit(
+                          repo: context.read<DateFormatStore>(),
+                        )..initialize(),
                         child: const DateFormatPicker(),
                       ),
                     ),

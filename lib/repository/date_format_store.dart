@@ -1,9 +1,6 @@
-import 'package:app/repository/pocketbase.dart';
 import 'package:app/util.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pocketbase/pocketbase.dart';
-
-final dateFormat$ = DateFormatStore(pb: pocketbase$);
 
 class DateFormatStore {
   DateFormatStore({required PocketBase pb}) : _pb = pb;

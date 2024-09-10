@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-final licensing$ = LicensingStore(rootBundle: rootBundle);
-
 class LicensingStore {
   LicensingStore({required AssetBundle rootBundle}) : _rootBundle = rootBundle;
 
