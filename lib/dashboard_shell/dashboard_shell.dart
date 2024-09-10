@@ -1,3 +1,4 @@
+import 'package:app/components/fundwise_leading_navigation_action.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
@@ -27,7 +28,7 @@ class DashboardShell extends StatelessWidget {
         );
       },
       sidebarLeadingCollapseButton: (context, toggle, expanded) {
-        return ExpandButton(expanded: expanded, onPressed: toggle);
+        return SidebarExpandButton(expanded: expanded, onPressed: toggle);
       },
       body: (context) => child,
     );

@@ -1,4 +1,5 @@
-import 'package:app/login/login_cubit.dart';
+import 'package:app/login/login_bloc.dart';
+import 'package:app/login/login_state.dart';
 import 'package:app/server/server_cubit.dart';
 import 'package:app/server/server_url_field.dart';
 import 'package:flailwind/flailwind.dart';
@@ -19,7 +20,7 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: _loginListener,
       child: Scaffold(
         body: Center(
@@ -50,8 +51,8 @@ class FormTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLogin = context.select<LoginCubit, bool>(
-      (store) => store.state.loginOrSignUp == LoginOrSignUp.login,
+    final isLogin = context.select<LoginBloc, bool>(
+      (store) => store.state.loginOrSignUp == LoginOrSignUpState.login,
     );
 
     return AnimatedAlign(
@@ -73,11 +74,11 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLogin = context.select<LoginCubit, bool>(
-      (cubit) => cubit.state.loginOrSignUp == LoginOrSignUp.login,
+    final isLogin = context.select<LoginBloc, bool>(
+      (cubit) => cubit.state.loginOrSignUp == LoginOrSignUpState.login,
     );
 
-    final enabled = context.select<LoginCubit, bool>(
+    final enabled = context.select<LoginBloc, bool>(
       (cubit) => !cubit.state.loading,
     );
 
@@ -139,7 +140,9 @@ class _PasswordFieldState extends State<PasswordField> with ObscureState {
   Widget build(BuildContext context) {
     return TextField(
       enabled: widget.enabled,
-      onChanged: context.read<LoginCubit>().updatePassword,
+      onChanged: (password) => context
+          .read<LoginBloc>()
+          .add(UpdateLoginDetailEvent(password: password)),
       obscureText: obscure,
       decoration: InputDecoration(
         hintText: 'password',
@@ -151,7 +154,7 @@ class _PasswordFieldState extends State<PasswordField> with ObscureState {
         ),
       ),
       onSubmitted: (_) {
-        if (widget.isLogin) context.read<LoginCubit>().loginOrSignUp();
+        if (widget.isLogin) context.read<LoginBloc>().add(LoginOrSignUpEvent());
       },
       autofillHints: [
         if (!widget.isLogin) AutofillHints.newPassword,
@@ -187,7 +190,7 @@ class EmailField extends StatefulWidget {
 
 class _EmailFieldState extends State<EmailField> {
   late final controller = TextEditingController(
-    text: context.read<LoginCubit>().state.email,
+    text: context.read<LoginBloc>().state.email,
   );
 
   @override
@@ -197,7 +200,9 @@ class _EmailFieldState extends State<EmailField> {
         TextField(
           controller: controller,
           enabled: widget.enabled,
-          onChanged: context.read<LoginCubit>().updateEmail,
+          onChanged: (email) => context
+              .read<LoginBloc>()
+              .add(UpdateLoginDetailEvent(email: email)),
           decoration: InputDecoration(
             hintText: widget.isLogin ? 'email/username' : 'email',
           ),
@@ -224,7 +229,7 @@ class RememberUserNameCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = context.select<LoginCubit, bool>(
+    final value = context.select<LoginBloc, bool>(
       (store) => store.state.rememberUsername,
     );
 
@@ -234,7 +239,8 @@ class RememberUserNameCheckBox extends StatelessWidget {
         const Text('remember username'),
         Checkbox.adaptive(
           value: value,
-          onChanged: (_) => context.read<LoginCubit>().toggleRememberUsername(),
+          onChanged: (_) =>
+              context.read<LoginBloc>().add(ToggleRememberUsernameEvent()),
         ),
       ],
     );
@@ -255,7 +261,9 @@ class _ConfirmFieldState extends State<ConfirmField> with ObscureState {
     return TextField(
       obscureText: obscure,
       enabled: widget.enabled,
-      onChanged: context.read<LoginCubit>().updateConfirm,
+      onChanged: (confirm) => context
+          .read<LoginBloc>()
+          .add(UpdateLoginDetailEvent(confirm: confirm)),
       decoration: InputDecoration(
         hintText: 'confirm',
         suffixIcon: IconButton(
@@ -281,8 +289,10 @@ class UsernameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       enabled: enabled,
-      onSubmitted: (_) => context.read<LoginCubit>().loginOrSignUp(),
-      onChanged: context.read<LoginCubit>().updateUsername,
+      onSubmitted: (_) => context.read<LoginBloc>().add(LoginOrSignUpEvent()),
+      onChanged: (username) => context
+          .read<LoginBloc>()
+          .add(UpdateLoginDetailEvent(username: username)),
       decoration: const InputDecoration(hintText: 'username'),
       autofillHints: const [AutofillHints.newUsername],
     );
@@ -302,7 +312,9 @@ class LoginOrSignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: enabled ? context.read<LoginCubit>().loginOrSignUp : null,
+      onPressed: enabled
+          ? () => context.read<LoginBloc>().add(LoginOrSignUpEvent())
+          : null,
       child: Text(isLogin ? 'login' : 'signup'),
     );
   }
@@ -321,8 +333,9 @@ class ToggleLoginSignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed:
-          enabled ? context.read<LoginCubit>().toggleLoginOrSignUp : null,
+      onPressed: enabled
+          ? () => context.read<LoginBloc>().add(ToggleLoginOrSignUpEvent())
+          : null,
       child: Text(isLogin ? 'go to sign up' : 'go to login'),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/repository/auth_store.dart';
+import 'package:app/router/router.dart';
+import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +31,11 @@ class LogoutButton extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextButton(
-                  onPressed: authentication$.signOut,
+                  onPressed: () {
+                    authentication$.signOut();
+                    DuckRouter.of(context)
+                        .navigate(to: LoginLocation(), root: true);
+                  },
                   child: const Text('Logout'),
                 ),
                 TextButton(
