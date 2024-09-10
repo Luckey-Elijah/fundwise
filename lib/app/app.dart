@@ -42,6 +42,7 @@ class _AuthListenable extends StatelessWidget {
           prev is! AuthenticatedState && next is AuthenticatedState ||
           prev is! NotAuthenticatedState && next is NotAuthenticatedState,
       listener: (context, state) {
+        final router = DuckRouter.maybeOf(context) ?? this.router;
         if (state is AuthenticatedState) {
           router.navigate(
             to: HomeLocation(),

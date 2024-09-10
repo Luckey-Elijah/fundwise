@@ -29,7 +29,6 @@ Future<void> initialize({
 
   try {
     final (u, _) = await (url.getUrl(), auth.refresh()).wait;
-
     if (u == null) auth.signOut();
   } catch (e, s) {
     unawaited(logging.logException(exception: e, stackTrace: s));

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/app/animated_splash.dart';
 import 'package:app/app/app.dart';
 import 'package:app/app/bloc_provider_scope.dart';
 import 'package:app/app/initialize.dart';
@@ -14,16 +15,29 @@ import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  runApp(const AnimatedSplash());
+
   final licensing = LicensingStore(rootBundle: rootBundle);
   final preferences = await SharedPreferences.getInstance();
   final asyncAuthStore = AsyncAuthStore(
     save: (data) => preferences.setString('pb_auth', data),
     initial: preferences.getString('pb_auth'),
   );
+
   final pocketbase = PocketBase('', authStore: asyncAuthStore);
   final logging = LoggingStore(pb: pocketbase);
   final auth = AuthenticationStore(loggingStore: logging, pb: pocketbase);
   final url = UrlStore(pb: pocketbase, prefs: preferences);
+
+  final app = RepositoryProviderScope(
+    url: url,
+    logging: logging,
+    licensing: licensing,
+    pocketbase: pocketbase,
+    preferences: preferences,
+    authentication: auth,
+    child: const BlocProviderScope(child: FundwiseApp()),
+  );
 
   await initialize(
     url: url,
@@ -32,15 +46,5 @@ Future<void> main() async {
     licensing: licensing,
   );
 
-  return runApp(
-    RepositoryProviderScope(
-      url: url,
-      logging: logging,
-      licensing: licensing,
-      pocketbase: pocketbase,
-      preferences: preferences,
-      authentication: auth,
-      child: const BlocProviderScope(child: FundwiseApp()),
-    ),
-  );
+  return runApp(app);
 }
