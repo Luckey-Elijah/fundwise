@@ -9,6 +9,7 @@ import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/reports/reports.dart';
 import 'package:app/repository/auth_store.dart';
+import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 
@@ -119,10 +120,14 @@ class AccountsLocation extends Location {
   final String? id;
 
   @override
-  LocationBuilder? get builder => id == null ? _builder : _builderId;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
   Widget _builder(BuildContext context) => const Placeholder();
-  Widget _builderId(BuildContext context) => const Placeholder();
 
   @override
   String get path => id == null ? '/accounts' : '/accounts/$id';
@@ -143,7 +148,12 @@ class BudgetNewPageLocation extends Location {
 class ReportingLocation extends Location {
   const ReportingLocation();
   @override
-  LocationBuilder? get builder => _builder;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
   Widget _builder(BuildContext context) => const ReportsPage();
 
@@ -167,7 +177,12 @@ class BudgetLocation extends Location {
   final String? id;
 
   @override
-  LocationBuilder? get builder => _builder;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
   Widget _builder(BuildContext context) {
     final id = this.id;
