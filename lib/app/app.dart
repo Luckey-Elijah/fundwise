@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:app/auth/auth_bloc.dart';
 import 'package:app/router/router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FundwiseApp extends StatefulWidget {
   const FundwiseApp({super.key});
@@ -13,81 +17,41 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: lightTheme,
-      routerConfig: _router,
-    );
-  }
-
-  ThemeData get lightTheme {
-    const defaultElevation = WidgetStatePropertyAll<double>(0);
-
-    final defaultShape = WidgetStatePropertyAll(
-      ContinuousRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
-
-    const defaultPadding = WidgetStatePropertyAll(EdgeInsets.all(16));
-
-    return ThemeData(
-      fontFamily: 'Raleway',
-      colorScheme: _scheme,
-      visualDensity: VisualDensity.comfortable,
-      useMaterial3: true,
-    ).copyWith(
-      dialogTheme: DialogTheme(
-        shape: defaultShape.value,
-        insetPadding: defaultPadding.value,
-      ),
-      splashFactory: NoSplash.splashFactory,
-      cardTheme: CardTheme(
-        elevation: defaultElevation.value,
-        shape: defaultShape.value,
-      ),
-      dividerTheme: const DividerThemeData(space: 0),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ButtonStyle(
-          elevation: defaultElevation,
-          padding: defaultPadding,
-          shape: defaultShape,
-        ),
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(elevation: defaultElevation, shape: defaultShape),
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listenWhen: (prev, next) {
+        final auth = prev is! AuthenticatedState && next is AuthenticatedState;
+        final notAuth =
+            prev is! NotAuthenticatedState && next is NotAuthenticatedState;
+        return auth || notAuth;
+      },
+      listener: (context, state) {
+        log('$state');
+        if (state is AuthenticatedState) {
+          _router.navigate(
+            to: HomeLocation(),
+            root: true,
+            clearStack: true,
+            replace: true,
+          );
+        } else if (state is NotAuthenticatedState) {
+          _router.navigate(
+            to: LoginLocation(),
+            root: true,
+            clearStack: true,
+            replace: true,
+          );
+        } else if (state is UnknownAuthenticatedState) {
+          _router.navigate(
+            to: SplashLocation(),
+            root: true,
+            clearStack: true,
+            replace: true,
+          );
+        }
+      },
+      child: MaterialApp.router(
+        routerConfig: _router,
       ),
     );
   }
 }
-
-const _scheme = ColorScheme(
-  brightness: Brightness.light,
-  primary: Color(0xff386a20),
-  onPrimary: Color(0xffffffff),
-  primaryContainer: Color(0xffb7f397),
-  onPrimaryContainer: Color(0xff0f140d),
-  secondary: Color(0xff55624c),
-  onSecondary: Color(0xffffffff),
-  secondaryContainer: Color(0xffd9e7cb),
-  onSecondaryContainer: Color(0xff121311),
-  tertiary: Color(0xff19686a),
-  onTertiary: Color(0xffffffff),
-  tertiaryContainer: Color(0xffa8eff0),
-  onTertiaryContainer: Color(0xff0e1414),
-  error: Color(0xffba1a1a),
-  onError: Color(0xffffffff),
-  errorContainer: Color(0xffffdad6),
-  onErrorContainer: Color(0xff141212),
-  surface: Color(0xfff9faf8),
-  onSurface: Color(0xff090909),
-  surfaceContainerHighest: Color(0xffe4e6e2),
-  onSurfaceVariant: Color(0xff111211),
-  outline: Color(0xff7c7c7c),
-  outlineVariant: Color(0xffc8c8c8),
-  shadow: Color(0xff000000),
-  scrim: Color(0xff000000),
-  inverseSurface: Color(0xff121311),
-  onInverseSurface: Color(0xfff5f5f5),
-  inversePrimary: Color(0xffbbdeab),
-  surfaceTint: Color(0xff386a20),
-);

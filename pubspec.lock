@@ -452,6 +452,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  mix:
+    dependency: "direct main"
+    description:
+      name: mix
+      sha256: cbbf6a7f40edbb9d468dcc1c2fc5c553fc838cee41c277188b0b8f0043acc07e
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.6"
+  mix_annotations:
+    dependency: transitive
+    description:
+      name: mix_annotations
+      sha256: "5f86b92017d44bb7bbc0e852b8c4a310bfd0d77232548a14802da7f5893d04e4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   nested:
     dependency: transitive
     description:

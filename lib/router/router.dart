@@ -1,13 +1,15 @@
+import 'dart:developer';
+
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
 import 'package:app/budget_select/budget_select_bloc.dart';
-import 'package:app/components/fundwise_ink.dart';
 import 'package:app/components/fundwise_logo.dart';
-import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
+import 'package:app/reports/reports.dart';
 import 'package:app/repository/auth_store.dart';
+import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 
@@ -67,11 +69,21 @@ class SplashLocation extends Location {
 final DuckRouter duckRouter = DuckRouter(
   initialLocation: SplashLocation(),
   interceptors: [
+    LoggingLocationInterceptor(),
     AuthenticationLocationInterceptor(authentication$),
     LoginLocationInterceptor(authentication$),
     BudgetLocationInterceptor(),
   ],
 );
+
+class LoggingLocationInterceptor extends LocationInterceptor {
+  @override
+  Location? execute(Location to, Location? from) {
+    log('${from?.path} -> ${to.path}', name: 'to | from');
+
+    return null;
+  }
+}
 
 class HomeLocation extends StatefulLocation {
   @override
@@ -86,7 +98,7 @@ class HomeLocation extends StatefulLocation {
         );
       },
       sidebarLeadingCollapseButton: (context, toggle, expanded) {
-        return ExpandButton(expanded: expanded, onPressed: toggle);
+        return SidebarExpandButton(expanded: expanded, onPressed: toggle);
       },
       body: (context) => shell,
     );
@@ -108,10 +120,14 @@ class AccountsLocation extends Location {
   final String? id;
 
   @override
-  LocationBuilder? get builder => id == null ? _builder : _builderId;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
   Widget _builder(BuildContext context) => const Placeholder();
-  Widget _builderId(BuildContext context) => const Placeholder();
 
   @override
   String get path => id == null ? '/accounts' : '/accounts/$id';
@@ -132,37 +148,17 @@ class BudgetNewPageLocation extends Location {
 class ReportingLocation extends Location {
   const ReportingLocation();
   @override
-  LocationBuilder? get builder => _builder;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
-  Widget _builder(BuildContext context) => const Center(
-        child: _Test(),
-      );
+  Widget _builder(BuildContext context) => const ReportsPage();
 
   @override
   String get path => '/reports';
-}
-
-class _Test extends StatelessWidget {
-  const _Test();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: PositionedOverlayBuilder(
-        anchorBuilder: (context, controller) => FundwiseInk.primary(
-          onSecondary: controller.show,
-          child: const Padding(
-            padding: EdgeInsets.all(8),
-            child: Text('hi, mom'),
-          ),
-        ),
-        overlayChildBuilder: (context, controller) {
-          return const _Test();
-        },
-      ),
-    );
-  }
 }
 
 class LoginLocation extends Location {
@@ -181,7 +177,12 @@ class BudgetLocation extends Location {
   final String? id;
 
   @override
-  LocationBuilder? get builder => _builder;
+  LocationPageBuilder? get pageBuilder {
+    return (context, p) => NoTransitionPage(
+          name: path,
+          child: _builder(context),
+        );
+  }
 
   Widget _builder(BuildContext context) {
     final id = this.id;

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:app/components/fundwise_ink.dart';
-import 'package:app/components/fundwise_logo.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -217,6 +216,8 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
   @override
   Widget build(BuildContext context) {
     final hasAction = hover || widget.account.actions.isNotEmpty;
+    final style = widget.account.negative ? context.p.onError : null;
+
     return InkWell(
       onTap: () {},
       onHover: (h) => setState(() => hover = h),
@@ -250,7 +251,7 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
                     widget.account.balance,
-                    style: widget.account.negative ? context.p.onError : null,
+                    style: style,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -263,42 +264,8 @@ class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
   }
 }
 
-class FundwiseLeadingNavigationAction extends StatelessWidget {
-  const FundwiseLeadingNavigationAction({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < 96) {
-              return const Center(child: FundwiseLogo());
-            }
-            return Row(
-              children: [
-                const FundwiseLogo(),
-                const GutterSmall(),
-                Flexible(
-                  child: Text(
-                    'account+user@fundwise.dev',
-                    style: context.p.lg.thin,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class ExpandButton extends StatelessWidget {
-  const ExpandButton({
+class SidebarExpandButton extends StatelessWidget {
+  const SidebarExpandButton({
     required this.expanded,
     required this.onPressed,
     super.key,
