@@ -37,7 +37,6 @@ class BudgetSelectView extends StatelessWidget {
           prev is! DefaultBudgetSelected && next is DefaultBudgetSelected,
       listener: (context, state) {
         if (state case DefaultBudgetSelected(:final budget)) {
-          log('$state');
           DuckRouter.of(context).navigate(
             to: BudgetLocation(id: budget.id),
           );

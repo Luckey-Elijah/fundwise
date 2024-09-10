@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app/auth/auth_bloc.dart';
 import 'package:app/repository/auth_store.dart';
 import 'package:app/router/router.dart';
@@ -15,45 +13,51 @@ class FundwiseApp extends StatefulWidget {
 }
 
 class _FundwiseAppState extends State<FundwiseApp> {
-  late final _router = duckRouter(auth: context.read<AuthenticationStore>());
+  late final router = duckRouter(auth: context.read<AuthenticationStore>());
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: router,
       builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-          listenWhen: (prev, next) {
-            final auth =
-                prev is! AuthenticatedState && next is AuthenticatedState;
-            final notAuth =
-                prev is! NotAuthenticatedState && next is NotAuthenticatedState;
-            return auth || notAuth;
-          },
-          listener: (context, state) {
-            log('$state');
-            final router = DuckRouter.maybeOf(context);
-            if (router == null) return;
-            if (state is AuthenticatedState) {
-              router.navigate(
-                to: HomeLocation(),
-                root: true,
-                clearStack: true,
-                replace: true,
-              );
-            }
-            if (state is NotAuthenticatedState) {
-              router.navigate(
-                to: LoginLocation(),
-                root: true,
-                clearStack: true,
-                replace: true,
-              );
-            }
-          },
-          child: child,
-        );
+        return _AuthListenable(router: router, child: child);
       },
+    );
+  }
+}
+
+class _AuthListenable extends StatelessWidget {
+  const _AuthListenable({
+    required this.child,
+    required this.router,
+  });
+
+  final Widget? child;
+  final DuckRouter router;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listenWhen: (prev, next) =>
+          prev is! AuthenticatedState && next is AuthenticatedState ||
+          prev is! NotAuthenticatedState && next is NotAuthenticatedState,
+      listener: (context, state) {
+        if (state is AuthenticatedState) {
+          router.navigate(
+            to: HomeLocation(),
+            clearStack: true,
+            replace: true,
+          );
+        }
+        if (state is NotAuthenticatedState) {
+          router.navigate(
+            to: LoginLocation(),
+            clearStack: true,
+            replace: true,
+          );
+        }
+      },
+      child: child,
     );
   }
 }
