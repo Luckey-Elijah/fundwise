@@ -31,7 +31,7 @@ class FundwiseBlocObserver extends BlocObserver {
     _loggingStore.logException(
       exception: error,
       stackTrace: stackTrace,
-      extra: bloc,
+      extra: bloc.runtimeType,
     );
   }
 
