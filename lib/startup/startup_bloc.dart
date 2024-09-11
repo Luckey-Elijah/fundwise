@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app/app/observer.dart';
 import 'package:app/repository/auth_store.dart';
 import 'package:app/repository/licensing_store.dart';
 import 'package:app/repository/logging_store.dart';
@@ -39,15 +38,12 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
       );
     };
 
-    Bloc.observer = FundwiseBlocObserver(loggingStore: _logging);
-
     try {
       final (u, _) = await (_url.getUrl(), _auth.refresh()).wait;
       if (u == null) _auth.signOut();
     } catch (e, s) {
       unawaited(_logging.logException(exception: e, stackTrace: s));
     } finally {
-      await Future<void>.delayed(const Duration(milliseconds: 1500 * 4));
       emit(ReadyStartUpState());
     }
   }

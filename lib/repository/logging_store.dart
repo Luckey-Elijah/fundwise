@@ -13,6 +13,7 @@ class LoggingStore {
   Future<void> logException({
     required Object? exception,
     required StackTrace? stackTrace,
+    Object? extra,
   }) async {
     String? trace;
     if (stackTrace != null) trace = Trace.format(stackTrace);
@@ -42,6 +43,7 @@ class LoggingStore {
       }
       log('$exception', name: 'exception');
       log('$trace', name: 'trace');
+      if (extra != null) log('$extra', name: 'extra');
     } catch (e, st) {
       log('Could not log an [exception]:');
       log('$exception', name: 'exception');
