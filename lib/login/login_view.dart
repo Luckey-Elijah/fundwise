@@ -34,12 +34,7 @@ class LoginView extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
               child: Card.outlined(
-                color: context.select<LoginBloc, bool>(
-                  (store) =>
-                      store.state.loginOrSignUp == LoginOrSignUpState.login,
-                )
-                    ? context.primaryContainer
-                    : context.tertiaryContainer,
+                color: context.primaryContainer,
                 child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Column(

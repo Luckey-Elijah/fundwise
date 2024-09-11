@@ -44,6 +44,8 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
     } catch (e, s) {
       unawaited(_logging.logException(exception: e, stackTrace: s));
     } finally {
+      final duration = event.duration;
+      if (duration != null) await Future<void>.delayed(duration);
       emit(ReadyStartUpState());
     }
   }

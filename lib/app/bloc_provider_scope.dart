@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlocProviderScope extends StatelessWidget {
-  const BlocProviderScope({
-    required this.child,
-    super.key,
-  });
+  const BlocProviderScope({required this.child, super.key});
 
   final Widget child;
 
@@ -21,7 +18,7 @@ class BlocProviderScope extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => StartUpBloc(
+          create: (context) => StartUpBloc(
             url: context.read<UrlStore>(),
             logging: context.read<LoggingStore>(),
             licensing: context.read<LicensingStore>(),
