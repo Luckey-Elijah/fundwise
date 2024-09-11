@@ -1,5 +1,3 @@
-// ignore_for_file: strict_raw_type
-
 import 'dart:developer';
 
 import 'package:app/repository/logging_store.dart';
@@ -13,7 +11,10 @@ class FundwiseBlocObserver extends BlocObserver {
   final LoggingStore _loggingStore;
 
   @override
-  void onEvent(Bloc bloc, Object? event) {
+  void onEvent(
+    Bloc<dynamic, dynamic> bloc,
+    Object? event,
+  ) {
     if (event != null) {
       log('$event', name: 'BlocObserver | ${bloc.runtimeType} | onEvent');
     }
@@ -21,7 +22,11 @@ class FundwiseBlocObserver extends BlocObserver {
   }
 
   @override
-  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+  void onError(
+    BlocBase<dynamic> bloc,
+    Object error,
+    StackTrace stackTrace,
+  ) {
     super.onError(bloc, error, stackTrace);
     _loggingStore.logException(
       exception: error,
@@ -31,13 +36,19 @@ class FundwiseBlocObserver extends BlocObserver {
   }
 
   @override
-  void onChange(BlocBase bloc, Change change) {
+  void onChange(
+    BlocBase<dynamic> bloc,
+    Change<dynamic> change,
+  ) {
     log('$change', name: 'BlocObserver | ${bloc.runtimeType} | onChange');
     super.onChange(bloc, change);
   }
 
   @override
-  void onTransition(Bloc bloc, Transition transition) {
+  void onTransition(
+    Bloc<dynamic, dynamic> bloc,
+    Transition<dynamic, dynamic> transition,
+  ) {
     log(
       '$transition',
       name: 'BlocObserver | ${bloc.runtimeType} | onTransition',
