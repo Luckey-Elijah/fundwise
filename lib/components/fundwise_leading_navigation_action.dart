@@ -11,7 +11,10 @@ class FundwiseLeadingNavigationAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
-      overlayChildBuilder: (context, controller) => const LogoutButton(),
+      overlayChildBuilder: (context, controller) => const Padding(
+        padding: EdgeInsets.all(8),
+        child: LogoutButton(),
+      ),
       anchorBuilder: (context, controller) => InkWell(
         onTap: () => controller.toggle(),
         child: Padding(

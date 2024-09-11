@@ -12,7 +12,10 @@ import 'package:flutter_gutter/flutter_gutter.dart';
 void _loginListener(BuildContext context, LoginState state) {
   if (state.error != null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(state.error!)),
+      SnackBar(
+        content: Text(state.error!),
+        shape: const StadiumBorder(),
+      ),
     );
   }
 }
@@ -31,7 +34,12 @@ class LoginView extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(480)),
               child: Card.outlined(
-                color: context.primaryContainer,
+                color: context.select<LoginBloc, bool>(
+                  (store) =>
+                      store.state.loginOrSignUp == LoginOrSignUpState.login,
+                )
+                    ? context.primaryContainer
+                    : context.tertiaryContainer,
                 child: const Padding(
                   padding: EdgeInsets.all(16),
                   child: Column(
@@ -57,14 +65,18 @@ class FormTitle extends StatelessWidget {
       (store) => store.state.loginOrSignUp == LoginOrSignUpState.login,
     );
 
+    final crossFadeState =
+        isLogin ? CrossFadeState.showFirst : CrossFadeState.showSecond;
+    final alignment = isLogin ? Alignment.topLeft : Alignment.topRight;
+
     return AnimatedAlign(
-      duration: Durations.short4,
-      alignment: isLogin ? Alignment.topLeft : Alignment.topRight,
+      duration: Durations.long1,
+      curve: Curves.easeOutCubic,
+      alignment: alignment,
       child: AnimatedCrossFade(
         firstChild: Text('login', style: context.h1),
         secondChild: Text('signup', style: context.h1),
-        crossFadeState:
-            isLogin ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        crossFadeState: crossFadeState,
         duration: Durations.short4,
       ),
     );
@@ -202,19 +214,23 @@ class _EmailFieldState extends State<EmailField> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          controller: controller,
-          enabled: widget.enabled,
-          onChanged: (email) => context
-              .read<LoginBloc>()
-              .add(UpdateLoginDetailEvent(email: email)),
-          decoration: InputDecoration(
-            hintText: widget.isLogin ? 'email/username' : 'email',
+        BlocListener<LoginBloc, LoginState>(
+          listenWhen: (prev, next) => next.email != controller.text,
+          listener: (context, state) => controller.text = state.email,
+          child: TextField(
+            controller: controller,
+            enabled: widget.enabled,
+            onChanged: (email) => context
+                .read<LoginBloc>()
+                .add(UpdateLoginDetailEvent(email: email)),
+            decoration: InputDecoration(
+              hintText: widget.isLogin ? 'email/username' : 'email',
+            ),
+            autofillHints: [
+              if (!widget.isLogin) AutofillHints.newUsername,
+              if (widget.isLogin) AutofillHints.username,
+            ],
           ),
-          autofillHints: [
-            if (!widget.isLogin) AutofillHints.newUsername,
-            if (widget.isLogin) AutofillHints.username,
-          ],
         ),
         AnimatedSize(
           duration: Durations.medium1,
