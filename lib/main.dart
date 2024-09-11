@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:app/app/animated_splash.dart';
 import 'package:app/app/app.dart';
 import 'package:app/app/bloc_provider_scope.dart';
-import 'package:app/app/initialize.dart';
 import 'package:app/app/repository_provider_scope.dart';
 import 'package:app/repository/auth_store.dart';
 import 'package:app/repository/licensing_store.dart';
@@ -15,10 +13,6 @@ import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
-  runApp(
-    const AnimatedSplash(),
-  );
-
   final licensing = LicensingStore(rootBundle: rootBundle);
   final preferences = await SharedPreferences.getInstance();
   final asyncAuthStore = AsyncAuthStore(
@@ -39,13 +33,6 @@ Future<void> main() async {
     preferences: preferences,
     authentication: auth,
     child: const BlocProviderScope(child: FundwiseApp()),
-  );
-
-  await initialize(
-    url: url,
-    auth: auth,
-    logging: logging,
-    licensing: licensing,
   );
 
   return runApp(app);

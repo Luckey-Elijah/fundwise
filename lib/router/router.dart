@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:app/app/animated_splash.dart';
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
-import 'package:app/components/fundwise_logo.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
@@ -45,8 +45,7 @@ class LoginLocationInterceptor extends LocationInterceptor {
 
 class SplashLocation extends Location {
   @override
-  LocationBuilder? get builder =>
-      (_) => const Center(child: FundwiseLogo(size: 48));
+  LocationBuilder? get builder => (_) => const AnimatedSplash();
 
   @override
   String get path => '/splash';

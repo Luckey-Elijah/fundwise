@@ -30,6 +30,12 @@ class AuthenticationStore {
   }
 
   Future<RecordModel?> refresh() async {
+    if (!_pb.authStore.isValid) {
+      // no need to attempt [authRefresh]
+      signOut();
+      return null;
+    }
+
     try {
       final RecordAuth(:record) = await _pb.collection('users').authRefresh();
       return record;

@@ -34,9 +34,13 @@ class _AnimatedSplashState extends State<AnimatedSplash>
     )..repeat();
 
     animation = TweenSequence([
+      TweenSequenceItem<double>(
+        tween: ConstantTween(1),
+        weight: 1,
+      ),
       TweenSequenceItem(
         tween: CurveTween(curve: Curves.bounceOut),
-        weight: 1,
+        weight: 2,
       ),
       TweenSequenceItem<double>(
         tween: ConstantTween(1),
