@@ -1,4 +1,3 @@
-import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
 
@@ -9,36 +8,37 @@ class ReportsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 150,
-          child: Box(
-            style: Style(
-              $box.color(context.primaryContainer),
-              $on.hover(
-                $box.color(context.primaryContainer.darken(5)),
+        Box(
+          style: Style(
+            $box.height(40),
+            $box.linearGradient.colors([
+              Colors.red,
+              Colors.orangeAccent,
+              Colors.redAccent,
+              Colors.orange,
+            ]),
+            $text.style.color(Colors.white),
+          ).animate(),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: const StyledText('Spending Breakdown'),
               ),
-            ).animate(),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Spending Breakdown'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Spending Trends'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Net Worth'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Income v Expense'),
-                ),
-              ],
-            ),
+              TextButton(
+                onPressed: () {},
+                child: const StyledText('Spending Trends'),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const StyledText('Net Worth'),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const StyledText('Income v Expense'),
+              ),
+            ],
           ),
         ),
         const Flexible(
