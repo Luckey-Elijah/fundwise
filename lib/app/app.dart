@@ -31,12 +31,10 @@ class _FundwiseAppState extends State<FundwiseApp> {
     router = DuckRouter(
       initialLocation: SplashLocation(),
       interceptors: [
+        CurrentLocationInterceptor(add: (l) => currentLocationCubit.add(l)),
         LoggingLocationInterceptor(),
         AuthenticationLocationInterceptor(widget.authentication),
         LoginLocationInterceptor(widget.authentication),
-        CurrentLocationInterceptor(
-          add: (value) => currentLocationCubit.add(value),
-        ),
       ],
     );
 
@@ -54,19 +52,19 @@ class _FundwiseAppState extends State<FundwiseApp> {
             if (state is LoadingStartUpState) return const AnimatedSplash();
             return MixTheme(
               data: MixThemeData.withMaterial(),
-              child: AuthenticationNavigation(
-                onAuthenticated: () => router.navigate(
-                  to: HomeLocation(),
-                  replace: true,
-                ),
-                onNotAuthenticated: () => router.navigate(
-                  to: LoginLocation(),
-                  clearStack: true,
-                  root: true,
-                  replace: true,
-                ),
-                child: CurrentLocationProvider(
-                  currentLocationCubit: currentLocationCubit,
+              child: CurrentLocationProvider(
+                currentLocationCubit: currentLocationCubit,
+                child: AuthenticationNavigation(
+                  onAuthenticated: () => router.navigate(
+                    to: HomeLocation(),
+                    replace: true,
+                  ),
+                  onNotAuthenticated: () => router.navigate(
+                    to: LoginLocation(),
+                    clearStack: true,
+                    root: true,
+                    replace: true,
+                  ),
                   child: child,
                 ),
               ),

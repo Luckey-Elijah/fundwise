@@ -6,6 +6,7 @@ import 'package:app/app/animated_splash.dart';
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
 import 'package:app/components/scaffold.dart';
+import 'package:app/current_location/current_location.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/reports/reports.dart';
 import 'package:app/repository/auth_store.dart';
@@ -15,19 +16,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthenticationLocationInterceptor extends LocationInterceptor {
-  AuthenticationLocationInterceptor(this.authenticationStore);
+  AuthenticationLocationInterceptor(this.auth);
 
-  final AuthenticationStore authenticationStore;
+  final AuthenticationStore auth;
 
   @override
   Location? execute(Location to, Location? from) {
-    if (authenticationStore.user != null) {
-      if (to is SplashLocation) {
-        return HomeLocation();
-      }
-      return null;
-    }
-    return LoginLocation();
+    if (auth.user == null) return LoginLocation();
+    if (to is SplashLocation) return HomeLocation();
+    return null;
   }
 }
 
@@ -80,12 +77,13 @@ class HomeLocation extends StatefulLocation {
     return (BuildContext context, DuckShell shell) {
       return FundwiseResponsiveScaffold(
         sidebarLeading: (context, expanded) {
+          final location = context.watch<CurrentLocationCubit>().state;
           return BlocProvider(
-            create: (context) =>
+            create: (_) =>
                 AccountSummariesBloc()..add(AccountSummariesInitialize()),
             child: SidebarLeading(
               expanded: expanded,
-              matchedLocation: 'budget',
+              location: location,
             ),
           );
         },
