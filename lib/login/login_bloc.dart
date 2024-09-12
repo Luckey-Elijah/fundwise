@@ -109,7 +109,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginOrSignUpEvent event,
     Emitter<LoginState> emit,
   ) async {
-    emit(state.copyWith(loading: true));
+    emit(state.copyWith(loading: true, error: null));
 
     if (state.loginOrSignUp == LoginOrSignUpState.login) {
       try {
@@ -117,6 +117,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           usernameOrEmail: state.email,
           password: state.password,
         );
+
+        return;
       } on ClientException catch (e) {
         return emit(
           state.copyWith(

@@ -11,7 +11,12 @@ class AuthenticationBloc
   AuthenticationBloc(this._auth) : super(UnknownAuthenticatedState()) {
     on<InitializeAuthenticationEvent>((event, emit) async {
       final model = await _auth.refresh();
-      if (model is RecordModel) emit(AuthenticatedState());
+
+      if (model is RecordModel) {
+        emit(AuthenticatedState());
+      } else {
+        emit(NotAuthenticatedState());
+      }
 
       await emit.forEach(
         _auth.stream,

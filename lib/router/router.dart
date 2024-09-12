@@ -194,3 +194,16 @@ extension DuckRouterOnBuildContext on BuildContext {
     bool root,
   }) get navigate => router.navigate;
 }
+
+extension CurrentLocation on DuckRouter {
+  Location? get currentLocation {
+    final state = routeInformationProvider.value.state as dynamic;
+    try {
+      final location = state.location; // ignore: avoid_dynamic_calls
+      if (location is Location) return location;
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+}

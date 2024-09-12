@@ -35,7 +35,9 @@ Future<void> main() async {
     pocketbase: pocketbase,
     preferences: preferences,
     authentication: auth,
-    child: const BlocProviderScope(child: FundwiseApp()),
+    child: BlocProviderScope(
+      child: FundwiseApp(authentication: auth),
+    ),
   );
 
   return runApp(app);

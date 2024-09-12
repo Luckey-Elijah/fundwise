@@ -24,8 +24,6 @@ class SidebarLeading extends StatelessWidget {
           : null;
     }
 
-    final navigate = context.navigate;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,19 +33,19 @@ class SidebarLeading extends StatelessWidget {
           label: 'BUDGET',
           icon: Icons.wallet,
           color: color('/budget'),
-          onTap: () => navigate(to: const BudgetLocation()),
+          onTap: () => context.navigate(to: const BudgetLocation()),
         ),
         SidebarRoute(
           label: 'REPORTS',
           icon: Icons.analytics,
           color: color('/reports'),
-          onTap: () => navigate(to: const ReportingLocation()),
+          onTap: () => context.navigate(to: const ReportingLocation()),
         ),
         SidebarRoute(
           label: 'ACCOUNTS',
           icon: Icons.account_balance,
           color: color('/accounts'),
-          onTap: () => navigate(to: const AccountsLocation()),
+          onTap: () => context.navigate(to: const AccountsLocation()),
         ),
         if (expanded) ...[
           const Gutter(),

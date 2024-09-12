@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:app/repository/logging_store.dart';
 import 'package:app/repository/user_model.dart';
@@ -17,7 +18,12 @@ class AuthenticationStore {
 
   final PocketBase _pb;
 
-  Stream<AuthStoreEvent> get stream => _pb.authStore.onChange;
+  Stream<AuthStoreEvent> get stream => _stream;
+
+  late final _stream = _pb.authStore.onChange.map((e) {
+    log('$e', name: '_pb.authStore');
+    return e;
+  }).asBroadcastStream();
 
   UserModel? get user {
     final model = _pb.authStore.model;

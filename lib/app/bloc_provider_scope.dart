@@ -18,6 +18,7 @@ class BlocProviderScope extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          lazy: false,
           create: (context) => StartUpBloc(
             url: context.read<UrlStore>(),
             logging: context.read<LoggingStore>(),
@@ -26,6 +27,7 @@ class BlocProviderScope extends StatelessWidget {
           )..add(InitializeStartUpEvent()),
         ),
         BlocProvider(
+          lazy: false,
           create: (context) =>
               AuthenticationBloc(context.read<AuthenticationStore>())
                 ..add(InitializeAuthenticationEvent()),
