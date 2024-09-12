@@ -52,7 +52,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (!_prefs.containsKey(_key)) return;
     emit(state.copyWith(rememberUsername: true));
     final emailOrUserName = _prefs.getString(_key);
-    log('_prefs.getString($_key) -> $emailOrUserName');
     emit(state.copyWith(email: emailOrUserName));
   }
 

@@ -1,17 +1,7 @@
 import 'package:app/components/fundwise_ink.dart';
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flailwind/flailwind.dart';
+import 'package:app/components/fundwise_version_doc_link.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
-import 'package:mix/mix.dart';
-
-part 'scaffold.mapper.dart';
-
-typedef ExpandableWidgetBuilder = Widget Function(
-  BuildContext context,
-  bool expanded,
-);
 
 class FundwiseResponsiveScaffold extends StatefulWidget {
   const FundwiseResponsiveScaffold({
@@ -21,8 +11,14 @@ class FundwiseResponsiveScaffold extends StatefulWidget {
     this.body,
   });
 
-  final ExpandableWidgetBuilder? sidebarLeading;
-  final ExpandableWidgetBuilder? sidebarTrailingCollapseButton;
+  final Widget Function(
+    BuildContext context,
+    bool expanded,
+  )? sidebarLeading;
+  final Widget Function(
+    BuildContext context,
+    bool expanded,
+  )? sidebarTrailingCollapseButton;
   final WidgetBuilder? body;
 
   @override
@@ -33,12 +29,7 @@ class FundwiseResponsiveScaffold extends StatefulWidget {
 class _FundwiseResponsiveScaffoldState
     extends State<FundwiseResponsiveScaffold> {
   bool expandedState = true;
-
-  void toggle() {
-    setState(() {
-      expandedState = !expandedState;
-    });
-  }
+  void toggle() => setState(() => expandedState = !expandedState);
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +56,16 @@ class _FundwiseResponsiveScaffoldState
                           ),
                         ),
                       if (!md)
-                        SidebarExpandButton(
-                          expanded: leadingExpanded,
-                          onPressed: toggle,
+                        Row(
+                          children: [
+                            if (leadingExpanded) const FundwiseVersionDocLink(),
+                            Expanded(
+                              child: SidebarExpandButton(
+                                expanded: leadingExpanded,
+                                onPressed: toggle,
+                              ),
+                            ),
+                          ],
                         ),
                     ],
                   ),
@@ -79,31 +77,6 @@ class _FundwiseResponsiveScaffoldState
           );
         },
       ),
-    );
-  }
-}
-
-class AccountGroupList extends StatelessWidget {
-  const AccountGroupList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        for (final (i, group) in context.select(
-          (AccountSummariesBloc bloc) => bloc.state.accountGroups.indexed,
-        )) ...[
-          AccountGroupSummaryWidget(
-            group: group,
-            index: i,
-          ),
-          if (group.expanded)
-            for (final account in group.accounts)
-              AccountSummaryWidget(
-                account: account,
-              ),
-        ],
-      ],
     );
   }
 }
@@ -151,118 +124,6 @@ class SidebarRoute extends StatelessWidget {
   }
 }
 
-class AccountGroupSummaryWidget extends StatelessWidget {
-  const AccountGroupSummaryWidget({
-    required this.group,
-    required this.index,
-    super.key,
-  });
-
-  final AccountGroupSummary group;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return PressableBox(
-      style: Style(
-        $box.padding.all(8),
-        $on.hover($box.color.darken(10)),
-      ),
-      onPress: () {
-        context
-            .read<AccountSummariesBloc>()
-            .add(AccountSummaryToggleExpand(index));
-      },
-      child: Row(
-        children: [
-          PressableBox(
-            child: StyledIcon(
-              Icons.chevron_right,
-              style: Style(
-                $icon.wrap.padding.all(8),
-                $with.rotate(group.expanded ? 1 : 0),
-              ),
-            ),
-          ),
-          Text(group.label.toUpperCase()),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(group.balance),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AccountSummaryWidget extends StatefulWidget {
-  const AccountSummaryWidget({
-    required this.account,
-    super.key,
-  });
-
-  final AccountSummary account;
-
-  @override
-  State<AccountSummaryWidget> createState() => _AccountSummaryWidgetState();
-}
-
-class _AccountSummaryWidgetState extends State<AccountSummaryWidget> {
-  bool hover = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final hasAction = hover || widget.account.actions.isNotEmpty;
-    final style = widget.account.negative ? context.p.onError : null;
-
-    return InkWell(
-      onTap: () {},
-      onHover: (h) => setState(() => hover = h),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Visibility.maintain(
-              visible: hasAction,
-              child: IconButton(
-                onPressed: hasAction ? () {} : null,
-                icon: Icon(hover ? Icons.edit : Icons.radio_button_on),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                widget.account.label,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ),
-            const GutterTiny(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Material(
-                borderRadius: BorderRadius.circular(8),
-                color: widget.account.negative
-                    ? context.errorContainer
-                    : const Color.fromARGB(0, 107, 92, 92),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Text(
-                    widget.account.balance,
-                    style: style,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class SidebarExpandButton extends StatelessWidget {
   const SidebarExpandButton({
     required this.expanded,
@@ -288,136 +149,4 @@ class SidebarExpandButton extends StatelessWidget {
       ),
     );
   }
-}
-
-abstract class AccountSummariesEvent {}
-
-class AccountSummariesInitialize extends AccountSummariesEvent {}
-
-class AccountSummaryToggleExpand extends AccountSummariesEvent {
-  AccountSummaryToggleExpand(this.index);
-  final int index;
-}
-
-class AccountSummariesBloc
-    extends Bloc<AccountSummariesEvent, AccountSummariesState> {
-  AccountSummariesBloc() : super(AccountSummariesState(accountGroups: [])) {
-    on<AccountSummaryToggleExpand>((event, emit) {
-      emit(
-        state.copyWith(
-          accountGroups: [
-            for (var i = 0; i < state.accountGroups.length; i++) ...[
-              if (i == event.index)
-                state.accountGroups[i].copyWith(
-                  expanded: !state.accountGroups[i].expanded,
-                ),
-              if (i != event.index) state.accountGroups[i],
-            ],
-          ],
-        ),
-      );
-    });
-    on<AccountSummariesInitialize>((event, emit) {
-      emit(
-        state.copyWith(
-          accountGroups: [
-            AccountGroupSummary(
-              accounts: [
-                AccountSummary(
-                  label: 'Credit Card',
-                  balance: r'-$733.90',
-                  negative: true,
-                  actions: {0},
-                ),
-                AccountSummary(
-                  label: 'Checking',
-                  balance: r'$2,133.01',
-                  actions: {1},
-                ),
-                AccountSummary(
-                  label: 'Checking',
-                  balance: r'$6,281.19',
-                  actions: {},
-                ),
-              ],
-              label: 'budget',
-              balance: r'$12.721.98',
-              expanded: true,
-            ),
-            AccountGroupSummary(
-              accounts: [
-                AccountSummary(
-                  label: 'Mortgage',
-                  balance: r'-$292,890.32',
-                  negative: true,
-                  actions: {},
-                ),
-              ],
-              label: 'loan',
-              balance: r'-$292,890.80',
-              expanded: true,
-              negative: true,
-            ),
-            AccountGroupSummary(
-              accounts: [
-                AccountSummary(
-                  label: '401(k) Guideline',
-                  balance: r'$87,908.76',
-                  actions: {},
-                ),
-                AccountSummary(
-                  label: '401k Fidelity',
-                  balance: r'$9,725.09',
-                  actions: {},
-                ),
-              ],
-              label: 'tracking',
-              balance: r'$400,098.32',
-              expanded: true,
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-
-@MappableClass()
-class AccountSummariesState with AccountSummariesStateMappable {
-  AccountSummariesState({required this.accountGroups});
-
-  final List<AccountGroupSummary> accountGroups;
-}
-
-@MappableClass()
-class AccountSummary with AccountSummaryMappable {
-  AccountSummary({
-    required this.label,
-    required this.balance,
-    this.negative = false,
-    this.actions = const <int>{},
-  });
-
-  final String label;
-  final String balance;
-  final bool negative;
-  final Set<int> actions;
-}
-
-@MappableClass()
-class AccountGroupSummary with AccountGroupSummaryMappable {
-  AccountGroupSummary({
-    required this.label,
-    required this.balance,
-    required this.accounts,
-    this.expanded = false,
-    this.negative = false,
-  });
-
-  final String label;
-  final String balance;
-  final bool expanded;
-  final bool negative;
-
-  final List<AccountSummary> accounts;
 }

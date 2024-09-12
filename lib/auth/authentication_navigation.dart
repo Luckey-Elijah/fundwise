@@ -18,8 +18,8 @@ class AuthenticationNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listenWhen: (prev, next) =>
-          prev is! AuthenticatedState && next is AuthenticatedState ||
-          prev is! NotAuthenticatedState && next is NotAuthenticatedState,
+          prev is NotAuthenticatedState && next is AuthenticatedState ||
+          prev is AuthenticatedState && next is NotAuthenticatedState,
       listener: (context, state) {
         if (state is AuthenticatedState) {
           router.navigate(

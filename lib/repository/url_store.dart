@@ -13,7 +13,7 @@ class UrlStore {
 
   Future<Uri?> getUrl() async {
     // use stored value first
-    final maybeRaw = _prefs.getString(key);
+    final maybeRaw = _prefs.getString(_key);
 
     if (maybeRaw != null) {
       // there is a value but it might be bad
@@ -24,7 +24,7 @@ class UrlStore {
       }
 
       // the stored value is bad - clean up
-      await _prefs.remove(key);
+      await _prefs.remove(_key);
     }
 
     // no stored value - but might be in pocketbase field
@@ -33,21 +33,21 @@ class UrlStore {
       return null;
     }
 
-    await _prefs.setString(key, '$maybe');
+    await _prefs.setString(_key, '$maybe');
     return maybe;
   }
 
-  static const key = 'server-url';
+  static const _key = 'server-url';
 
   Future<void> setUrl(Uri? url) async {
     if (url == null) {
-      await _prefs.remove(key);
+      await _prefs.remove(_key);
       _pb.baseUrl = '';
       _pb.authStore.clear();
       return;
     }
 
-    await _prefs.setString(key, '$url');
+    await _prefs.setString(_key, '$url');
     _pb.baseUrl = '$url';
     _pb.authStore.clear();
   }

@@ -5,7 +5,6 @@ import 'package:app/repository/budget_store.dart';
 import 'package:app/repository/currency_format_model.dart';
 import 'package:app/repository/formatter.dart';
 import 'package:app/router/router.dart';
-import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +36,7 @@ class BudgetSelectView extends StatelessWidget {
           prev is! DefaultBudgetSelected && next is DefaultBudgetSelected,
       listener: (context, state) {
         if (state case DefaultBudgetSelected(:final budget)) {
-          DuckRouter.of(context).navigate(
+          context.navigate(
             to: BudgetLocation(id: budget.id),
           );
         }
@@ -59,7 +58,7 @@ class BudgetSelectView extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       log('$state');
-                      DuckRouter.of(context)
+                      context.router
                           .navigate(to: const BudgetNewPageLocation());
                     },
                     child: Padding(
@@ -120,8 +119,7 @@ class BudgetSelectView extends StatelessWidget {
                         .read<BudgetSelectBloc>()
                         .add(SelectBudgetEvent(budget));
                     log('$state');
-                    DuckRouter.of(context)
-                        .navigate(to: BudgetLocation(id: budget.id));
+                    context.navigate(to: BudgetLocation(id: budget.id));
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8),

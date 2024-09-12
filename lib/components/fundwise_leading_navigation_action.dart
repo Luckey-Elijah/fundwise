@@ -1,19 +1,30 @@
 import 'package:app/components/fundwise_logo.dart';
+import 'package:app/components/logout_button.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
-import 'package:app/dashboard_shell/logout_button.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
-class FundwiseLeadingNavigationAction extends StatelessWidget {
-  const FundwiseLeadingNavigationAction({super.key});
+class SidebarSettingsButton extends StatelessWidget {
+  const SidebarSettingsButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return PositionedOverlayBuilder(
-      overlayChildBuilder: (context, controller) => const Padding(
-        padding: EdgeInsets.all(8),
-        child: LogoutButton(),
+      overlayChildBuilder: (context, controller) => Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const LogoutButton(),
+            TextButton(
+              onPressed: () {
+                controller.toggle();
+              },
+              child: const Text('Settings'),
+            ),
+          ],
+        ),
       ),
       anchorBuilder: (context, controller) => InkWell(
         onTap: () => controller.toggle(),

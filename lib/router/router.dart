@@ -1,16 +1,18 @@
 import 'dart:developer';
 
+import 'package:app/account_summaries/account_summaries_bloc.dart';
+import 'package:app/account_summaries/sidebar_leading.dart';
 import 'package:app/app/animated_splash.dart';
 import 'package:app/budget/ui/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
 import 'package:app/components/scaffold.dart';
-import 'package:app/dashboard_shell/dashboard_shell.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/reports/reports.dart';
 import 'package:app/repository/auth_store.dart';
 import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthenticationLocationInterceptor extends LocationInterceptor {
   AuthenticationLocationInterceptor(this.authenticationStore);
@@ -78,9 +80,13 @@ class HomeLocation extends StatefulLocation {
     return (BuildContext context, DuckShell shell) {
       return FundwiseResponsiveScaffold(
         sidebarLeading: (context, expanded) {
-          return SidebarLeading(
-            expanded: expanded,
-            matchedLocation: '',
+          return BlocProvider(
+            create: (context) =>
+                AccountSummariesBloc()..add(AccountSummariesInitialize()),
+            child: SidebarLeading(
+              expanded: expanded,
+              matchedLocation: 'budget',
+            ),
           );
         },
         body: (context) => shell,
@@ -176,4 +182,15 @@ class BudgetLocation extends Location {
 
   @override
   String get path => id == null ? '/budget' : '/budget/$id';
+}
+
+extension DuckRouterOnBuildContext on BuildContext {
+  DuckRouter get router => DuckRouter.of(this);
+
+  Future<T?> Function<T extends Object?>({
+    required Location to,
+    bool? clearStack,
+    bool? replace,
+    bool root,
+  }) get navigate => router.navigate;
 }

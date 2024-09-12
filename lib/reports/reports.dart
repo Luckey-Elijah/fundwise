@@ -82,16 +82,23 @@ class Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Box(
       style: Style(
-        // $box.color.lightBlueAccent(),
         $box.borderRadius.all.circular(24),
         $box.margin.all(16),
+        $box.color.lightBlue(),
+        $box.gradient.linear.colors([
+          Colors.green,
+          Colors.blue,
+          Colors.lightBlueAccent,
+          Colors.lightBlue,
+          Colors.green,
+        ]),
         $on.hover(
-          $box.border.color.black(),
-          $box.border(),
-          $box.color.lightBlue(),
-        ),
-        $on.press(
-          $box.color.green(),
+          $box.gradient.linear.colors([
+            Colors.green,
+            Colors.lightBlueAccent,
+            Colors.lightBlue,
+            Colors.blue,
+          ]),
         ),
       ).animate(),
     );

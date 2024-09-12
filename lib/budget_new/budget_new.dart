@@ -1,5 +1,5 @@
 import 'package:app/repository/date_format_store.dart';
-import 'package:duck_router/duck_router.dart';
+import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +18,7 @@ class BudgetNewPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextButton.icon(
-                onPressed: DuckRouter.of(context).pop,
+                onPressed: context.router.pop,
                 label: const Text('Back'),
                 icon: const Icon(Icons.chevron_left),
               ),
