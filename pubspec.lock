@@ -257,9 +257,10 @@ packages:
   flailwind:
     dependency: "direct main"
     description:
-      path: flailwind
-      relative: true
-    source: path
+      name: flailwind
+      sha256: "81c08f34508489c9afad6194b034609dbf689f0a844b1d4d488b0b825070f772"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   flutter:
     dependency: "direct main"

@@ -8,7 +8,7 @@ dependencies:
   bloc: ^8.1.4
   dart_mappable: ^4.2.2
   duck_router: ^4.0.0
-  flailwind: { path: ./flailwind }
+  flailwind: ^0.0.1
   flutter: { sdk: flutter }
   flutter_bloc: ^8.1.6
   flutter_gutter: ^2.0.0

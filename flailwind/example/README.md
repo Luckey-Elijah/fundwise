@@ -1,3 +1,0 @@
-# example
-
-flailwind example showcase
