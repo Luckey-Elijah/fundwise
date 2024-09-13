@@ -42,6 +42,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginOrSignUpEvent>(_onLoginOrSignUpEvent);
     on<ToggleLoginOrSignUpEvent>(_onToggleLoginOrSignUpEvent);
   }
+  @override
+  void onChange(Change<LoginState> change) {
+    super.onChange(change);
+  }
 
   void _onInitializeLoginEvent(
     InitializeLoginEvent event,
@@ -118,7 +122,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         return;
       } on ClientException catch (e) {
-        return emit(
+        emit(
           state.copyWith(
             error: 'Could not login: ${e.statusCode}: '
                 '${e.response['message']}',
@@ -126,12 +130,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ),
         );
       } on Exception catch (e) {
-        return emit(
+        emit(
           state.copyWith(
             error: 'Could not login: $e',
             loading: false,
           ),
         );
+      } finally {
+        emit(state.copyWith(loading: false));
       }
     }
 
@@ -174,7 +180,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         confirm: state.confirm,
       );
 
-      emit(state.copyWith(signUpSuccess: 'Sign up successful'));
+      emit(
+        state.copyWith(
+          signUpSuccess: 'Sign up successful',
+          loading: true,
+          loginOrSignUp: LoginOrSignUpState.login,
+        ),
+      );
+      add(LoginOrSignUpEvent());
     } on ClientException catch (e) {
       emit(
         state.copyWith(
@@ -190,6 +203,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           loading: false,
         ),
       );
+    } finally {
+      emit(state.copyWith(loading: false));
     }
   }
 
