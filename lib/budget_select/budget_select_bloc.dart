@@ -33,9 +33,9 @@ class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
 
     try {
       final budgets = await _budgetStore$.getBudgets();
-      emit(ListBudgetSelection(budgets));
+      emit(ListBudgetSelection([...budgets]));
     } on Exception {
-      emit(const ErrorBudgetSelection());
+      emit(ErrorBudgetSelection(state.budgets));
     }
   }
 
@@ -68,5 +68,5 @@ class ListBudgetSelection extends BudgetSelectState {
 }
 
 class ErrorBudgetSelection extends BudgetSelectState {
-  const ErrorBudgetSelection() : super(const []);
+  const ErrorBudgetSelection([super.budgets = const []]);
 }

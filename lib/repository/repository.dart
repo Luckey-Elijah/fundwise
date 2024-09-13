@@ -18,4 +18,3 @@ export 'pocketbase.dart';
 export 'url_repository.dart';
 export 'user_model.dart';
 export 'user_repository.dart';
-export 'util.dart';

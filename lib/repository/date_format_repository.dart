@@ -8,29 +8,22 @@ class DateFormatRepository {
   final PocketBase _pb;
   late final _collection = _pb.collection('date_formats');
 
-  Future<List<DateFormatModel>> list() async {
+  Future<Iterable<DateFormatModel>> getAll() async {
     try {
       final records = await _collection.getList();
-      return records.items
-          .map(modelToMap)
-          .map(DateFormatModelMapper.fromMap)
-          .toList();
+      return records.items.map(modelToMap).map(DateFormatModelMapper.fromMap);
     } on ClientException {
       return [];
     }
   }
 
-  Future<List<DateFormatModel>> search(String query) async {
+  Future<Iterable<DateFormatModel>> search(String query) async {
     const cols = ['description', 'format'];
     try {
       final records = await _collection.getList(
         filter: cols.map((col) => '$col~"$query"').join('||'),
       );
-
-      return records.items
-          .map(modelToMap)
-          .map(DateFormatModelMapper.fromMap)
-          .toList();
+      return records.items.map(modelToMap).map(DateFormatModelMapper.fromMap);
     } on ClientException {
       return [];
     }

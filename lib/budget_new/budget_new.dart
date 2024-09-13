@@ -121,10 +121,10 @@ class DateFormatPickerCubit extends Cubit<DateFormatPickerCubitState> {
   final DateFormatRepository repo;
 
   Future<void> initialize() async {
-    final dateFormats = await repo.list();
+    final dateFormats = await repo.getAll();
     emit(
       DateFormatPickerCubitState(
-        dateFormats: dateFormats,
+        dateFormats: [...dateFormats],
         selected: dateFormats.firstOrNull,
       ),
     );
