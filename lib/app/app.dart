@@ -1,8 +1,11 @@
-import 'package:app/app/animated_splash.dart';
+import 'package:app/auth/authentication_location_interceptor.dart';
 import 'package:app/auth/authentication_navigation.dart';
 import 'package:app/current_location/current_location.dart';
+import 'package:app/login/login_location_interceptor.dart';
 import 'package:app/repository/auth_store.dart';
 import 'package:app/router/router.dart';
+import 'package:app/splash/splash.dart';
+import 'package:app/splash/splash_location.dart';
 import 'package:app/startup/startup_bloc.dart';
 import 'package:app/startup/startup_state.dart';
 import 'package:duck_router/duck_router.dart';
@@ -49,7 +52,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
         return MaterialApp.router(
           routerConfig: router,
           builder: (context, child) {
-            if (state is LoadingStartUpState) return const AnimatedSplash();
+            if (state is LoadingStartUpState) return const Splash();
             return MixTheme(
               data: MixThemeData.withMaterial(),
               child: CurrentLocationProvider(
