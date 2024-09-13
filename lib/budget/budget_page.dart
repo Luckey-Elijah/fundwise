@@ -1,9 +1,9 @@
 import 'dart:math' show Random;
 
-import 'package:app/budget/ui/category_group_list_item.dart';
-import 'package:app/budget/ui/list_view_actions.dart';
-import 'package:app/budget/ui/sidebar.dart';
-import 'package:app/budget/ui/top_navigator.dart';
+import 'package:app/budget/category_group_list_item.dart';
+import 'package:app/budget/list_view_actions.dart';
+import 'package:app/budget/sidebar.dart';
+import 'package:app/budget/top_navigator.dart';
 import 'package:app/budget_select/budget_select.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';

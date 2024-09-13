@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:app/components/fundwise_logo.dart';
 import 'package:flutter/material.dart';
 
+export 'package:app/splash/splash_location.dart';
+
 class Splash extends StatefulWidget {
   const Splash({
     super.key,

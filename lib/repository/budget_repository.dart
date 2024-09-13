@@ -25,7 +25,7 @@ class BudgetRepository {
   }
 
   Future<List<BudgetSummaryModel>> getBudgets() async {
-    final records = await _pb.collection('budgets_view').getFullList();
+    final records = await _pb.collection('budget_summaries').getFullList();
 
     final budgets = [
       ...records.map(modelToMap).map(BudgetSummaryModelMapper.fromMap),

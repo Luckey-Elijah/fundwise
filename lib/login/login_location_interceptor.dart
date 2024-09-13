@@ -1,6 +1,5 @@
 import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
-import 'package:duck_router/duck_router.dart';
 
 class LoginLocationInterceptor extends LocationInterceptor {
   LoginLocationInterceptor(this.auth);

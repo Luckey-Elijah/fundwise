@@ -1,8 +1,6 @@
 import 'package:app/account_summaries/account_summaries.dart';
-import 'package:app/components/fundwise_leading_navigation_action.dart';
-import 'package:app/components/scaffold.dart';
+import 'package:app/components/components.dart';
 import 'package:app/router/router.dart';
-import 'package:duck_router/duck_router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';

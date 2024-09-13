@@ -1,4 +1,4 @@
-import 'package:app/server/server_cubit.dart';
+import 'package:app/server/server.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

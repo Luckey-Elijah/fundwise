@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:app/repository/repository.dart';
-import 'package:app/startup/startup_event.dart';
-import 'package:app/startup/startup_state.dart';
+import 'package:app/startup/startup.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

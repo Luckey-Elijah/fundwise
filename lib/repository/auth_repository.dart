@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app/repository/repository.dart';
-import 'package:pocketbase/pocketbase.dart';
-
-export 'package:pocketbase/pocketbase.dart' show AuthStoreEvent;
 
 class AuthenticationRepository {
   AuthenticationRepository({

@@ -1,7 +1,6 @@
-import 'package:app/auth/auth_bloc.dart';
+import 'package:app/authentication/authentication_bloc.dart';
 import 'package:app/repository/repository.dart';
-import 'package:app/startup/startup_bloc.dart';
-import 'package:app/startup/startup_event.dart';
+import 'package:app/startup/startup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

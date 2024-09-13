@@ -1,6 +1,5 @@
 import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
 
 abstract class AuthenticationEvent {}
 

@@ -1,4 +1,4 @@
-import 'package:app/budget/ui/budget_page.dart';
+import 'package:app/budget/budget_page.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 

@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:app/login/login_state.dart';
+import 'package:app/login/login.dart';
 import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LoginEvent {}
 

@@ -1,15 +1,10 @@
 import 'dart:async';
 
 import 'package:app/app/app.dart';
-import 'package:app/app/bloc_provider_scope.dart';
-import 'package:app/app/observer.dart';
-import 'package:app/app/repository_provider_scope.dart';
 import 'package:app/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   final licensing = LicensingRepository(rootBundle: rootBundle);

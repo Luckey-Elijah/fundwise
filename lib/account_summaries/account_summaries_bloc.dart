@@ -1,5 +1,4 @@
-import 'package:app/account_summaries/account_summaries_event.dart';
-import 'package:app/account_summaries/account_summaries_state.dart';
+import 'package:app/account_summaries/account_summaries.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountSummariesBloc

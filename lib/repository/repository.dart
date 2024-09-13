@@ -1,3 +1,6 @@
+export 'package:pocketbase/pocketbase.dart';
+export 'package:shared_preferences/shared_preferences.dart';
+
 export 'auth_repository.dart';
 export 'budget_model.dart';
 export 'budget_repository.dart';

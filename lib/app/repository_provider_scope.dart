@@ -1,8 +1,6 @@
 import 'package:app/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pocketbase/pocketbase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RepositoryProviderScope extends StatelessWidget {
   const RepositoryProviderScope({

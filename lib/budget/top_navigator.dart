@@ -1,7 +1,7 @@
-import 'package:app/budget/ui/age_of_money_label.dart';
-import 'package:app/budget/ui/filter_list_view.dart';
-import 'package:app/budget/ui/month_navigator.dart';
-import 'package:app/budget/ui/ready_to_assign.dart';
+import 'package:app/budget/age_of_money_label.dart';
+import 'package:app/budget/filter_list_view.dart';
+import 'package:app/budget/month_navigator.dart';
+import 'package:app/budget/ready_to_assign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
