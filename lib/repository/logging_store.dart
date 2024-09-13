@@ -18,7 +18,7 @@ class LoggingStore {
     String? trace;
     if (stackTrace != null) trace = Trace.format(stackTrace);
     try {
-      if (exception is! FlutterError) {
+      if (exception is! FlutterError && !kDebugMode) {
         final record = await _pb.collection('errors').create(
           body: {
             'reporter': switch (_pb.authStore.model) {
