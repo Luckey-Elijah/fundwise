@@ -11,7 +11,7 @@ import 'package:app/current_location/current_location.dart';
 import 'package:app/login/login_location_interceptor.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/reports/reports.dart';
-import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/router/custom_pages.dart';
 import 'package:app/splash/splash_location.dart';
 import 'package:duck_router/duck_router.dart';
@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 DuckRouter duckRouter({
-  required AuthenticationStore auth,
+  required AuthenticationRepository auth,
 }) =>
     DuckRouter(
       initialLocation: SplashLocation(),

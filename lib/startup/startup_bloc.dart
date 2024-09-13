@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:app/repository/auth_store.dart';
-import 'package:app/repository/licensing_store.dart';
-import 'package:app/repository/logging_store.dart';
-import 'package:app/repository/url_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/startup/startup_event.dart';
 import 'package:app/startup/startup_state.dart';
 import 'package:flutter/foundation.dart';
@@ -11,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
   StartUpBloc({
-    required UrlStore url,
-    required LoggingStore logging,
-    required LicensingStore licensing,
-    required AuthenticationStore auth,
+    required UrlRepository url,
+    required LoggingRepository logging,
+    required LicensingRepository licensing,
+    required AuthenticationRepository auth,
   })  : _url = url,
         _logging = logging,
         _licensing = licensing,
@@ -23,10 +20,10 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
     on<InitializeStartUpEvent>(_onInitializeStartUpEvent);
   }
 
-  final UrlStore _url;
-  final LoggingStore _logging;
-  final LicensingStore _licensing;
-  final AuthenticationStore _auth;
+  final UrlRepository _url;
+  final LoggingRepository _logging;
+  final LicensingRepository _licensing;
+  final AuthenticationRepository _auth;
 
   Future<void> _onInitializeStartUpEvent(
     InitializeStartUpEvent event,

@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart' show FlutterError, kDebugMode;
 import 'package:pocketbase/pocketbase.dart';
 import 'package:stack_trace/stack_trace.dart';
 
-class LoggingStore {
-  LoggingStore({required PocketBase pb}) : _pb = pb;
+class LoggingRepository {
+  LoggingRepository({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
   var _sequence = 0;

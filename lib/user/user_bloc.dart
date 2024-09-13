@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:app/components/status.dart';
-import 'package:app/repository/user_model.dart';
-import 'package:app/repository/user_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class UserEvent {}
@@ -28,7 +27,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<InitializeUserEvent>(_onInitializeUserEvent);
   }
 
-  final UserStore userRepository;
+  final UserRepository userRepository;
 
   FutureOr<void> _onInitializeUserEvent(
     InitializeUserEvent event,

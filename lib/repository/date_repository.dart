@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:stream_transform/stream_transform.dart';
 
-final date$ = DateStore();
-
-class DateStore {
+class DateRepository {
   var _now = _dateOnly(DateTime.now());
 
   static DateTime _dateOnly(DateTime dateTime) =>
@@ -16,7 +14,7 @@ class DateStore {
         previous.day == next.day;
   }
 
-  Stream<DateTime> get stream async* {
+  Stream<DateTime> _buildStream() async* {
     yield _now;
 
     const five = Duration(seconds: 5);
@@ -26,4 +24,8 @@ class DateStore {
         .distinct(_dateEquals)
         .asBroadcastStream();
   }
+
+  late final _stream = _buildStream().asBroadcastStream();
+
+  Stream<DateTime> get stream => _stream;
 }

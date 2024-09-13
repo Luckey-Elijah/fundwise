@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:app/repository/budget_model.dart';
-import 'package:app/repository/budget_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class BudgetSelectEvent {}
@@ -21,7 +20,7 @@ class BudgetSelectBloc extends Bloc<BudgetSelectEvent, BudgetSelectState> {
     on<SelectBudgetEvent>(_onSelectBudgetEvent);
   }
 
-  final BudgetStore _budgetStore$;
+  final BudgetRepository _budgetStore$;
 
   Future<void> _onInitializeBudgetSelectEvent(
     InitializeBudgetSelectEvent event,

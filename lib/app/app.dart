@@ -2,7 +2,7 @@ import 'package:app/auth/authentication_location_interceptor.dart';
 import 'package:app/auth/authentication_navigation.dart';
 import 'package:app/current_location/current_location.dart';
 import 'package:app/login/login_location_interceptor.dart';
-import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:app/splash/splash.dart';
 import 'package:app/splash/splash_location.dart';
@@ -19,7 +19,7 @@ class FundwiseApp extends StatefulWidget {
     super.key,
   });
 
-  final AuthenticationStore authentication;
+  final AuthenticationRepository authentication;
 
   @override
   State<FundwiseApp> createState() => _FundwiseAppState();

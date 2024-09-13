@@ -1,4 +1,4 @@
-import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 
@@ -30,7 +30,7 @@ class AuthenticationBloc
       );
     });
   }
-  final AuthenticationStore _auth;
+  final AuthenticationRepository _auth;
 }
 
 abstract class AuthenticationState {}

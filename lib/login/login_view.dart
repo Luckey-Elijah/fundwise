@@ -1,7 +1,6 @@
 import 'package:app/login/login_bloc.dart';
 import 'package:app/login/login_state.dart';
-import 'package:app/repository/health_store.dart';
-import 'package:app/repository/url_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/server/server_cubit.dart';
 import 'package:app/server/server_url_field.dart';
 import 'package:flailwind/flailwind.dart';
@@ -114,8 +113,8 @@ class LoginForm extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => ServerCubit(
-              health: context.read<HealthStore>(),
-              url: context.read<UrlStore>(),
+              health: context.read<HealthRepository>(),
+              url: context.read<UrlRepository>(),
             )..initialize(),
             child: const ServerUrlField(),
           ),

@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:app/budget_select/budget_select_bloc.dart';
-import 'package:app/repository/budget_store.dart';
-import 'package:app/repository/currency_format_model.dart';
-import 'package:app/repository/formatter.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +15,7 @@ class BudgetSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BudgetSelectBloc(context.read<BudgetStore>())
+      create: (context) => BudgetSelectBloc(context.read<BudgetRepository>())
         ..add(InitializeBudgetSelectEvent()),
       child: const BudgetSelectView(),
     );

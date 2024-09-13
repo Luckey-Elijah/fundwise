@@ -1,7 +1,8 @@
 import 'package:app/components/positioned_overlay_builder.dart';
-import 'package:app/repository/date_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +23,7 @@ class BudgetMonthNavigator extends StatelessWidget {
         Column(
           children: [
             StreamBuilder(
-              stream: date$.stream,
+              stream: context.read<DateRepository>().stream,
               builder: (context, snapshot) => PositionedOverlayBuilder(
                 overlayConstraints: const BoxConstraints(
                   maxWidth: 480,

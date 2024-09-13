@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:app/login/login_state.dart';
-import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +34,7 @@ class UpdateLoginDetailEvent extends LoginEvent {
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({
     required SharedPreferences prefs,
-    required AuthenticationStore auth,
+    required AuthenticationRepository auth,
   })  : _prefs = prefs,
         _auth = auth,
         super(LoginState.initial) {
@@ -195,7 +195,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  final AuthenticationStore _auth;
+  final AuthenticationRepository _auth;
   final SharedPreferences _prefs;
 
   static const _key = 'remember-username/email';

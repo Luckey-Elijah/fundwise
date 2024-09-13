@@ -1,8 +1,7 @@
 import 'package:app/components/logout_button.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/status.dart';
-import 'package:app/repository/user_model.dart';
-import 'package:app/repository/user_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/user/user_bloc.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => UserBloc(userRepository: context.read<UserStore>())
-        ..add(InitializeUserEvent()),
+      create: (context) =>
+          UserBloc(userRepository: context.read<UserRepository>())
+            ..add(InitializeUserEvent()),
       child: const SettingsView(),
     );
   }

@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:app/repository/logging_store.dart';
-import 'package:app/repository/model_to_map.dart';
-import 'package:app/repository/user_model.dart';
+import 'package:app/repository/repository.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 export 'package:pocketbase/pocketbase.dart' show AuthStoreEvent;
 
-class AuthenticationStore {
-  AuthenticationStore({
-    required LoggingStore loggingStore,
+class AuthenticationRepository {
+  AuthenticationRepository({
+    required LoggingRepository loggingStore,
     required PocketBase pb,
   })  : _loggingStore = loggingStore,
         _pb = pb;
 
-  final LoggingStore _loggingStore;
+  final LoggingRepository _loggingStore;
 
   final PocketBase _pb;
 

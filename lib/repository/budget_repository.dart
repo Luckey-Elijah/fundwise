@@ -2,8 +2,8 @@ import 'package:app/repository/budget_model.dart';
 import 'package:app/repository/model_to_map.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class BudgetStore {
-  BudgetStore({required PocketBase pb}) : _pb = pb;
+class BudgetRepository {
+  BudgetRepository({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 

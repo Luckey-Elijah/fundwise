@@ -1,11 +1,11 @@
-import 'package:app/repository/auth_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:duck_router/duck_router.dart';
 
 class LoginLocationInterceptor extends LocationInterceptor {
   LoginLocationInterceptor(this.auth);
 
-  final AuthenticationStore auth;
+  final AuthenticationRepository auth;
 
   @override
   Location? execute(Location to, Location? from) {

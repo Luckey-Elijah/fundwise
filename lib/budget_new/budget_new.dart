@@ -1,4 +1,4 @@
-import 'package:app/repository/date_format_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class BudgetNewPage extends StatelessWidget {
                       label: 'Date Format',
                       child: BlocProvider(
                         create: (context) => DateFormatPickerCubit(
-                          repo: context.read<DateFormatStore>(),
+                          repo: context.read<DateFormatRepository>(),
                         )..initialize(),
                         child: const DateFormatPicker(),
                       ),
@@ -80,7 +80,7 @@ class DateFormatPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<DateFormat>(
+    return DropdownButton<DateFormatModel>(
       iconSize: 0,
       value:
           context.select((DateFormatPickerCubit cubit) => cubit.state.selected),
@@ -105,8 +105,8 @@ class DateFormatPickerCubitState {
     required this.selected,
   });
 
-  final List<DateFormat> dateFormats;
-  final DateFormat? selected;
+  final List<DateFormatModel> dateFormats;
+  final DateFormatModel? selected;
 }
 
 class DateFormatPickerCubit extends Cubit<DateFormatPickerCubitState> {
@@ -118,7 +118,7 @@ class DateFormatPickerCubit extends Cubit<DateFormatPickerCubitState> {
           ),
         );
 
-  final DateFormatStore repo;
+  final DateFormatRepository repo;
 
   Future<void> initialize() async {
     final dateFormats = await repo.list();
@@ -130,7 +130,7 @@ class DateFormatPickerCubit extends Cubit<DateFormatPickerCubitState> {
     );
   }
 
-  void select(DateFormat? selected) {
+  void select(DateFormatModel? selected) {
     emit(
       DateFormatPickerCubitState(
         dateFormats: state.dateFormats,

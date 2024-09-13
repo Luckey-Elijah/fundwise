@@ -1,8 +1,8 @@
 import 'package:pocketbase/pocketbase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UrlStore {
-  UrlStore({
+class UrlRepository {
+  UrlRepository({
     required PocketBase pb,
     required SharedPreferences prefs,
   })  : _pb = pb,

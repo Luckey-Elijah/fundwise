@@ -2,8 +2,8 @@ import 'package:app/repository/model_to_map.dart';
 import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class UserStore {
-  UserStore({required PocketBase pb}) : _pb = pb;
+class UserRepository {
+  UserRepository({required PocketBase pb}) : _pb = pb;
 
   final PocketBase _pb;
 

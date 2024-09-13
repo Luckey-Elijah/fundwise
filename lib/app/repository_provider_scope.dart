@@ -1,11 +1,4 @@
-import 'package:app/repository/auth_store.dart';
-import 'package:app/repository/budget_store.dart';
-import 'package:app/repository/date_format_store.dart';
-import 'package:app/repository/health_store.dart';
-import 'package:app/repository/licensing_store.dart';
-import 'package:app/repository/logging_store.dart';
-import 'package:app/repository/url_store.dart';
-import 'package:app/repository/user_store.dart';
+import 'package:app/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pocketbase/pocketbase.dart';
@@ -24,12 +17,12 @@ class RepositoryProviderScope extends StatelessWidget {
   });
 
   final Widget child;
-  final UrlStore url;
-  final LoggingStore logging;
+  final UrlRepository url;
+  final LoggingRepository logging;
   final PocketBase pocketbase;
-  final LicensingStore licensing;
+  final LicensingRepository licensing;
   final SharedPreferences preferences;
-  final AuthenticationStore authentication;
+  final AuthenticationRepository authentication;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +34,11 @@ class RepositoryProviderScope extends StatelessWidget {
         RepositoryProvider.value(value: pocketbase),
         RepositoryProvider.value(value: preferences),
         RepositoryProvider.value(value: authentication),
-        RepositoryProvider(create: (_) => UserStore(pb: pocketbase)),
-        RepositoryProvider(create: (_) => BudgetStore(pb: pocketbase)),
-        RepositoryProvider(create: (_) => HealthStore(pb: pocketbase)),
-        RepositoryProvider(create: (_) => DateFormatStore(pb: pocketbase)),
+        RepositoryProvider(create: (_) => DateRepository()),
+        RepositoryProvider(create: (_) => UserRepository(pb: pocketbase)),
+        RepositoryProvider(create: (_) => BudgetRepository(pb: pocketbase)),
+        RepositoryProvider(create: (_) => HealthRepository(pb: pocketbase)),
+        RepositoryProvider(create: (_) => DateFormatRepository(pb: pocketbase)),
       ],
       child: child,
     );

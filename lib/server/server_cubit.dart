@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:app/components/status.dart' show FundwiseStatus;
-import 'package:app/repository/health_store.dart';
-import 'package:app/repository/url_store.dart';
+import 'package:app/components/status.dart';
+import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart' show ValueGetter;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 extension ValidUrl on Uri? {
@@ -17,8 +16,8 @@ extension ValidUrl on Uri? {
 
 class ServerCubit extends Cubit<ServerState> {
   ServerCubit({
-    required UrlStore url,
-    required HealthStore health,
+    required UrlRepository url,
+    required HealthRepository health,
   })  : _url = url,
         _health = health,
         super(
@@ -29,8 +28,8 @@ class ServerCubit extends Cubit<ServerState> {
           ),
         );
 
-  final UrlStore _url;
-  final HealthStore _health;
+  final UrlRepository _url;
+  final HealthRepository _health;
   Future<void> initialize() async {
     final url = await _url.getUrl();
     emit(
