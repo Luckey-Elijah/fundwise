@@ -4,6 +4,12 @@
     "**/bower_components": true,
     "**/*.code-search": true,
     "server/pb_migrations": true,
-    "server/pb_data": true
+    "server/pb_data": true,
+    "**/*.mapper.dart": true,
+    "**/*.g.dart": true
+  },
+  "files.exclude": {
+    "**/*.mapper.dart": true,
+    "**/*.g.dart": true
   }
 }
