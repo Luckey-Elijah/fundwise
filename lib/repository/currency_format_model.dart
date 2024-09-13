@@ -1,6 +1,9 @@
-import 'package:app/util.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-class CurrencyFormatModel {
+part 'currency_format_model.mapper.dart';
+
+@MappableClass(caseStyle: CaseStyle.snakeCase)
+class CurrencyFormatModel with CurrencyFormatModelMappable {
   CurrencyFormatModel({
     required this.decimalDigits,
     required this.groupSize,
@@ -11,20 +14,7 @@ class CurrencyFormatModel {
     required this.symbolFirst,
     this.negativeSymbol = '-',
     this.negativeSymbolFirst = true,
-  })  : assert(decimalDigits >= 0, '[decimalDigits] must be non-negative.'),
-        assert(groupSize >= 0, '[groupSize] must be non-negative.');
-
-  factory CurrencyFormatModel.fromJson(Map<String, dynamic> map) {
-    return CurrencyFormatModel(
-      decimalDigits: map.tryInt('decimal_digits') ?? 0,
-      groupSize: map.tryInt('group_size') ?? 0,
-      decimalSeparator: map.tryString('decimal_separator') ?? '',
-      groupSeparator: map.tryString('group_separator') ?? '',
-      symbol: map.tryString('symbol') ?? '',
-      displaySymbol: map.tryBool('display_symbol') ?? true,
-      symbolFirst: map.tryBool('symbol_first') ?? true,
-    );
-  }
+  });
 
   final int decimalDigits;
   final int groupSize;

@@ -1,3 +1,4 @@
+import 'package:app/repository/model_to_map.dart';
 import 'package:app/repository/user_model.dart';
 import 'package:pocketbase/pocketbase.dart';
 
@@ -8,7 +9,7 @@ class UserStore {
 
   UserModel? get user {
     final model = _pb.authStore.model;
-    if (model is RecordModel) return UserModel.fromJson(model.data);
+    if (model is RecordModel) return UserModelMapper.fromMap(modelToMap(model));
     return null;
   }
 }

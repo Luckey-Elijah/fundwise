@@ -1,7 +1,10 @@
 import 'package:app/repository/currency_format_model.dart';
-import 'package:app/util.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
-class BudgetSummaryModel {
+part 'budget_model.mapper.dart';
+
+@MappableClass(caseStyle: CaseStyle.snakeCase)
+class BudgetSummaryModel with BudgetSummaryModelMappable {
   const BudgetSummaryModel({
     required this.id,
     required this.name,
@@ -9,18 +12,6 @@ class BudgetSummaryModel {
     required this.owner,
     required this.currencyFormat,
   });
-
-  factory BudgetSummaryModel.fromJson(Map<String, dynamic> map) {
-    return BudgetSummaryModel(
-      id: map.tryString('id') ?? '',
-      name: map.tryString('name') ?? '',
-      dateFormat: map.tryString('date_format') ?? '',
-      owner: map.tryString('owner') ?? '',
-      currencyFormat: CurrencyFormatModel.fromJson(
-        map.tryMap('currency_format') ?? {},
-      ),
-    );
-  }
 
   final String id;
   final String name;

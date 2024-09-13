@@ -23,6 +23,11 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
     on<InitializeStartUpEvent>(_onInitializeStartUpEvent);
   }
 
+  final UrlStore _url;
+  final LoggingStore _logging;
+  final LicensingStore _licensing;
+  final AuthenticationStore _auth;
+
   Future<void> _onInitializeStartUpEvent(
     InitializeStartUpEvent event,
     Emitter<StartUpState> emit,
@@ -49,9 +54,4 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
       emit(ReadyStartUpState());
     }
   }
-
-  final UrlStore _url;
-  final LoggingStore _logging;
-  final LicensingStore _licensing;
-  final AuthenticationStore _auth;
 }

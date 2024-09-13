@@ -53,6 +53,7 @@ class _FundwiseAppState extends State<FundwiseApp> {
           routerConfig: router,
           builder: (context, child) {
             if (state is LoadingStartUpState) return const Splash();
+
             return MixTheme(
               data: MixThemeData.withMaterial(),
               child: CurrentLocationProvider(

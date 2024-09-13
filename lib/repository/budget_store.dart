@@ -1,4 +1,5 @@
 import 'package:app/repository/budget_model.dart';
+import 'package:app/repository/model_to_map.dart';
 import 'package:pocketbase/pocketbase.dart';
 
 class BudgetStore {
@@ -14,7 +15,9 @@ class BudgetStore {
           .collection('default_budgets_view')
           .getFirstListItem('owner="${model.id}"');
 
-      final budget = BudgetSummaryModel.fromJson(forModel(result));
+      final data = modelToMap(result);
+
+      final budget = BudgetSummaryModelMapper.fromMap(data);
       return budget;
     } on ClientException {
       return null;
@@ -24,7 +27,9 @@ class BudgetStore {
   Future<List<BudgetSummaryModel>> getBudgets() async {
     final records = await _pb.collection('budgets_view').getFullList();
 
-    final budgets = [...records.map(forModel).map(BudgetSummaryModel.fromJson)];
+    final budgets = [
+      ...records.map(modelToMap).map(BudgetSummaryModelMapper.fromMap),
+    ];
     return budgets;
   }
 
@@ -39,13 +44,4 @@ class BudgetStore {
 
     await _pb.collection('default_budgets').create(body: body);
   }
-}
-
-Map<String, dynamic> forModel(RecordModel model) {
-  return <String, dynamic>{
-    ...model.data,
-    'id': model.id,
-    'created': model.created,
-    'updated': model.updated,
-  };
 }
