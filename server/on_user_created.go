@@ -6,7 +6,6 @@ import (
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
 )
 
 func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error {
@@ -31,92 +30,30 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 		return err
 	}
 
-	group, err := buildCategoryGroupRecord(dao, budget.Id, "Necessary")
+	group, err := CreateCategoryGroup(dao, budget.Id, "Necessities")
 	if err != nil {
 		log.Printf("Failed to create category group record: %v", err)
 		return err
+	} else {
+		log.Printf("Created category group record: %v", group)
 	}
 
-	err = dao.SaveRecord(group)
+	category, err := CreateCategory(dao, group.Id, "Groceries", false)
 	if err != nil {
-		log.Printf("Failed to save category group record: %v", err)
+		log.Printf("Failed to create category record: %v", err)
 		return err
+	} else {
+		log.Printf("Created category record: %v", category)
 	}
 
-	category, err := buildCategoryRecord(dao, group.Id, "Groceries")
-	if err != nil {
-		log.Printf("Failed to create budget record: %v", err)
-		return err
-	}
-
-	err = dao.SaveRecord(category)
-	if err != nil {
-		log.Printf("Failed to save budget record: %v", err)
-		return err
-	}
-
-	budgetAccount, err := buildBudgetAccountRecord(dao, budget.Id)
+	budgetAccount, err := CreateBudgetAccount(dao, budget.Id, "Checking Account", "checking", true, false, 1000_00)
 	if err != nil {
 		log.Printf("Failed to create budget account record: %v", err)
-	}
-
-	err = dao.SaveRecord(budgetAccount)
-	if err != nil {
-		log.Printf("Failed to save budget account record: %v", err)
-		return err
+	} else {
+		log.Printf("Created budget account record: %v", budgetAccount)
 	}
 
 	return nil
-}
-
-func buildBudgetAccountRecord(dao *daos.Dao, budgetId string) (*models.Record, error) {
-	budgetAccountCollection, err := dao.FindCollectionByNameOrId("budget_accounts")
-	if err != nil {
-		log.Printf("Failed to find budget_accounts collection: %v", err)
-		return nil, err
-	}
-	budgetAccountRecord := models.NewRecord(budgetAccountCollection)
-	budgetAccountRecord.Set("name", "My Checking Account")
-	budgetAccountRecord.Set("account_type", "checking")
-	budgetAccountRecord.Set("on_budget", "true")
-	budgetAccountRecord.Set("closed", "false")
-	budgetAccountRecord.Set("cleared_balance", 1000_00)
-	budgetAccountRecord.Set("cleared_balance", 1000_00)
-	budgetAccountRecord.Set("budget", budgetId)
-
-	return budgetAccountRecord, nil
-}
-
-func buildCategoryRecord(dao *daos.Dao, groupId string, name string) (*models.Record, error) {
-	categoryCollection, err := dao.FindCollectionByNameOrId("categories")
-
-	if err != nil {
-		log.Printf("Failed to find categories collection: %v", err)
-		return nil, err
-	}
-
-	categoryRecord := models.NewRecord(categoryCollection)
-	categoryRecord.Set("group", groupId)
-	categoryRecord.Set("name", name)
-	categoryRecord.Set("hidden", false)
-
-	return categoryRecord, nil
-}
-
-func buildCategoryGroupRecord(dao *daos.Dao, budgetId string, name string) (*models.Record, error) {
-	categoryGroupCollection, err := dao.FindCollectionByNameOrId("category_groups")
-
-	if err != nil {
-		log.Printf("Failed to find category_groups collection: %v", err)
-		return nil, err
-	}
-
-	log.Printf(">>> budget: %v", budgetId)
-	categoryGroupRecord := models.NewRecord(categoryGroupCollection)
-	categoryGroupRecord.Set("budget", budgetId)
-	categoryGroupRecord.Set("name", name)
-	categoryGroupRecord.Set("hidden", false)
-	return categoryGroupRecord, nil
 }
 
 func getCurrencyFormat(dao *daos.Dao) (*string, error) {
