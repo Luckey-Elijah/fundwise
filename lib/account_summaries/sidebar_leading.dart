@@ -1,5 +1,8 @@
 import 'package:app/account_summaries/account_summaries.dart';
+import 'package:app/accounts/accounts_location.dart';
+import 'package:app/budget/budget_location.dart';
 import 'package:app/components/components.dart';
+import 'package:app/reports/reports_location.dart';
 import 'package:app/router/router.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +38,8 @@ class SidebarLeading extends StatelessWidget {
         SidebarRoute(
           label: 'REPORTS',
           icon: Icons.analytics,
-          color: color<ReportingLocation>(),
-          onTap: () => context.navigate(to: const ReportingLocation()),
+          color: color<ReportsLocation>(),
+          onTap: () => context.navigate(to: const ReportsLocation()),
         ),
         SidebarRoute(
           label: 'ACCOUNTS',

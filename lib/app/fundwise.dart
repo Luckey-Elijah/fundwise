@@ -1,6 +1,7 @@
 import 'package:app/authentication/authentication.dart';
 import 'package:app/current_location/current_location.dart';
-import 'package:app/login/login.dart';
+import 'package:app/home/home_location.dart';
+import 'package:app/login/login_location.dart';
 import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:app/splash/splash.dart';
@@ -27,14 +28,9 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
   @override
   void initState() {
-    router = DuckRouter(
-      initialLocation: SplashLocation(),
-      interceptors: [
-        CurrentLocationInterceptor(add: (l) => currentLocationCubit.add(l)),
-        LoggingLocationInterceptor(),
-        AuthenticationLocationInterceptor(widget.authentication),
-        LoginLocationInterceptor(widget.authentication),
-      ],
+    router = duckRouter(
+      authentication: () => widget.authentication,
+      currentLocationCubit: () => currentLocationCubit,
     );
 
     currentLocationCubit = CurrentLocationCubit(router: router);

@@ -2,6 +2,7 @@ import 'package:app/budget/budget_page.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 
 class BudgetReadyToAssign extends StatelessWidget {
   const BudgetReadyToAssign({super.key});
@@ -50,25 +51,30 @@ class BudgetAssignButton extends StatelessWidget {
           ),
           iconAlignment: IconAlignment.end,
           label: const Text('Assign'),
-          icon: const Icon(Icons.arrow_drop_down),
+          icon: Icon(
+            controller.isShowing ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+          ),
           onPressed: controller.toggle,
         );
       },
+      overlayConstraints: const BoxConstraints(maxWidth: 140, maxHeight: 300),
       overlayChildBuilder: (context, controller) {
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              for (var i = 0; i < 10; i++)
-                InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text('thing $i'),
-                  ),
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          children: [
+            for (var i = 0; i < 10; i++)
+              PressableBox(
+                style: Style(
+                  $box.padding.all(8),
+                  $box.margin.all(4),
+                  $box.color.white(),
+                  $box.borderRadius(8),
+                  $on.hover($box.color.darken(10)),
                 ),
-            ],
-          ),
+                onPress: () {},
+                child: StyledText('thing $i'),
+              ),
+          ],
         );
       },
     );

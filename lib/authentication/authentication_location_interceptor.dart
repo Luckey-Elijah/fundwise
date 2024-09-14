@@ -1,3 +1,5 @@
+import 'package:app/home/home_location.dart';
+import 'package:app/login/login_location.dart';
 import 'package:app/repository/repository.dart';
 import 'package:app/router/router.dart';
 import 'package:app/splash/splash_location.dart';
