@@ -8,8 +8,12 @@ import (
 	"github.com/pocketbase/pocketbase/models"
 )
 
+func CreateBudget(app *pocketbase.PocketBase) error {
+	return nil
+}
+
 func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error {
-	dateFormatId, err:=	getDateFormat(app)
+	dateFormatId, err := getDateFormat(app)
 	if err != nil {
 		log.Printf("Failed to find date_formats collection: %v", err)
 		return err
@@ -22,7 +26,7 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 	}
 
 	budget, err := buildBudgetRecord(app, *dateFormatId, e.Record.Id, *currencyFormat)
-	if err !=nil {
+	if err != nil {
 		log.Printf("Failed to create budget record: %v", err)
 		return err
 	}
@@ -33,8 +37,8 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 		return err
 	}
 
-	defaultBudget, err := buildDefaultBudgetRecord(app, budget.Id, e.Record.Id);
-	if err !=nil {
+	defaultBudget, err := buildDefaultBudgetRecord(app, budget.Id, e.Record.Id)
+	if err != nil {
 		log.Printf("Failed to create default budget record: %v", err)
 		return err
 	}
@@ -46,7 +50,7 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 	}
 
 	group, err := buildCategoryGroupRecord(app, budget.Id, "Necessary")
-	if err !=nil {
+	if err != nil {
 		log.Printf("Failed to create category group record: %v", err)
 		return err
 	}
@@ -58,7 +62,7 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 	}
 
 	category, err := buildCategoryRecord(app, group.Id, "Groceries")
-	if err !=nil {
+	if err != nil {
 		log.Printf("Failed to create budget record: %v", err)
 		return err
 	}
@@ -80,26 +84,26 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 		return err
 	}
 
-	return nil;
+	return nil
 }
 
-func buildDefaultBudgetRecord(app *pocketbase.PocketBase, budgetId string, ownerId string) (*models.Record,error)  {
+func buildDefaultBudgetRecord(app *pocketbase.PocketBase, budgetId string, ownerId string) (*models.Record, error) {
 	defaultBudgetCollection, err := app.Dao().FindCollectionByNameOrId("default_budgets")
 	if err != nil {
 		log.Printf("Failed to find default_budgets collection: %v", err)
-		return nil, err;
+		return nil, err
 	}
 	defaultBudgetRecord := models.NewRecord(defaultBudgetCollection)
 	defaultBudgetRecord.Set("budget", budgetId)
 	defaultBudgetRecord.Set("user", ownerId)
-	return defaultBudgetRecord, nil;
+	return defaultBudgetRecord, nil
 }
 
-func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*models.Record,error) {
+func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*models.Record, error) {
 	budgetAccountCollection, err := app.Dao().FindCollectionByNameOrId("budget_accounts")
 	if err != nil {
 		log.Printf("Failed to find budget_accounts collection: %v", err)
-		return nil, err;
+		return nil, err
 	}
 	budgetAccountRecord := models.NewRecord(budgetAccountCollection)
 	budgetAccountRecord.Set("name", "My Checking Account")
@@ -110,15 +114,15 @@ func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*mod
 	budgetAccountRecord.Set("cleared_balance", 1000_00)
 	budgetAccountRecord.Set("budget", budgetId)
 
-	return budgetAccountRecord, nil;
+	return budgetAccountRecord, nil
 }
 
-func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string) (*models.Record,error) {
+func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string) (*models.Record, error) {
 	categoryCollection, err := app.Dao().FindCollectionByNameOrId("categories")
 
 	if err != nil {
 		log.Printf("Failed to find categories collection: %v", err)
-		return nil, err;
+		return nil, err
 	}
 
 	categoryRecord := models.NewRecord(categoryCollection)
@@ -126,10 +130,10 @@ func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string
 	categoryRecord.Set("name", name)
 	categoryRecord.Set("hidden", false)
 
-	return categoryRecord, nil;
+	return categoryRecord, nil
 }
 
-func buildCategoryGroupRecord(app *pocketbase.PocketBase, budgetId string, name string) (*models.Record,error) {
+func buildCategoryGroupRecord(app *pocketbase.PocketBase, budgetId string, name string) (*models.Record, error) {
 	categoryGroupCollection, err := app.Dao().FindCollectionByNameOrId("category_groups")
 
 	if err != nil {
@@ -142,7 +146,7 @@ func buildCategoryGroupRecord(app *pocketbase.PocketBase, budgetId string, name 
 	categoryGroupRecord.Set("budget", budgetId)
 	categoryGroupRecord.Set("name", name)
 	categoryGroupRecord.Set("hidden", false)
-	return categoryGroupRecord, nil;
+	return categoryGroupRecord, nil
 }
 
 func getCurrencyFormat(app *pocketbase.PocketBase) (*string, error) {
@@ -161,7 +165,7 @@ func getCurrencyFormat(app *pocketbase.PocketBase) (*string, error) {
 
 	firstCurrencyFormatRecord := currencyFormatRecords[0]
 	currencyFormatId := firstCurrencyFormatRecord.Id
-	return &currencyFormatId, nil;
+	return &currencyFormatId, nil
 }
 
 func getDateFormat(app *pocketbase.PocketBase) (*string, error) {
@@ -180,7 +184,7 @@ func getDateFormat(app *pocketbase.PocketBase) (*string, error) {
 
 	firstDateFormatRecord := dateFormatRecords[0]
 	dateFormatId := firstDateFormatRecord.Id
-	return &dateFormatId, nil;
+	return &dateFormatId, nil
 }
 
 func buildBudgetRecord(
@@ -188,7 +192,7 @@ func buildBudgetRecord(
 	dateFormatId string,
 	ownerId string,
 	currencyFormatId string,
-) (*models.Record,error) {
+) (*models.Record, error) {
 	budgetCollection, err := app.Dao().FindCollectionByNameOrId("budgets")
 
 	if err != nil {
@@ -203,6 +207,5 @@ func buildBudgetRecord(
 	budgetRecord.Set("date_format", dateFormatId)
 	budgetRecord.Set("currency_format", currencyFormatId)
 
-	return budgetRecord, nil;
+	return budgetRecord, nil
 }
-
