@@ -11,24 +11,39 @@ func CreateBudget(
 	dao *daos.Dao,
 	budgetName string,
 	dateFormatId string,
-	currentFormatId string,
 	ownerId string,
+	currencyFormatId string,
 	asDefault bool,
 ) (*models.Record, error) {
-	budget, err := buildBudgetRecord(dao, dateFormatId, ownerId, currentFormatId)
+
+	budgetCollection, err := dao.FindCollectionByNameOrId("budgets")
+
+	log.Printf("Creating Budget with budgetName: %v", budgetName)
+	log.Printf("Creating Budget with dateFormatId: %v", dateFormatId)
+	log.Printf("Creating Budget with currencyFormatId: %v", currencyFormatId)
+	log.Printf("Creating Budget with ownerId: %v", ownerId)
+	log.Printf("Creating Budget with asDefault: %v", asDefault)
+
 	if err != nil {
-		log.Printf("Failed to create budget record: %v", err)
+		log.Printf("Failed to find budget collection: %v", err)
 		return nil, err
 	}
 
-	err = dao.SaveRecord(budget)
+	budgetRecord := models.NewRecord(budgetCollection)
+	budgetRecord.Set("owner", ownerId)
+	budgetRecord.Set("name", budgetName)
+	budgetRecord.Set("date_format", dateFormatId)
+	budgetRecord.Set("currency_format", currencyFormatId)
+
+	err = dao.SaveRecord(budgetRecord)
 	if err != nil {
 		log.Printf("Failed to save budget record: %v", err)
 		return nil, err
 	}
 
 	if asDefault {
-		defaultBudget, err := buildDefaultBudgetRecord(dao, budget.Id, ownerId)
+		log.Printf("setting %v as default", budgetRecord.Id)
+		defaultBudget, err := buildDefaultBudgetRecord(dao, budgetRecord.Id, ownerId)
 		if err != nil {
 			log.Printf("Failed to create default budget record: %v", err)
 			return nil, err
@@ -40,29 +55,6 @@ func CreateBudget(
 			return nil, err
 		}
 	}
-
-	return budget, nil
-}
-
-func buildBudgetRecord(
-	dao *daos.Dao,
-	dateFormatId string,
-	ownerId string,
-	currencyFormatId string,
-) (*models.Record, error) {
-	budgetCollection, err := dao.FindCollectionByNameOrId("budgets")
-
-	if err != nil {
-		log.Printf("Failed to find budget collection: %v", err)
-		return nil, err
-	}
-
-	budgetRecord := models.NewRecord(budgetCollection)
-
-	budgetRecord.Set("owner", ownerId)
-	budgetRecord.Set("name", "My Budget")
-	budgetRecord.Set("date_format", dateFormatId)
-	budgetRecord.Set("currency_format", currencyFormatId)
 
 	return budgetRecord, nil
 }
