@@ -33,15 +33,27 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 		return err
 	}
 
+	defaultBudget, err := buildDefaultBudgetRecord(app, budget.Id, e.Record.Id);
+	if err !=nil {
+		log.Printf("Failed to create default budget record: %v", err)
+		return err
+	}
+
+	err = app.Dao().SaveRecord(defaultBudget)
+	if err != nil {
+		log.Printf("Failed to save default budget record: %v", err)
+		return err
+	}
+
 	group, err := buildCategoryGroupRecord(app, budget.Id, "Necessary")
 	if err !=nil {
-		log.Printf("Failed to create budget record: %v", err)
+		log.Printf("Failed to create category group record: %v", err)
 		return err
 	}
 
 	err = app.Dao().SaveRecord(group)
 	if err != nil {
-		log.Printf("Failed to save budget record: %v", err)
+		log.Printf("Failed to save category group record: %v", err)
 		return err
 	}
 
@@ -57,7 +69,48 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 		return err
 	}
 
+	budgetAccount, err := buildBudgetAccountRecord(app, budget.Id)
+	if err != nil {
+		log.Printf("Failed to create budget account record: %v", err)
+	}
+
+	err = app.Dao().SaveRecord(budgetAccount)
+	if err != nil {
+		log.Printf("Failed to save budget account record: %v", err)
+		return err
+	}
+
 	return nil;
+}
+
+func buildDefaultBudgetRecord(app *pocketbase.PocketBase, budgetId string, ownerId string) (*models.Record,error)  {
+	defaultBudgetCollection, err := app.Dao().FindCollectionByNameOrId("default_budgets")
+	if err != nil {
+		log.Printf("Failed to find default_budgets collection: %v", err)
+		return nil, err;
+	}
+	defaultBudgetRecord := models.NewRecord(defaultBudgetCollection)
+	defaultBudgetRecord.Set("budget", budgetId)
+	defaultBudgetRecord.Set("user", ownerId)
+	return defaultBudgetRecord, nil;
+}
+
+func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*models.Record,error) {
+	budgetAccountCollection, err := app.Dao().FindCollectionByNameOrId("budget_accounts")
+	if err != nil {
+		log.Printf("Failed to find budget_accounts collection: %v", err)
+		return nil, err;
+	}
+	budgetAccountRecord := models.NewRecord(budgetAccountCollection)
+	budgetAccountRecord.Set("name", "My Checking Account")
+	budgetAccountRecord.Set("account_type", "checking")
+	budgetAccountRecord.Set("on_budget", "true")
+	budgetAccountRecord.Set("closed", "false")
+	budgetAccountRecord.Set("cleared_balance", 1000_00)
+	budgetAccountRecord.Set("cleared_balance", 1000_00)
+	budgetAccountRecord.Set("budget", budgetId)
+
+	return budgetAccountRecord, nil;
 }
 
 func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string) (*models.Record,error) {
