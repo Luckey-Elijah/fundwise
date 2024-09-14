@@ -5,80 +5,62 @@ import (
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/daos"
 	"github.com/pocketbase/pocketbase/models"
 )
 
-func CreateBudget(app *pocketbase.PocketBase) error {
-	return nil
-}
-
 func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error {
-	dateFormatId, err := getDateFormat(app)
+	dao := app.Dao()
+
+	dateFormatId, err := getDateFormat(dao)
 	if err != nil {
 		log.Printf("Failed to find date_formats collection: %v", err)
 		return err
 	}
 
-	currencyFormat, err := getCurrencyFormat(app)
+	currencyFormat, err := getCurrencyFormat(dao)
 	if err != nil {
 		log.Printf("Failed get currency_format from collection: %v", err)
 		return err
 	}
 
-	budget, err := buildBudgetRecord(app, *dateFormatId, e.Record.Id, *currencyFormat)
+	budget, err := CreateBudget(dao, "My Budget", *dateFormatId, e.Record.Id, *currencyFormat, true)
+
 	if err != nil {
 		log.Printf("Failed to create budget record: %v", err)
 		return err
 	}
 
-	err = app.Dao().SaveRecord(budget)
-	if err != nil {
-		log.Printf("Failed to save budget record: %v", err)
-		return err
-	}
-
-	defaultBudget, err := buildDefaultBudgetRecord(app, budget.Id, e.Record.Id)
-	if err != nil {
-		log.Printf("Failed to create default budget record: %v", err)
-		return err
-	}
-
-	err = app.Dao().SaveRecord(defaultBudget)
-	if err != nil {
-		log.Printf("Failed to save default budget record: %v", err)
-		return err
-	}
-
-	group, err := buildCategoryGroupRecord(app, budget.Id, "Necessary")
+	group, err := buildCategoryGroupRecord(dao, budget.Id, "Necessary")
 	if err != nil {
 		log.Printf("Failed to create category group record: %v", err)
 		return err
 	}
 
-	err = app.Dao().SaveRecord(group)
+	err = dao.SaveRecord(group)
 	if err != nil {
 		log.Printf("Failed to save category group record: %v", err)
 		return err
 	}
 
-	category, err := buildCategoryRecord(app, group.Id, "Groceries")
+	category, err := buildCategoryRecord(dao, group.Id, "Groceries")
 	if err != nil {
 		log.Printf("Failed to create budget record: %v", err)
 		return err
 	}
 
-	err = app.Dao().SaveRecord(category)
+	err = dao.SaveRecord(category)
 	if err != nil {
 		log.Printf("Failed to save budget record: %v", err)
 		return err
 	}
 
-	budgetAccount, err := buildBudgetAccountRecord(app, budget.Id)
+	budgetAccount, err := buildBudgetAccountRecord(dao, budget.Id)
 	if err != nil {
 		log.Printf("Failed to create budget account record: %v", err)
 	}
 
-	err = app.Dao().SaveRecord(budgetAccount)
+	err = dao.SaveRecord(budgetAccount)
 	if err != nil {
 		log.Printf("Failed to save budget account record: %v", err)
 		return err
@@ -87,20 +69,8 @@ func OnUserCreated(e *core.RecordCreateEvent, app *pocketbase.PocketBase) error 
 	return nil
 }
 
-func buildDefaultBudgetRecord(app *pocketbase.PocketBase, budgetId string, ownerId string) (*models.Record, error) {
-	defaultBudgetCollection, err := app.Dao().FindCollectionByNameOrId("default_budgets")
-	if err != nil {
-		log.Printf("Failed to find default_budgets collection: %v", err)
-		return nil, err
-	}
-	defaultBudgetRecord := models.NewRecord(defaultBudgetCollection)
-	defaultBudgetRecord.Set("budget", budgetId)
-	defaultBudgetRecord.Set("user", ownerId)
-	return defaultBudgetRecord, nil
-}
-
-func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*models.Record, error) {
-	budgetAccountCollection, err := app.Dao().FindCollectionByNameOrId("budget_accounts")
+func buildBudgetAccountRecord(dao *daos.Dao, budgetId string) (*models.Record, error) {
+	budgetAccountCollection, err := dao.FindCollectionByNameOrId("budget_accounts")
 	if err != nil {
 		log.Printf("Failed to find budget_accounts collection: %v", err)
 		return nil, err
@@ -117,8 +87,8 @@ func buildBudgetAccountRecord(app *pocketbase.PocketBase, budgetId string) (*mod
 	return budgetAccountRecord, nil
 }
 
-func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string) (*models.Record, error) {
-	categoryCollection, err := app.Dao().FindCollectionByNameOrId("categories")
+func buildCategoryRecord(dao *daos.Dao, groupId string, name string) (*models.Record, error) {
+	categoryCollection, err := dao.FindCollectionByNameOrId("categories")
 
 	if err != nil {
 		log.Printf("Failed to find categories collection: %v", err)
@@ -133,8 +103,8 @@ func buildCategoryRecord(app *pocketbase.PocketBase, groupId string, name string
 	return categoryRecord, nil
 }
 
-func buildCategoryGroupRecord(app *pocketbase.PocketBase, budgetId string, name string) (*models.Record, error) {
-	categoryGroupCollection, err := app.Dao().FindCollectionByNameOrId("category_groups")
+func buildCategoryGroupRecord(dao *daos.Dao, budgetId string, name string) (*models.Record, error) {
+	categoryGroupCollection, err := dao.FindCollectionByNameOrId("category_groups")
 
 	if err != nil {
 		log.Printf("Failed to find category_groups collection: %v", err)
@@ -149,14 +119,14 @@ func buildCategoryGroupRecord(app *pocketbase.PocketBase, budgetId string, name 
 	return categoryGroupRecord, nil
 }
 
-func getCurrencyFormat(app *pocketbase.PocketBase) (*string, error) {
-	currencyFormatCollection, err := app.Dao().FindCollectionByNameOrId("currency_formats")
+func getCurrencyFormat(dao *daos.Dao) (*string, error) {
+	currencyFormatCollection, err := dao.FindCollectionByNameOrId("currency_formats")
 	if err != nil {
 		log.Printf("Failed to find currency_formats collection: %v", err)
 		return nil, err
 	}
 
-	currencyFormatRecords, err := app.Dao().FindRecordsByExpr(currencyFormatCollection.Id, nil)
+	currencyFormatRecords, err := dao.FindRecordsByExpr(currencyFormatCollection.Id, nil)
 
 	if err != nil {
 		log.Printf("Failed to find currency_formats records: %v", err)
@@ -168,14 +138,14 @@ func getCurrencyFormat(app *pocketbase.PocketBase) (*string, error) {
 	return &currencyFormatId, nil
 }
 
-func getDateFormat(app *pocketbase.PocketBase) (*string, error) {
-	dateFormatCollection, err := app.Dao().FindCollectionByNameOrId("date_formats")
+func getDateFormat(dao *daos.Dao) (*string, error) {
+	dateFormatCollection, err := dao.FindCollectionByNameOrId("date_formats")
 	if err != nil {
 		log.Printf("Failed to find date_formats collection: %v", err)
 		return nil, err
 	}
 
-	dateFormatRecords, err := app.Dao().FindRecordsByExpr(dateFormatCollection.Id, nil)
+	dateFormatRecords, err := dao.FindRecordsByExpr(dateFormatCollection.Id, nil)
 
 	if err != nil {
 		log.Printf("Failed to find date_formats records: %v", err)
@@ -185,27 +155,4 @@ func getDateFormat(app *pocketbase.PocketBase) (*string, error) {
 	firstDateFormatRecord := dateFormatRecords[0]
 	dateFormatId := firstDateFormatRecord.Id
 	return &dateFormatId, nil
-}
-
-func buildBudgetRecord(
-	app *pocketbase.PocketBase,
-	dateFormatId string,
-	ownerId string,
-	currencyFormatId string,
-) (*models.Record, error) {
-	budgetCollection, err := app.Dao().FindCollectionByNameOrId("budgets")
-
-	if err != nil {
-		log.Printf("Failed to find budget collection: %v", err)
-		return nil, err
-	}
-
-	budgetRecord := models.NewRecord(budgetCollection)
-
-	budgetRecord.Set("owner", ownerId)
-	budgetRecord.Set("name", "My Budget")
-	budgetRecord.Set("date_format", dateFormatId)
-	budgetRecord.Set("currency_format", currencyFormatId)
-
-	return budgetRecord, nil
 }
