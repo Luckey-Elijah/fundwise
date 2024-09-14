@@ -3,34 +3,18 @@ import 'dart:developer';
 import 'package:app/account_summaries/account_summaries_bloc.dart';
 import 'package:app/account_summaries/account_summaries_event.dart';
 import 'package:app/account_summaries/sidebar_leading.dart';
-import 'package:app/authentication/authentication_location_interceptor.dart';
 import 'package:app/budget/budget_page.dart';
 import 'package:app/budget_new/budget_new.dart';
 import 'package:app/components/scaffold.dart';
 import 'package:app/current_location/current_location.dart';
-import 'package:app/login/login_location_interceptor.dart';
 import 'package:app/login/login_page.dart';
 import 'package:app/reports/reports.dart';
-import 'package:app/repository/repository.dart';
 import 'package:app/router/custom_pages.dart';
-import 'package:app/splash/splash_location.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'package:duck_router/duck_router.dart';
-
-DuckRouter duckRouter({
-  required AuthenticationRepository auth,
-}) =>
-    DuckRouter(
-      initialLocation: SplashLocation(),
-      interceptors: [
-        LoggingLocationInterceptor(),
-        AuthenticationLocationInterceptor(auth),
-        LoginLocationInterceptor(auth),
-      ],
-    );
 
 class LoggingLocationInterceptor extends LocationInterceptor {
   @override
