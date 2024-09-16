@@ -14,17 +14,17 @@ Future<void> main() async {
     initial: preferences.getString('pb_auth'),
   );
 
-  final pocketbase = PocketBase('', authStore: asyncAuthStore);
-  final logging = LoggingRepository(pb: pocketbase);
-  final auth = AuthenticationRepository(loggingStore: logging, pb: pocketbase);
-  final url = UrlRepository(pb: pocketbase, prefs: preferences);
+  final pb = PocketBase('', authStore: asyncAuthStore);
+  final logging = LoggingRepository(pb: pb);
+  final auth = AuthenticationRepository(loggingStore: logging, pb: pb);
+  final url = UrlRepository(pb: pb, prefs: preferences);
   Bloc.observer = FundwiseBlocObserver(loggingStore: logging);
 
   final app = RepositoryProviderScope(
     url: url,
     logging: logging,
     licensing: licensing,
-    pocketbase: pocketbase,
+    pocketbase: pb,
     preferences: preferences,
     authentication: auth,
     child: BlocProviderScope(
