@@ -10,18 +10,6 @@ class CurrentLocationCubit extends Cubit<Location> {
   void add(Location location) => emit(location);
 }
 
-class CurrentLocationInterceptor extends LocationInterceptor {
-  CurrentLocationInterceptor({required this.add, super.pushesOnTop});
-
-  final ValueSetter<Location> add;
-
-  @override
-  Location? execute(Location to, Location? from) {
-    add(to);
-    return null;
-  }
-}
-
 class CurrentLocationProvider extends StatelessWidget {
   const CurrentLocationProvider({
     required this.child,

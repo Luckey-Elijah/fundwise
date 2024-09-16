@@ -1,7 +1,7 @@
 import 'package:app/budget/budget_page.dart';
 import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class BudgetLocation extends Location {
   const BudgetLocation({this.id});
