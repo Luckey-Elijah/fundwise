@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:app/components/status.dart';
 import 'package:app/repository/repository.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 extension ValidUrl on Uri? {
@@ -31,6 +30,7 @@ class ServerCubit extends Cubit<ServerState> {
   final UrlRepository _url;
   final HealthRepository _health;
   Future<void> initialize() async {
+    emit(state.copyWith(status: FundwiseStatus.loading));
     final url = await _url.getUrl();
     emit(
       state.copyWith(
@@ -43,30 +43,40 @@ class ServerCubit extends Cubit<ServerState> {
   }
 
   Future<void> updateUrl(String text) async {
+    emit(state.copyWith(status: FundwiseStatus.loading));
+
     final url = Uri.tryParse(text);
-    if (state.url == url) return;
+    if (state.url == url) {
+      return emit(state.copyWith(status: FundwiseStatus.loaded));
+    }
+
     if (url.valid) {
       await _url.setUrl(url);
-      emit(state.copyWith(url: () => url));
+      emit(
+        state.copyWith(
+          url: () => url,
+          status: FundwiseStatus.loaded,
+        ),
+      );
     }
   }
 
   Future<void> check() async {
     var healthy = false;
-
     try {
       emit(state.copyWith(status: FundwiseStatus.loading));
       healthy = await _health.check();
+      emit(
+        state.copyWith(
+          healthy: () => healthy,
+          status: FundwiseStatus.loaded,
+        ),
+      );
     } on Exception {
       healthy = false;
+    } finally {
+      emit(state.copyWith(status: FundwiseStatus.loaded));
     }
-
-    emit(
-      state.copyWith(
-        healthy: () => healthy,
-        status: FundwiseStatus.loaded,
-      ),
-    );
   }
 }
 
