@@ -6,6 +6,7 @@ import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:mix/mix.dart';
 
 void _loginListener(BuildContext context, LoginState state) {
   if (state.error != null) {
@@ -313,6 +314,14 @@ class UsernameField extends StatelessWidget {
   }
 }
 
+Style get buttonStyle => Style(
+      $box.color($material.colorScheme.surface()),
+      $box.padding(4),
+      $box.borderRadius(8),
+      $on.hover($box.color.darken(5)),
+      $text.style.color($material.colorScheme.onSurface()),
+    );
+
 class LoginOrSignUpButton extends StatelessWidget {
   const LoginOrSignUpButton({
     required this.enabled,
@@ -325,11 +334,12 @@ class LoginOrSignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: enabled
+    return PressableBox(
+      style: buttonStyle,
+      onPress: enabled
           ? () => context.read<LoginBloc>().add(LoginOrSignUpEvent())
           : null,
-      child: Text(isLogin ? 'login' : 'signup'),
+      child: StyledText(isLogin ? 'login' : 'signup'),
     );
   }
 }
@@ -346,11 +356,12 @@ class ToggleLoginSignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: enabled
+    return PressableBox(
+      onPress: enabled
           ? () => context.read<LoginBloc>().add(ToggleLoginOrSignUpEvent())
           : null,
-      child: Text(isLogin ? 'go to sign up' : 'go to login'),
+      style: buttonStyle,
+      child: StyledText(isLogin ? 'go to sign up' : 'go to login'),
     );
   }
 }

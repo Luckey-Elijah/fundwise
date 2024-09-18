@@ -78,7 +78,10 @@ class AccountSummaryTile extends StatelessWidget {
                 Row(
                   children: [
                     CustomPaint(
-                      painter: ClearedBalanceIconPainter(cleared: true),
+                      painter: ClearedBalanceIconPainter(
+                        cleared: true,
+                        color: context.primary,
+                      ),
                       size: const Size.square(20),
                     ),
                     const GutterTiny(),
@@ -89,7 +92,10 @@ class AccountSummaryTile extends StatelessWidget {
                 Row(
                   children: [
                     CustomPaint(
-                      painter: ClearedBalanceIconPainter(cleared: false),
+                      painter: ClearedBalanceIconPainter(
+                        cleared: false,
+                        color: context.primary,
+                      ),
                       size: const Size.square(20),
                     ),
                     const GutterTiny(),
@@ -145,16 +151,20 @@ enum AccountType {
 class AccountsEvent {}
 
 class ClearedBalanceIconPainter extends CustomPainter {
-  ClearedBalanceIconPainter({required this.cleared});
+  ClearedBalanceIconPainter({
+    required this.cleared,
+    required this.color,
+  });
 
   final bool cleared;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 2.5
-      ..color = Colors.black
+      ..color = color
       ..style = cleared ? PaintingStyle.fill : PaintingStyle.stroke;
 
     canvas.drawCircle(
@@ -164,7 +174,7 @@ class ClearedBalanceIconPainter extends CustomPainter {
     );
     if (cleared) {
       paint
-        ..color = Colors.white
+        ..color = Colors.transparent
         ..style = PaintingStyle.stroke;
     }
     canvas.drawArc(

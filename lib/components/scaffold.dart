@@ -70,7 +70,10 @@ class _FundwiseResponsiveScaffoldState
                     ],
                   ),
                 ),
-                if (!sm) const VerticalDivider(width: 0),
+                if (!sm) ...[
+                  const VerticalDivider(),
+                  const SizedBox(width: 1),
+                ],
               ],
               if (widget.body != null) Expanded(child: widget.body!(context)),
             ],

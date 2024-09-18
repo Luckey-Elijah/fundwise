@@ -101,8 +101,9 @@ class BudgetCategoryGroupListItem extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(),
-        if (groupExpanded case == true) ...categories,
+        if (groupExpanded != null) const Divider(),
+        if (groupExpanded ?? false) ...categories,
+        if (groupExpanded != null) const Divider(),
       ],
     );
   }

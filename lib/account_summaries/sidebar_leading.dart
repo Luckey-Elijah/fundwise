@@ -5,10 +5,29 @@ import 'package:app/components/components.dart';
 import 'package:app/current_location/current_location.dart';
 import 'package:app/reports/reports_location.dart';
 import 'package:app/router/router.dart';
-import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:mix/mix.dart';
+
+final _baseStyle = Style(
+  $box.padding.all(8),
+  $box.margin.all(4),
+  $box.borderRadius.all(8),
+  $icon.size(40),
+);
+
+final _selected = _baseStyle.addAll([
+  $box.color($material.colorScheme.primary()),
+  $text.style.color($material.colorScheme.onPrimary()),
+  $icon.color($material.colorScheme.onPrimary()),
+  $on.hover($box.color.lighten(10)),
+]);
+
+final _notSelected = _baseStyle.addAll([
+  $box.color($material.colorScheme.background()),
+  $on.hover($box.color.darken(10)),
+]);
 
 class SidebarLeading extends StatelessWidget {
   const SidebarLeading({
@@ -22,32 +41,43 @@ class SidebarLeading extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = context.watch<CurrentLocationCubit>().state;
 
-    Color? color<T extends Location>() {
-      return (location is T) ? context.colorScheme.secondaryContainer : null;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SidebarSettingsButton(),
         const Divider(height: 0),
-        SidebarRoute(
-          label: 'BUDGET',
-          icon: Icons.wallet,
-          color: color<BudgetLocation>(),
-          onTap: () => context.navigate(to: const BudgetLocation()),
+        PressableBox(
+          onPress: () => context.navigate(to: const BudgetLocation()),
+          style: location is BudgetLocation ? _selected : _notSelected,
+          child: const Row(
+            children: [
+              StyledIcon(Icons.wallet),
+              Gutter(),
+              StyledText('BUDGET'),
+            ],
+          ),
         ),
-        SidebarRoute(
-          label: 'REPORTS',
-          icon: Icons.analytics,
-          color: color<ReportsLocation>(),
-          onTap: () => context.navigate(to: const ReportsLocation()),
+        PressableBox(
+          onPress: () => context.navigate(to: const ReportsLocation()),
+          style: location is ReportsLocation ? _selected : _notSelected,
+          child: const Row(
+            children: [
+              StyledIcon(Icons.analytics),
+              Gutter(),
+              StyledText('REPORTS'),
+            ],
+          ),
         ),
-        SidebarRoute(
-          label: 'ACCOUNTS',
-          icon: Icons.account_balance,
-          color: color<AccountsLocation>(),
-          onTap: () => context.navigate(to: const AccountsLocation()),
+        PressableBox(
+          onPress: () => context.navigate(to: const AccountsLocation()),
+          style: location is AccountsLocation ? _selected : _notSelected,
+          child: const Row(
+            children: [
+              StyledIcon(Icons.account_balance),
+              Gutter(),
+              StyledText('ACCOUNTS'),
+            ],
+          ),
         ),
         if (expanded) ...[
           const Gutter(),

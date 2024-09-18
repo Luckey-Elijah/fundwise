@@ -11,14 +11,8 @@ class ReportsPage extends StatelessWidget {
         Box(
           style: Style(
             $box.height(40),
-            $box.linearGradient.colors([
-              Colors.red,
-              Colors.orangeAccent,
-              Colors.redAccent,
-              Colors.orange,
-            ]),
-            $text.style.color(Colors.white),
-          ).animate(),
+            $text.style.color($material.colorScheme.onBackground()),
+          ),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
@@ -41,6 +35,7 @@ class ReportsPage extends StatelessWidget {
             ],
           ),
         ),
+        const Divider(),
         const Flexible(
           child: Row(
             children: [
@@ -85,22 +80,21 @@ class Content extends StatelessWidget {
         $box.borderRadius.all.circular(24),
         $box.margin.all(16),
         $box.color.lightBlue(),
-        $box.gradient.linear.colors([
-          Colors.green,
-          Colors.blue,
-          Colors.lightBlueAccent,
-          Colors.lightBlue,
-          Colors.green,
+        $box.gradient.radial.radius(2),
+        $box.gradient.radial.stops.call([0.25, 0.75]),
+        $box.gradient.radial.colors([
+          $material.colorScheme.primary(),
+          $material.colorScheme.secondary(),
         ]),
         $on.hover(
-          $box.gradient.linear.colors([
-            Colors.green,
-            Colors.lightBlueAccent,
-            Colors.lightBlue,
-            Colors.blue,
+          $box.gradient.radial.colors([
+            $material.colorScheme.secondary(),
+            $material.colorScheme.primary(),
           ]),
+          $box.gradient.radial.center(Alignment.bottomRight),
         ),
-      ).animate(),
+        $box.gradient.radial.center(Alignment.topLeft),
+      ).animate(curve: Curves.easeOutCubic, duration: Durations.medium1),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:app/app/app.dart';
 import 'package:app/authentication/authentication.dart';
 import 'package:app/current_location/current_location.dart';
 import 'package:app/home/home_location.dart';
@@ -43,6 +44,8 @@ class _FundwiseAppState extends State<FundwiseApp> {
       builder: (context, state) {
         return MaterialApp.router(
           routerConfig: router,
+          theme: themeDataLight,
+          darkTheme: themeDataDark,
           builder: (context, child) {
             if (state is LoadingStartUpState) return const Splash();
 

@@ -20,7 +20,7 @@ class BlocProviderScope extends StatelessWidget {
             logging: context.read<LoggingRepository>(),
             licensing: context.read<LicensingRepository>(),
             auth: context.read<AuthenticationRepository>(),
-          )..add(InitializeStartUpEvent()),
+          )..add(InitializeStartUpEvent(const Duration(seconds: 2))),
         ),
         BlocProvider(
           lazy: false,
