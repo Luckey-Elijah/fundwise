@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:app/budget/budget_page.dart';
+import 'package:app/components/expanded_state.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:mix/mix.dart';
 
 class BudgetSidebar extends StatelessWidget {
   const BudgetSidebar({super.key});
@@ -174,45 +176,46 @@ class BudgetSidebarInspector extends StatefulWidget {
   State<BudgetSidebarInspector> createState() => _BudgetSidebarInspectorState();
 }
 
-class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector> {
-  bool expanded = false;
-
+class _BudgetSidebarInspectorState extends State<BudgetSidebarInspector>
+    with ExpandedState {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      color: context.primaryContainer,
+    return Box(
+      style: Style(
+        $box.color(context.primaryContainer),
+        $box.borderRadius(8),
+      ),
       child: Column(
         children: [
-          InkWell(
-            onTap: () => setState(() => expanded = !expanded),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  widget.title,
-                  const GutterTiny(),
-                  Transform.rotate(
-                    angle: expanded ? pi / 2 : 0,
-                    child: const Icon(Icons.chevron_right),
-                  ),
-                  if (widget.trailing != null) ...[
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: widget.trailing,
-                      ),
+          PressableBox(
+            style: Style(
+              $box.borderRadius(8),
+              $box.color(context.primaryContainer),
+              $box.padding(16),
+              $on.hover($box.color.lighten(5)),
+            ),
+            onPress: () => expanded = !expanded,
+            child: Row(
+              children: [
+                widget.title,
+                const GutterTiny(),
+                Transform.rotate(
+                  angle: expanded ? pi / 2 : 0,
+                  child: const Icon(Icons.chevron_right),
+                ),
+                if (widget.trailing != null) ...[
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: widget.trailing,
                     ),
-                  ],
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
           if (expanded) ...[
-            const Divider(
-              endIndent: 4,
-              indent: 4,
-            ),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.all(16),
               child: widget.content,

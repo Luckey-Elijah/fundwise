@@ -1,3 +1,4 @@
+import 'package:app/components/expanded_state.dart';
 import 'package:app/components/fundwise_ink.dart';
 import 'package:app/components/fundwise_version_doc_link.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,15 @@ class FundwiseResponsiveScaffold extends StatefulWidget {
       _FundwiseResponsiveScaffoldState();
 }
 
-class _FundwiseResponsiveScaffoldState
-    extends State<FundwiseResponsiveScaffold> {
-  bool expandedState = true;
-  void toggle() => setState(() => expandedState = !expandedState);
+class _FundwiseResponsiveScaffoldState extends State<FundwiseResponsiveScaffold>
+    with ExpandedState {
+  @override
+  void initState() {
+    super.initState();
+    expanded = true;
+  }
+
+  void toggle() => expanded = !expanded;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,7 @@ class _FundwiseResponsiveScaffoldState
         builder: (context, constraints) {
           final md = constraints.maxWidth < 1020;
           final sm = constraints.maxWidth < 720;
-          final leadingExpanded = !md && expandedState;
+          final leadingExpanded = !md && expanded;
           final constr = BoxConstraints(maxWidth: leadingExpanded ? 320 : 82);
 
           return Row(

@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
-ThemeData get themeDataLight =>
-    ThemeData.from(colorScheme: lightScheme).copyWith(
-      dividerTheme: DividerThemeData(
-        space: 0,
-        endIndent: 0,
-        thickness: 1,
-        indent: 0,
-        color: lightScheme.onSurface,
-      ),
-    );
-ThemeData get themeDataDark => ThemeData.from(colorScheme: darkScheme).copyWith(
-      dividerTheme: DividerThemeData(
-        space: 0,
-        endIndent: 0,
-        thickness: 1,
-        color: darkScheme.onSurface,
-      ),
-    );
+ThemeData _with(ColorScheme colorScheme) {
+  return ThemeData.from(colorScheme: colorScheme).copyWith(
+    dividerTheme: DividerThemeData(
+      space: 0,
+      endIndent: 0,
+      thickness: 1,
+      indent: 0,
+      color: colorScheme.onSurface,
+    ),
+  );
+}
+
+ThemeData themeDataLight = _with(lightScheme);
+ThemeData themeDataDark = _with(darkScheme);
 
 const ColorScheme lightScheme = ColorScheme(
   brightness: Brightness.light,
