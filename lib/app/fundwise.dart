@@ -12,11 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mix/mix.dart';
 
 class FundwiseApp extends StatefulWidget {
-  const FundwiseApp({
-    required this.authentication,
-    super.key,
-  });
-
+  const FundwiseApp({required this.authentication, super.key});
   final AuthenticationRepository authentication;
 
   @override
