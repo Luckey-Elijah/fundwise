@@ -7,7 +7,7 @@ environment: { sdk: ">=3.5.1 <4.0.0" }
 dependencies:
   bloc: ^8.1.4
   dart_mappable: ^4.2.2
-  duck_router: ^4.0.0
+  duck_router: ^5.0.0
   flailwind: ^0.0.1
   flutter: { sdk: flutter }
   flutter_bloc: ^8.1.6

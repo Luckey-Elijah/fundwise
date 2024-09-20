@@ -10,7 +10,7 @@ class BudgetLocation extends Location {
 
   @override
   LocationPageBuilder? get pageBuilder {
-    return (c, p) => NoTransitionPage(name: path, child: _builder(c));
+    return (c) => NoTransitionPage(name: path, child: _builder(c));
   }
 
   Widget _builder(BuildContext context) {

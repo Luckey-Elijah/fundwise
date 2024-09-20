@@ -210,10 +210,10 @@ packages:
     dependency: "direct main"
     description:
       name: duck_router
-      sha256: "292f0a92680569e780dee1a56f5367ce4f2e89d3483ce64a160463d89495029d"
+      sha256: "86133a82ea657ac2cf986a2d880c745b1a74596250b393ed5a4393909a5f98a4"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "5.0.0"
   equatable:
     dependency: transitive
     description:

@@ -7,7 +7,7 @@ class ReportsLocation extends Location {
   const ReportsLocation();
   @override
   LocationPageBuilder? get pageBuilder {
-    return (context, p) => NoTransitionPage(
+    return (context) => NoTransitionPage(
           name: path,
           child: _builder(context),
         );
