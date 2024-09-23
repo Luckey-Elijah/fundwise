@@ -1,6 +1,5 @@
-import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:app/components/components.dart';
 import 'package:app/repository/repository.dart';
-import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,11 +35,7 @@ class LogoutButton extends StatelessWidget {
                   },
                   child: const Text('Logout'),
                 ),
-                TextButton(
-                  style: TextButton.styleFrom(foregroundColor: context.error),
-                  onPressed: controller.hide,
-                  child: const Text('Cancel'),
-                ),
+                CancelButton(onPressed: controller.hide),
               ],
             ),
           ],

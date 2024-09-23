@@ -2,10 +2,20 @@ import 'package:app/components/logout_button.dart';
 import 'package:app/components/positioned_overlay_builder.dart';
 import 'package:app/components/status.dart';
 import 'package:app/repository/repository.dart';
+import 'package:app/router/router.dart';
 import 'package:app/user/user_bloc.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+class SettingsLocation extends Location {
+  const SettingsLocation();
+  @override
+  LocationBuilder? get builder => (c) => SettingsPage();
+
+  @override
+  String get path => '/settings';
+}
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -13,9 +23,9 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          UserBloc(userRepository: context.read<UserRepository>())
-            ..add(InitializeUserEvent()),
+      create: (context) => UserBloc(
+        userRepository: context.read<UserRepository>(),
+      )..add(InitializeUserEvent()),
       child: const SettingsView(),
     );
   }

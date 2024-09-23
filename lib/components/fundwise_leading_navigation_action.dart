@@ -1,12 +1,12 @@
-import 'package:app/components/fundwise_logo.dart';
-import 'package:app/components/logout_button.dart';
-import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:app/components/components.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
 
 class SidebarSettingsButton extends StatelessWidget {
-  const SidebarSettingsButton({super.key});
+  const SidebarSettingsButton({required this.navigateToSettings, super.key});
+
+  final VoidCallback navigateToSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,12 @@ class SidebarSettingsButton extends StatelessWidget {
             const LogoutButton(),
             TextButton(
               onPressed: () {
+                navigateToSettings();
                 controller.toggle();
               },
               child: const Text('Settings'),
             ),
+            CancelButton(onPressed: controller.hide),
           ],
         ),
       ),

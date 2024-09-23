@@ -1,5 +1,4 @@
 import 'package:app/authentication/authentication.dart';
-import 'package:app/current_location/current_location.dart';
 import 'package:app/login/login.dart';
 import 'package:app/repository/repository.dart';
 import 'package:app/splash/splash.dart';
@@ -10,7 +9,6 @@ export 'package:duck_router/duck_router.dart';
 
 DuckRouter duckRouter({
   required ValueGetter<AuthenticationRepository> authentication,
-  required ValueGetter<CurrentLocationCubit> currentLocationCubit,
 }) {
   return DuckRouter(
     initialLocation: SplashLocation(),
@@ -18,7 +16,6 @@ DuckRouter duckRouter({
       AuthenticationLocationInterceptor(authentication()),
       LoginLocationInterceptor(authentication()),
     ],
-    onNavigate: (destination) => currentLocationCubit().add(destination),
   );
 }
 

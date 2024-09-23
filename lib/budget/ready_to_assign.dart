@@ -1,5 +1,5 @@
 import 'package:app/budget/budget_page.dart';
-import 'package:app/components/positioned_overlay_builder.dart';
+import 'package:app/components/components.dart';
 import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 import 'package:mix/mix.dart';
@@ -51,9 +51,7 @@ class BudgetAssignButton extends StatelessWidget {
           ),
           iconAlignment: IconAlignment.end,
           label: const Text('Assign'),
-          icon: Icon(
-            controller.isShowing ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-          ),
+          icon: Icon(Icons.arrow_drop_down),
           onPressed: controller.toggle,
         );
       },
@@ -67,13 +65,17 @@ class BudgetAssignButton extends StatelessWidget {
                 style: Style(
                   $box.padding.all(8),
                   $box.margin.all(4),
-                  $box.color.white(),
+                  $box.color.white54(),
                   $box.borderRadius(8),
                   $on.hover($box.color.darken(10)),
                 ),
                 onPress: () {},
                 child: StyledText('thing $i'),
               ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: CancelButton(onPressed: controller.hide),
+            ),
           ],
         );
       },

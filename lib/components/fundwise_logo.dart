@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flailwind/flailwind.dart';
 import 'package:flutter/material.dart';
 
 class FundwiseLogo extends StatelessWidget {
@@ -10,21 +11,23 @@ class FundwiseLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: const FundwiseLogoPainter(),
+      painter: FundwiseLogoPainter(context.colorScheme.onSurface),
       size: Size.square(size),
     );
   }
 }
 
 class FundwiseLogoPainter extends CustomPainter {
-  const FundwiseLogoPainter();
+  const FundwiseLogoPainter(this.color);
+
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final size$ = Size.square(size.shortestSide);
 
     final paint = Paint()
-      ..color = Colors.black
+      ..color = color
       ..strokeWidth = min(size$.width / 12, 24)
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round

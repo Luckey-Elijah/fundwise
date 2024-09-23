@@ -1,6 +1,5 @@
 import 'package:app/app/app.dart';
 import 'package:app/authentication/authentication.dart';
-import 'package:app/current_location/current_location.dart';
 import 'package:app/home/home_location.dart';
 import 'package:app/login/login_location.dart';
 import 'package:app/repository/repository.dart';
@@ -21,16 +20,13 @@ class FundwiseApp extends StatefulWidget {
 
 class _FundwiseAppState extends State<FundwiseApp> {
   late final DuckRouter router;
-  late final CurrentLocationCubit currentLocationCubit;
 
   @override
   void initState() {
     router = duckRouter(
       authentication: () => widget.authentication,
-      currentLocationCubit: () => currentLocationCubit,
     );
 
-    currentLocationCubit = CurrentLocationCubit(router: router);
     super.initState();
   }
 
@@ -47,21 +43,18 @@ class _FundwiseAppState extends State<FundwiseApp> {
 
             return MixTheme(
               data: MixThemeData.withMaterial(),
-              child: CurrentLocationProvider(
-                currentLocationCubit: currentLocationCubit,
-                child: AuthenticationNavigation(
-                  onAuthenticated: () => router.navigate(
-                    to: HomeLocation(),
-                    replace: true,
-                  ),
-                  onNotAuthenticated: () => router.navigate(
-                    to: LoginLocation(),
-                    clearStack: true,
-                    root: true,
-                    replace: true,
-                  ),
-                  child: child,
+              child: AuthenticationNavigation(
+                onAuthenticated: () => router.navigate(
+                  to: HomeLocation(),
+                  replace: true,
                 ),
+                onNotAuthenticated: () => router.navigate(
+                  to: LoginLocation(),
+                  clearStack: true,
+                  root: true,
+                  replace: true,
+                ),
+                child: child,
               ),
             );
           },

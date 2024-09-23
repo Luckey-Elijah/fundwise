@@ -1,8 +1,97 @@
+import 'package:app/account_summaries/account_summaries.dart';
+import 'package:app/components/components.dart';
 import 'package:app/components/expanded_state.dart';
-import 'package:app/components/fundwise_ink.dart';
-import 'package:app/components/fundwise_version_doc_link.dart';
+import 'package:app/router/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gutter/flutter_gutter.dart';
+import 'package:mix/mix.dart';
+
+final _baseStyle = Style(
+  $box.padding.all(8),
+  $box.margin.all(4),
+  $box.borderRadius.all(8),
+  $icon.size(40),
+  $box.color($material.colorScheme.background()),
+  $on.hover($box.color.darken(10)),
+);
+
+Style _selectedStyle(BuildContext context) => _baseStyle.addAll([
+      $icon.color($material.colorScheme.onPrimary.resolve(context)),
+      $text.style.color($material.colorScheme.onPrimary.resolve(context)),
+      $box.gradient.linear.colors([
+        $material.colorScheme.primary(),
+        $material.colorScheme.primary.resolve(context).lighten(40),
+      ]),
+      $on.hover(
+        $box.gradient.linear.colors([
+          $material.colorScheme.primary.resolve(context).lighten(),
+          $material.colorScheme.primary.resolve(context).lighten(40),
+        ]),
+      ),
+    ]);
+
+class SidebarLeading extends StatefulWidget {
+  const SidebarLeading({
+    required this.shell,
+    required this.expanded,
+    super.key,
+  });
+
+  final bool expanded;
+  final DuckShell shell;
+
+  @override
+  State<SidebarLeading> createState() => _SidebarLeadingState();
+}
+
+class _SidebarLeadingState extends State<SidebarLeading> {
+  int index = 0;
+
+  void switchChild(int index) {
+    widget.shell.switchChild(index);
+    setState(() => this.index = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Style style(int i) {
+      if (index == i) return _selectedStyle(context);
+      return _baseStyle;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SidebarSettingsButton(
+          navigateToSettings: () => switchChild(3),
+        ),
+        const Divider(height: 0),
+        SidebarRouteButton(
+          style: style(0),
+          onPress: () => switchChild(0),
+          iconData: Icons.wallet,
+          label: 'Budget',
+        ),
+        SidebarRouteButton(
+          style: style(1),
+          onPress: () => switchChild(1),
+          iconData: Icons.analytics,
+          label: 'Reports',
+        ),
+        SidebarRouteButton(
+          style: style(2),
+          onPress: () => switchChild(2),
+          iconData: Icons.account_balance,
+          label: 'Accounts',
+        ),
+        if (widget.expanded) ...[
+          const Gutter(),
+          const Expanded(child: AccountGroupList()),
+        ],
+      ],
+    );
+  }
+}
 
 class FundwiseResponsiveScaffold extends StatefulWidget {
   const FundwiseResponsiveScaffold({
@@ -90,43 +179,40 @@ class _FundwiseResponsiveScaffoldState extends State<FundwiseResponsiveScaffold>
   }
 }
 
-class SidebarRoute extends StatelessWidget {
-  const SidebarRoute({
+class SidebarRouteButton extends StatelessWidget {
+  const SidebarRouteButton({
+    required this.style,
+    required this.onPress,
+    required this.iconData,
     required this.label,
-    required this.icon,
     super.key,
-    this.color,
-    this.onTap,
   });
 
-  final Color? color;
-  final VoidCallback? onTap;
+  final Style style;
+  final VoidCallback onPress;
+  final IconData iconData;
   final String label;
-  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-      child: FundwiseInk(
-        onPrimary: onTap,
-        color: color,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth < 96) {
-                return Center(child: Icon(icon, size: 40));
-              }
-              return Row(
-                children: [
-                  Icon(icon, size: 40),
-                  const Gutter(),
-                  Text(label),
-                ],
-              );
-            },
-          ),
+    return Tooltip(
+      message: label,
+      child: PressableBox(
+        onPress: onPress,
+        style: style,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 96) {
+              return Center(child: StyledIcon(iconData));
+            }
+            return Row(
+              children: [
+                StyledIcon(iconData),
+                Gutter(),
+                StyledText(label, style: style),
+              ],
+            );
+          },
         ),
       ),
     );
