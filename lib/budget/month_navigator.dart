@@ -52,10 +52,10 @@ class BudgetMonthNavigator extends StatelessWidget {
                     }
 
                     if (date.isBefore(date)) {
-                      return context.primaryContainer.withOpacity(0.3);
+                      return context.primaryContainer.withAlpha(255 ~/ 3);
                     }
 
-                    return context.secondaryContainer.withOpacity(0.5);
+                    return context.secondaryContainer.withAlpha(255 ~/ 2);
                   }
 
                   return Padding(

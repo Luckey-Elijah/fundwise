@@ -20,7 +20,7 @@ class AuthenticationBloc
       await emit.forEach(
         _auth.stream,
         onData: (event) {
-          if (event.token.isNotEmpty && event.model is RecordModel) {
+          if (event.token.isNotEmpty && event.record != null) {
             return AuthenticatedState();
           } else {
             return NotAuthenticatedState();

@@ -22,8 +22,8 @@ class AuthenticationRepository {
   }).asBroadcastStream();
 
   UserModel? get user {
-    final model = _pb.authStore.model;
-    if (model is RecordModel) {
+    final model = _pb.authStore.record;
+    if (model != null) {
       return UserModelMapper.fromMap(modelToMap(model));
     }
     return null;

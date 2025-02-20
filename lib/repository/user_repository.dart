@@ -8,8 +8,8 @@ class UserRepository {
   final PocketBase _pb;
 
   UserModel? get user {
-    final model = _pb.authStore.model;
-    if (model is RecordModel) return UserModelMapper.fromMap(modelToMap(model));
+    final model = _pb.authStore.record;
+    if (model != null) return UserModelMapper.fromMap(modelToMap(model));
     return null;
   }
 }

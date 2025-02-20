@@ -1,4 +1,3 @@
-import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +8,16 @@ class AccountsLocation extends Location {
 
   @override
   LocationPageBuilder? get pageBuilder {
-    return (c) => NoTransitionPage(name: path, child: _builder(c));
+    return (context) => DuckPage(
+          child: _builder(context),
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              _builder(context),
+        );
   }
 
   Widget _builder(BuildContext context) => const Placeholder();

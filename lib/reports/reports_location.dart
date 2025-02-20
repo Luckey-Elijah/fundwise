@@ -1,15 +1,21 @@
 import 'package:app/reports/reports.dart';
-import 'package:app/router/custom_pages.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 
 class ReportsLocation extends Location {
   const ReportsLocation();
+
   @override
   LocationPageBuilder? get pageBuilder {
-    return (context) => NoTransitionPage(
-          name: path,
+    return (context) => DuckPage(
           child: _builder(context),
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              _builder(context),
         );
   }
 

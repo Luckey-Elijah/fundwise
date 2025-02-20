@@ -19,7 +19,7 @@ class UrlRepository {
       // there is a value but it might be bad
       final maybe = Uri.tryParse(maybeRaw);
       if (maybe != null) {
-        _pb.baseUrl = '$maybe';
+        _pb.baseURL = '$maybe';
         return maybe;
       }
 
@@ -28,7 +28,7 @@ class UrlRepository {
     }
 
     // no stored value - but might be in pocketbase field
-    final maybe = Uri.tryParse(_pb.baseUrl);
+    final maybe = Uri.tryParse(_pb.baseURL);
     if (maybe == null) {
       return null;
     }
@@ -42,13 +42,13 @@ class UrlRepository {
   Future<void> setUrl(Uri? url) async {
     if (url == null) {
       await _prefs.remove(_key);
-      _pb.baseUrl = '';
+      _pb.baseURL = '';
       _pb.authStore.clear();
       return;
     }
 
     await _prefs.setString(_key, '$url');
-    _pb.baseUrl = '$url';
+    _pb.baseURL = '$url';
     _pb.authStore.clear();
   }
 }

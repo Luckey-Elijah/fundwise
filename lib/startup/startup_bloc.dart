@@ -42,6 +42,8 @@ class StartUpBloc extends Bloc<StartUpEvent, StartUpState> {
     try {
       final (u, _) = await (_url.getUrl(), _auth.refresh()).wait;
       if (u == null) _auth.signOut();
+      // Log everything else
+      // ignore: avoid_catches_without_on_clauses
     } catch (e, s) {
       unawaited(_logging.logException(exception: e, stackTrace: s));
     } finally {

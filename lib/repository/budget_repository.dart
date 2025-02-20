@@ -8,8 +8,8 @@ class BudgetRepository {
   final PocketBase _pb;
 
   Future<BudgetSummaryModel?> getDefaultBudget() async {
-    final model = _pb.authStore.model;
-    if (model is! RecordModel) return null;
+    final model = _pb.authStore.record;
+    if (model == null) return null;
     try {
       final result = await _pb
           .collection('default_budgets_view')
@@ -30,8 +30,8 @@ class BudgetRepository {
   }
 
   Future<void> setDefault(BudgetSummaryModel budget) async {
-    final model = _pb.authStore.model;
-    if (model is! RecordModel) return;
+    final model = _pb.authStore.record;
+    if (model == null) return;
 
     final body = {
       'budget': budget.id,

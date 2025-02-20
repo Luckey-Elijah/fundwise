@@ -4,7 +4,7 @@ Map<String, dynamic> modelToMap(RecordModel model) {
   return {
     ...model.data,
     'id': model.id,
-    'created': model.created,
-    'updated': model.updated,
+    'created': model.get<String>('created'),
+    'updated': model.get<String>('updated'),
   };
 }

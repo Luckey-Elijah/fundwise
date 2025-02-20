@@ -21,11 +21,7 @@ class LoggingRepository {
       if (exception is! FlutterError && !kDebugMode) {
         final record = await _pb.collection('errors').create(
           body: {
-            'reporter': switch (_pb.authStore.model) {
-              final RecordModel model => model.id,
-              final AdminModel model => model.id,
-              _ => null,
-            },
+            'reporter': _pb.authStore.record?.id,
             'runtime_type': '${exception.runtimeType}',
             'error': '$exception',
             'stack': trace,
@@ -44,6 +40,8 @@ class LoggingRepository {
       log('$exception', name: 'exception');
       log('$trace', name: 'trace');
       if (extra != null) log('$extra', name: 'extra');
+      // handling all other cases to log
+      // ignore: avoid_catches_without_on_clauses
     } catch (e, st) {
       log('Could not log an [exception]:');
       log('$exception', name: 'exception');

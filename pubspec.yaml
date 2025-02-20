@@ -5,16 +5,16 @@ description: Open source budgeting.
 environment: { sdk: ">=3.5.1 <4.0.0" }
 
 dependencies:
-  bloc: ^8.1.4
+  bloc: ^9.0.0
   dart_mappable: ^4.2.2
-  duck_router: ^5.0.0
+  duck_router: ^6.2.1
   flailwind: ^0.0.1
   flutter: { sdk: flutter }
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^9.0.0
   flutter_gutter: ^2.0.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   mix: ^1.4.6
-  pocketbase: ^0.18.1
+  pocketbase: ^0.22.0
   shared_preferences: ^2.2.3
   stack_trace: ^1.11.1
   stream_transform: ^2.1.0
@@ -25,7 +25,7 @@ dev_dependencies:
   dart_mappable_builder: ^4.2.3
   flutter_test: { sdk: flutter }
   mocktail: ^1.0.4
-  very_good_analysis: ^6.0.0
+  very_good_analysis: ^7.0.0
 
 flutter:
   uses-material-design: true
