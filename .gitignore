@@ -46,3 +46,5 @@ app.*.map.json
 
 # pocketbase things
 pb_data/
+*.g.dart
+*.mapper.dart

@@ -5,6 +5,10 @@ linter:
     avoid_positional_boolean_parameters: false
 
 analyzer:
+  exclude:
+    - '**.g.dart'
+    - '**.mapper.dart'
+
   plugins:
     - custom_lint
   errors:
