@@ -2,10 +2,23 @@ import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/home/home_location.dart';
+import 'package:fundwise/services/shared_preferences.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  return runApp(ProviderScope(child: FundwiseApp()));
+Future<void> main() async {
+  final sharedPreferences = await SharedPreferencesWithCache.create(
+    cacheOptions: SharedPreferencesWithCacheOptions(),
+  );
+
+  return runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: FundwiseApp(),
+    ),
+  );
 }
 
 class FundwiseApp extends ConsumerStatefulWidget {

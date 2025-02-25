@@ -15,6 +15,7 @@ dependencies:
   pocketbase: ^0.22.0
   riverpod_annotation: ^2.6.1
   shadcn_ui: ^0.20.3
+  shared_preferences: ^2.5.2
   stack_trace: ^1.12.1
 
 dev_dependencies:
