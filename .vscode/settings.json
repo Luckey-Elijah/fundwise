@@ -11,5 +11,9 @@
   "files.exclude": {
     "**/*.mapper.dart": true,
     "**/*.g.dart": true
-  }
+  },
+  "cSpell.words": [
+    "Fundwise",
+    "Lucide"
+  ]
 }

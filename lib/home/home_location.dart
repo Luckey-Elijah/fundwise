@@ -1,41 +1,25 @@
-import 'package:app/account_summaries/account_summaries.dart';
-import 'package:app/accounts/accounts_location.dart';
+import 'package:app/account/account_location.dart';
 import 'package:app/budget/budget_location.dart';
-import 'package:app/components/scaffold.dart';
+import 'package:app/home/home_page.dart';
 import 'package:app/reports/reports_location.dart';
-import 'package:app/router/router.dart';
-import 'package:app/settings/settings_page.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:duck_router/duck_router.dart';
+import 'package:flutter/material.dart';
 
 class HomeLocation extends StatefulLocation {
   @override
-  StatefulLocationBuilder get childBuilder {
-    return (BuildContext context, DuckShell shell) {
-      return FundwiseResponsiveScaffold(
-        sidebarLeading: (context, expanded) {
-          return BlocProvider(
-            create: (_) =>
-                AccountSummariesBloc()..add(AccountSummariesInitialize()),
-            child: SidebarLeading(
-              expanded: expanded,
-              shell: shell,
-            ),
-          );
-        },
-        body: (context) => shell,
-      );
-    };
+  StatefulLocationBuilder get childBuilder => _childBuilder;
+
+  Widget _childBuilder(BuildContext context, DuckShell shell) {
+    return HomePage(shell: shell);
   }
 
   @override
   List<Location> get children => [
-        const BudgetLocation(),
-        const AccountsLocation(),
-        const ReportsLocation(),
-        const SettingsLocation(),
-      ];
+    BudgetLocation(),
+    ReportsLocation(),
+    AccountLocation(),
+  ];
 
   @override
-  String get path => '/';
+  String get path => '';
 }

@@ -1,36 +1,41 @@
-import 'dart:async';
-
-import 'package:app/app/app.dart';
-import 'package:app/repository/repository.dart';
+import 'package:app/home/home_location.dart';
+import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-Future<void> main() async {
-  final licensing = LicensingRepository(rootBundle: rootBundle);
-  final preferences = await SharedPreferences.getInstance();
-  final asyncAuthStore = AsyncAuthStore(
-    save: (data) => preferences.setString('pb_auth', data),
-    initial: preferences.getString('pb_auth'),
-  );
+void main() {
+  return runApp(ProviderScope(child: FundwiseApp()));
+}
 
-  final pb = PocketBase('', authStore: asyncAuthStore);
-  final logging = LoggingRepository(pb: pb);
-  final auth = AuthenticationRepository(loggingStore: logging, pb: pb);
-  final url = UrlRepository(pb: pb, prefs: preferences);
-  Bloc.observer = FundwiseBlocObserver(loggingStore: logging);
+class FundwiseApp extends ConsumerStatefulWidget {
+  const FundwiseApp({super.key});
 
-  final app = RepositoryProviderScope(
-    url: url,
-    logging: logging,
-    licensing: licensing,
-    pocketbase: pb,
-    preferences: preferences,
-    authentication: auth,
-    child: BlocProviderScope(
-      child: FundwiseApp(authentication: auth),
-    ),
-  );
+  @override
+  ConsumerState<FundwiseApp> createState() => _FundwiseAppState();
+}
 
-  return runApp(app);
+class _FundwiseAppState extends ConsumerState<FundwiseApp> {
+  final router = DuckRouter(initialLocation: HomeLocation());
+
+  @override
+  Widget build(BuildContext context) {
+    final shadCardTheme = ShadCardTheme(padding: EdgeInsets.all(2));
+
+    return ShadApp.materialRouter(
+      routerConfig: router,
+      theme: ShadThemeData(
+        brightness: Brightness.light,
+        colorScheme: const ShadSlateColorScheme.light(),
+        cardTheme: shadCardTheme,
+      ),
+      darkTheme: ShadThemeData(
+        brightness: Brightness.dark,
+        colorScheme: const ShadSlateColorScheme.dark(),
+        cardTheme: shadCardTheme,
+      ),
+      themeMode: ThemeMode.system,
+      builder: (context, child) => Material(child: child),
+    );
+  }
 }

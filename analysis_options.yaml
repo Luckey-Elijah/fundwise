@@ -5,6 +5,8 @@ linter:
     avoid_positional_boolean_parameters: false
 
 analyzer:
+  plugins:
+    - custom_lint
   errors:
     omit_local_variable_types: ignore
     prefer_const_constructors: ignore
