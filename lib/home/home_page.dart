@@ -20,54 +20,49 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final $expanded = ValueNotifier(true);
-
-  @override
-  void dispose() {
-    $expanded.dispose();
-    super.dispose();
-  }
+  bool expanded = true;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ValueListenableBuilder(
-          valueListenable: $expanded,
-          builder: (context, expanded, child) {
-            return SizedBox(
-              width: expanded ? 250 : 60,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wideEnough = constraints.maxWidth > 800;
+        return Row(
+          children: [
+            SizedBox(
+              width: (wideEnough && expanded) ? 250 : 60,
               child: Stack(
                 children: [
-                  SideNavigationRail(switchChild: widget.shell.switchChild),
-                  Align(
-                    alignment:
-                        expanded
-                            ? AlignmentDirectional.bottomEnd
-                            : AlignmentDirectional.bottomCenter,
-                    child: ShadIconButton.secondary(
-                      onPressed: () => $expanded.value = !$expanded.value,
-                      icon: Icon(
-                        expanded
-                            ? LucideIcons.arrowLeftToLine
-                            : LucideIcons.arrowRightToLine,
+                  SideBarNavigationList(switchChild: widget.shell.switchChild),
+                  if (wideEnough)
+                    Align(
+                      alignment:
+                          expanded
+                              ? AlignmentDirectional.bottomEnd
+                              : AlignmentDirectional.bottomCenter,
+                      child: ShadIconButton.secondary(
+                        onPressed: () => setState(() => expanded = !expanded),
+                        icon: Icon(
+                          expanded
+                              ? LucideIcons.arrowLeftToLine
+                              : LucideIcons.arrowRightToLine,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
-            );
-          },
-        ),
-        FundwiseDivider(),
-        Expanded(child: widget.shell),
-      ],
+            ),
+            FundwiseDivider(),
+            Expanded(child: widget.shell),
+          ],
+        );
+      },
     );
   }
 }
 
-class SideNavigationRail extends StatelessWidget {
-  const SideNavigationRail({required this.switchChild, super.key});
+class SideBarNavigationList extends StatelessWidget {
+  const SideBarNavigationList({required this.switchChild, super.key});
 
   final void Function(int) switchChild;
 
