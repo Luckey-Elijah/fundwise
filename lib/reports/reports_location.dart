@@ -1,5 +1,5 @@
-import 'package:app/reports/reports_page.dart';
 import 'package:duck_router/duck_router.dart';
+import 'package:fundwise/reports/reports_page.dart';
 
 class ReportsLocation extends Location {
   @override

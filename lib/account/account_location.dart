@@ -1,5 +1,5 @@
-import 'package:app/account/account_page.dart';
 import 'package:duck_router/duck_router.dart';
+import 'package:fundwise/account/account_page.dart';
 
 class AccountLocation extends Location {
   const AccountLocation({this.id});

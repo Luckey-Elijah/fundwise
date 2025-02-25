@@ -1,13 +1,13 @@
-import 'package:app/account/account_location.dart';
-import 'package:app/account/account_menu_item.dart';
-import 'package:app/account/accounts_menu_card.dart';
-import 'package:app/budget/budget_menu_card.dart';
-import 'package:app/components/fundwise_divider.dart';
-import 'package:app/reports/reports_menu_card.dart';
-import 'package:app/settings/settings_menu_card.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/account/account_location.dart';
+import 'package:fundwise/account/account_menu_item.dart';
+import 'package:fundwise/account/accounts_menu_card.dart';
+import 'package:fundwise/budget/budget_menu_card.dart';
+import 'package:fundwise/components/fundwise_divider.dart';
+import 'package:fundwise/reports/reports_menu_card.dart';
+import 'package:fundwise/settings/settings_menu_card.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class HomePage extends ConsumerStatefulWidget {

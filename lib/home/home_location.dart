@@ -1,9 +1,9 @@
-import 'package:app/account/account_location.dart';
-import 'package:app/budget/budget_location.dart';
-import 'package:app/home/home_page.dart';
-import 'package:app/reports/reports_location.dart';
 import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart';
+import 'package:fundwise/account/account_location.dart';
+import 'package:fundwise/budget/budget_location.dart';
+import 'package:fundwise/home/home_page.dart';
+import 'package:fundwise/reports/reports_location.dart';
 
 class HomeLocation extends StatefulLocation {
   @override
