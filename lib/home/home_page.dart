@@ -12,6 +12,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({required this.shell, super.key});
+
   final DuckShell shell;
 
   @override
@@ -29,8 +30,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final router = DuckRouter.of(context);
-
     return Row(
       children: [
         ValueListenableBuilder(
@@ -40,56 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               width: expanded ? 250 : 60,
               child: Stack(
                 children: [
-                  CustomScrollView(
-                    scrollBehavior: ShadScrollBehavior(),
-                    slivers: [
-                      SliverList.list(
-                        children: [
-                          SettingsMenuCard(),
-                          ReportsMenuCard(
-                            onPressed: () {
-                              widget.shell.switchChild(1);
-                            },
-                          ),
-                          BudgetMenuCard(
-                            onPressed: () => widget.shell.switchChild(0),
-                          ),
-                          AccountsMenuCard(
-                            onPressed: () {
-                              widget.shell.switchChild(2);
-                              router.navigate(
-                                to: AccountLocation(),
-                                replace: true,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      SliverLayoutBuilder(
-                        builder: (context, constraints) {
-                          if (constraints.crossAxisExtent < 80) {
-                            return SliverToBoxAdapter();
-                          }
-
-                          return SliverList.builder(
-                            itemCount: 70,
-                            itemBuilder: (context, index) {
-                              return AccountMenuItem(
-                                i: index,
-                                onAccountPressed: () {
-                                  widget.shell.switchChild(2);
-                                  router.navigate(
-                                    replace: true,
-                                    to: AccountLocation(id: index),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                  SideNavigationRail(switchChild: widget.shell.switchChild),
                   Align(
                     alignment:
                         expanded
@@ -111,6 +61,61 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         FundwiseDivider(),
         Expanded(child: widget.shell),
+      ],
+    );
+  }
+}
+
+class SideNavigationRail extends StatelessWidget {
+  const SideNavigationRail({required this.switchChild, super.key});
+
+  final void Function(int) switchChild;
+
+  @override
+  Widget build(BuildContext context) {
+    final router = DuckRouter.of(context);
+
+    return CustomScrollView(
+      scrollBehavior: ShadScrollBehavior(),
+      slivers: [
+        SliverList.list(
+          children: [
+            SettingsMenuCard(),
+            ReportsMenuCard(
+              onPressed: () {
+                switchChild(1);
+              },
+            ),
+            BudgetMenuCard(onPressed: () => switchChild(0)),
+            AccountsMenuCard(
+              onPressed: () {
+                // switchChild(2);
+                router.navigate(to: AccountLocation(), replace: true);
+              },
+            ),
+          ],
+        ),
+        SliverLayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.crossAxisExtent < 80) return SliverToBoxAdapter();
+
+            return SliverList.builder(
+              itemCount: 70,
+              itemBuilder: (context, index) {
+                return AccountMenuItem(
+                  i: index,
+                  onAccountPressed: () {
+                    switchChild(2);
+                    router.navigate(
+                      replace: true,
+                      to: AccountLocation(id: index),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }
