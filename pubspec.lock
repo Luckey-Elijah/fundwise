@@ -253,10 +253,10 @@ packages:
     dependency: "direct main"
     description:
       name: duck_router
-      sha256: "1a2e6b1a6dc62f350863113ee4e2069bcaab1e45932d2dabae9255e1b83fd08b"
+      sha256: "12a008c58f5e18702e58a4ff1bc3627d9095833954d0f304267853ef6ef60688"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.2"
+    version: "7.0.1"
   equatable:
     dependency: transitive
     description:
@@ -500,10 +500,10 @@ packages:
     dependency: transitive
     description:
       name: lucide_icons_flutter
-      sha256: ae3ed6144ff96b253d23906c1bdfc8306a6196c2907fca200be194b36a57f746
+      sha256: "0556185ba61e3b844e1d930bc09fe562a2e5062babbff15f3ca3ca5221c765d4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.7"
+    version: "1.2.8"
   matcher:
     dependency: transitive
     description:
@@ -716,10 +716,10 @@ packages:
     dependency: "direct main"
     description:
       name: shadcn_ui
-      sha256: "416e032e62a4d440e7f55d7dada444b0db3323afe64d2d97f4bef07b3d1153df"
+      sha256: c09d7a4c51efe34c510a49ddb88a6ccb12ec1b178886bcbc94ea6593f87b16cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.20.1"
+    version: "0.20.3"
   shelf:
     dependency: transitive
     description:
