@@ -8,19 +8,6 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ShadCard(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final part in path
-                .split('/')
-                .where((part) => part.isNotEmpty)) ...[
-              ShadButton(child: Text(part)),
-            ],
-          ],
-        ),
-      ),
-    );
+    return Center(child: ShadButton(child: Text(path), onPressed: () {}));
   }
 }

@@ -48,11 +48,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           SettingsMenuCard(),
                           ReportsMenuCard(
                             onPressed: () {
-                              widget.shell.switchChild(0);
+                              widget.shell.switchChild(1);
                             },
                           ),
                           BudgetMenuCard(
-                            onPressed: () => widget.shell.switchChild(1),
+                            onPressed: () => widget.shell.switchChild(0),
                           ),
                           AccountsMenuCard(
                             onPressed: () {

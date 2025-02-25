@@ -15,8 +15,8 @@ class HomeLocation extends StatefulLocation {
 
   @override
   List<Location> get children => [
-    ReportsLocation(),
     BudgetLocation(),
+    ReportsLocation(),
     AccountLocation(),
   ];
 
