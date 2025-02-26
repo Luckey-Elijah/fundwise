@@ -13,12 +13,13 @@ class ReportsPage extends ConsumerWidget {
 
     return Center(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           for (final mode in ThemeMode.values)
             ShadButton.raw(
               onPressed: () => controller.useMode(mode),
               variant:
-                  mode == state.valueOrNull?.mode
+                  mode == state.mode
                       ? ShadButtonVariant.primary
                       : ShadButtonVariant.secondary,
               leading: Icon(switch (mode) {

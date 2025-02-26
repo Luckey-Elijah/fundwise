@@ -33,14 +33,11 @@ class ThemeModel with ThemeModelMappable {
 
 @riverpod
 class ThemeController extends _$ThemeController
-    with CachedAsyncNotifierState<ThemeModel> {
+    with CachedNotifierState<ThemeModel> {
   @override
-  Future<ThemeModel> build() async {
-    return cached() ?? ThemeModel(mode: ThemeMode.system);
-  }
+  ThemeModel build() => cached() ?? ThemeModel(mode: ThemeMode.system);
 
-  Future<void> useMode(ThemeMode mode) =>
-      update((model) => model.copyWith(mode: mode));
+  void useMode(ThemeMode mode) => state.copyWith(mode: mode);
 
   @override
   ClassMapperBase<ThemeModel> mapper() => ThemeModelMapper.ensureInitialized();

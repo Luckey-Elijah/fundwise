@@ -1,5 +1,6 @@
 import 'package:duck_router/duck_router.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show Brightness;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/home/home_location.dart';
 import 'package:fundwise/services/shared_preferences.dart';
@@ -49,14 +50,10 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
         colorScheme: const ShadSlateColorScheme.dark(),
         cardTheme: shadCardTheme,
       ),
-      themeMode: ref.watch(
-        themeControllerProvider.select((it) => it.valueOrNull?.mode),
-      ),
+      themeMode: ref.watch(themeControllerProvider.select((it) => it.mode)),
       builder: (context, child) {
-        return ColoredBox(
-          color: ShadTheme.of(context).colorScheme.background,
-          child: child,
-        );
+        final color = ShadTheme.of(context).colorScheme.background;
+        return ColoredBox(color: color, child: SizedBox.expand(child: child));
       },
     );
   }
