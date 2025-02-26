@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/home/home_location.dart';
 import 'package:fundwise/services/shared_preferences.dart';
+import 'package:fundwise/services/theme.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,7 +37,7 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
   Widget build(BuildContext context) {
     final shadCardTheme = ShadCardTheme(padding: EdgeInsets.all(2));
 
-    return ShadApp.materialRouter(
+    return ShadApp.router(
       routerConfig: router,
       theme: ShadThemeData(
         brightness: Brightness.light,
@@ -48,8 +49,13 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
         colorScheme: const ShadSlateColorScheme.dark(),
         cardTheme: shadCardTheme,
       ),
-      themeMode: ThemeMode.system,
-      builder: (context, child) => Material(child: child),
+      themeMode: ref.watch(themeControllerProvider.select((it) => it.mode)),
+      builder: (context, child) {
+        return ColoredBox(
+          color: ShadTheme.of(context).colorScheme.background,
+          child: child,
+        );
+      },
     );
   }
 }
