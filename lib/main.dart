@@ -49,7 +49,9 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
         colorScheme: const ShadSlateColorScheme.dark(),
         cardTheme: shadCardTheme,
       ),
-      themeMode: ref.watch(themeControllerProvider.select((it) => it.mode)),
+      themeMode: ref.watch(
+        themeControllerProvider.select((it) => it.valueOrNull?.mode),
+      ),
       builder: (context, child) {
         return ColoredBox(
           color: ShadTheme.of(context).colorScheme.background,

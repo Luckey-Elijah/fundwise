@@ -1,10 +1,35 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/services/theme.dart';
+import 'package:shadcn_ui/shadcn_ui.dart';
 
-class ReportsPage extends StatelessWidget {
+class ReportsPage extends ConsumerWidget {
   const ReportsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Center(child: Placeholder());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.read(themeControllerProvider.notifier);
+    final state = ref.watch(themeControllerProvider);
+
+    return Center(
+      child: Row(
+        children: [
+          for (final mode in ThemeMode.values)
+            ShadButton.raw(
+              onPressed: () => controller.useMode(mode),
+              variant:
+                  mode == state.valueOrNull?.mode
+                      ? ShadButtonVariant.primary
+                      : ShadButtonVariant.secondary,
+              leading: Icon(switch (mode) {
+                ThemeMode.system => LucideIcons.sunMoon,
+                ThemeMode.light => LucideIcons.sun,
+                ThemeMode.dark => LucideIcons.moon,
+              }),
+              child: Text(mode.name),
+            ),
+        ],
+      ),
+    );
   }
 }

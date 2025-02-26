@@ -1,29 +1,47 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
-import 'package:fundwise/services/local_storage.dart';
+import 'package:fundwise/services/caching_mapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+export 'package:flutter/material.dart' show ThemeMode;
 
 part 'theme.g.dart';
 part 'theme.mapper.dart';
 
-@MappableClass()
+class ThemeModeMapper extends SimpleMapper<ThemeMode> {
+  const ThemeModeMapper();
+
+  @override
+  ThemeMode decode(dynamic value) {
+    for (final element in ThemeMode.values) {
+      if (element.name == value) return element;
+    }
+
+    throw FormatException('$value cannot be mapped the [ThemeMode].');
+  }
+
+  @override
+  dynamic encode(ThemeMode self) => self.name;
+}
+
+@MappableClass(includeCustomMappers: [ThemeModeMapper()])
 class ThemeModel with ThemeModelMappable {
-  ThemeModel({required this.mode});
+  const ThemeModel({required this.mode});
 
   final ThemeMode mode;
 }
 
 @riverpod
-class ThemeController extends _$ThemeController {
+class ThemeController extends _$ThemeController
+    with CachedAsyncNotifierState<ThemeModel> {
   @override
-  ThemeModel build() {
-    final LocalStorage<ThemeModel> localStorage = ref.watch(
-      localStorageProvider(mapper: ThemeModelMapper.ensureInitialized()),
-    );
-    listenSelf(localStorage.listener());
-    final maybe = localStorage.state();
-    if (maybe != null) return maybe;
-
-    return ThemeModel(mode: ThemeMode.system);
+  Future<ThemeModel> build() async {
+    return cached() ?? ThemeModel(mode: ThemeMode.system);
   }
+
+  Future<void> useMode(ThemeMode mode) =>
+      update((model) => model.copyWith(mode: mode));
+
+  @override
+  ClassMapperBase<ThemeModel> mapper() => ThemeModelMapper.ensureInitialized();
 }
