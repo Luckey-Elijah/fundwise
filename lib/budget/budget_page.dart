@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()
@@ -18,13 +18,13 @@ class TableExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const invoices = [
-      ['INV001', 'Paid', 'Credit Card', r'$250.00'],
-      ['INV002', 'Pending', 'PayPal', r'$150.00'],
-      ['INV003', 'Unpaid', 'Bank Transfer', r'$350.00'],
-      ['INV004', 'Paid', 'Credit Card', r'$450.00'],
-      ['INV005', 'Paid', 'PayPal', r'$550.00'],
-      ['INV006', 'Pending', 'Bank Transfer', r'$200.00'],
-      ['INV007', 'Unpaid', 'Credit Card', r'$300.00'],
+      ['alskdjfalksjd', 'Paid', 'Credit Card', r'$250.00'],
+      ['alskdjfalksjd', 'Pending', 'PayPal', r'$150.00'],
+      ['alskdjfalksjd', 'Unpaid', 'Bank Transfer', r'$350.00'],
+      ['alskdjfalksjd', 'Paid', 'Credit Card', r'$450.00'],
+      ['alskdjfalksjd', 'Paid', 'PayPal', r'$550.00'],
+      ['alskdjfalksjd', 'Pending', 'Bank Transfer', r'$200.00'],
+      ['alskdjfalksjd', 'Unpaid', 'Credit Card', r'$300.00'],
     ];
     final headings = ['CATEGORY', 'ASSIGNED', 'ACTIVITY', 'AVAILABLE'];
     return ShadTable(
@@ -37,7 +37,9 @@ class TableExample extends StatelessWidget {
           alignment: isLast ? Alignment.centerRight : null,
           child: ShadButton.link(
             padding: EdgeInsets.zero,
-            child: Text(headings[column]),
+            child: Flexible(
+              child: Text(headings[column], overflow: TextOverflow.ellipsis),
+            ),
           ),
         );
       },
@@ -61,7 +63,12 @@ class TableExample extends StatelessWidget {
           padding: EdgeInsets.zero,
           child: ShadButton.link(
             padding: EdgeInsets.zero,
-            child: Text(invoice[index.column]),
+            child: Flexible(
+              child: Text(
+                invoice[index.column],
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ),
         );
       },

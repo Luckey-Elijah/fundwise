@@ -6,8 +6,8 @@ linter:
 
 analyzer:
   exclude:
-    - '**.g.dart'
-    - '**.mapper.dart'
+    - "**.g.dart"
+    - "**.mapper.dart"
 
   plugins:
     - custom_lint
@@ -15,3 +15,4 @@ analyzer:
     omit_local_variable_types: ignore
     prefer_const_constructors: ignore
     prefer_const_constructors_in_immutables: ignore
+    require_trailing_commas: ignore

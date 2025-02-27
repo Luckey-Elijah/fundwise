@@ -1,9 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter/material.dart';
+import 'package:fundwise/components/material.dart';
 import 'package:fundwise/services/caching_mapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-export 'package:flutter/material.dart' show ThemeMode;
 
 part 'theme.g.dart';
 part 'theme.mapper.dart';
