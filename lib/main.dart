@@ -1,8 +1,7 @@
-import 'package:duck_router/duck_router.dart';
 import 'package:flutter/material.dart' show Brightness;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fundwise/home/home_location.dart';
+import 'package:fundwise/root/router.dart';
 import 'package:fundwise/services/shared_preferences.dart';
 import 'package:fundwise/services/theme.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -24,22 +23,16 @@ Future<void> main() async {
   );
 }
 
-class FundwiseApp extends ConsumerStatefulWidget {
+class FundwiseApp extends ConsumerWidget {
   const FundwiseApp({super.key});
 
   @override
-  ConsumerState<FundwiseApp> createState() => _FundwiseAppState();
-}
-
-class _FundwiseAppState extends ConsumerState<FundwiseApp> {
-  final router = DuckRouter(initialLocation: HomeLocation());
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
     final shadCardTheme = ShadCardTheme(padding: EdgeInsets.all(2));
 
     return ShadApp.router(
-      routerConfig: router,
+      routerConfig: router.config(),
       theme: ShadThemeData(
         brightness: Brightness.light,
         colorScheme: const ShadSlateColorScheme.light(),

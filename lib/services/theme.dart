@@ -37,7 +37,9 @@ class ThemeController extends _$ThemeController
   @override
   ThemeModel build() => cached() ?? ThemeModel(mode: ThemeMode.system);
 
-  void useMode(ThemeMode mode) => state.copyWith(mode: mode);
+  void useMode(ThemeMode mode) {
+    state = state.copyWith(mode: mode);
+  }
 
   @override
   ClassMapperBase<ThemeModel> mapper() => ThemeModelMapper.ensureInitialized();

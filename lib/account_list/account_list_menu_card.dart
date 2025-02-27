@@ -4,17 +4,17 @@ import 'package:fundwise/components/menu_card_builder.dart';
 import 'package:fundwise/root/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class BudgetMenuCard extends ConsumerWidget {
-  const BudgetMenuCard({super.key});
+class AccountListMenuCard extends ConsumerWidget {
+  const AccountListMenuCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MenuCardBuilder(
+      icon: LucideIcons.landmark,
       onPressed: () {
-        ref.read(routerProvider).navigate(BudgetRoute());
+        ref.read(routerProvider).navigate(AccountListRoute());
       },
-      icon: LucideIcons.walletCards,
-      label: 'Budget',
+      label: 'Accounts',
     );
   }
 }

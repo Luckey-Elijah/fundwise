@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/root/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class SettingsMenuCard extends StatelessWidget {
+class SettingsMenuCard extends ConsumerWidget {
   const SettingsMenuCard({super.key});
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = ShadTheme.of(context);
+
+    void onPressed() {
+      ref.read(routerProvider).navigate(SettingsRoute());
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -16,12 +21,14 @@ class SettingsMenuCard extends StatelessWidget {
         );
         if (constraints.maxWidth < 80) {
           return ShadIconButton.raw(
+            onPressed: onPressed,
             icon: shadAvatar,
             variant: ShadButtonVariant.outline,
             padding: EdgeInsets.all(4),
           );
         }
         return ShadButton.raw(
+          onPressed: onPressed,
           variant: ShadButtonVariant.outline,
           height: 64,
           mainAxisAlignment: MainAxisAlignment.start,

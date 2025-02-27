@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/components/menu_card_builder.dart';
+import 'package:fundwise/root/router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
-class ReportsMenuCard extends StatelessWidget {
-  const ReportsMenuCard({required this.onPressed, super.key});
-
-  final void Function() onPressed;
+class ReportsMenuCard extends ConsumerWidget {
+  const ReportsMenuCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MenuCardBuilder(
-      onPressed: onPressed,
+      onPressed: () => ref.read(routerProvider).navigate(ReportsRoute()),
       icon: LucideIcons.chartArea,
       label: 'Reports',
     );

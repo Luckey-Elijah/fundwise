@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
+@RoutePage()
 class BudgetPage extends StatelessWidget {
   const BudgetPage({super.key});
 
@@ -10,21 +12,8 @@ class BudgetPage extends StatelessWidget {
   }
 }
 
-class TableExample extends StatefulWidget {
+class TableExample extends StatelessWidget {
   const TableExample({super.key});
-
-  @override
-  State<TableExample> createState() => _TableExampleState();
-}
-
-class _TableExampleState extends State<TableExample> {
-  final horizontalScrollController = ScrollController();
-
-  @override
-  void dispose() {
-    horizontalScrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +28,6 @@ class _TableExampleState extends State<TableExample> {
     ];
     final headings = ['CATEGORY', 'ASSIGNED', 'ACTIVITY', 'AVAILABLE'];
     return ShadTable(
-      horizontalScrollController: horizontalScrollController,
       columnCount: invoices[0].length,
       rowCount: invoices.length,
       header: (context, column) {

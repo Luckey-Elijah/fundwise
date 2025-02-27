@@ -11,13 +11,12 @@ mixin CachedAsyncNotifierState<T extends Object>
   AsyncValue<T>? cached({
     void Function(Object error, StackTrace stackTrace)? listenOnError,
   }) {
-    final store = CachingMapper<T, AsyncValue<T>>(
+    late final store = CachingMapper<T, AsyncValue<T>>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
       toState: AsyncData.new,
       storeWhen: (prev, next) => prev?.value != next.value && next.hasValue,
     );
-
     listenSelf(store.listener(), onError: listenOnError);
     final cache = store.state();
     if (cache != null) return cache;
@@ -29,18 +28,18 @@ mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
 
-  late final _store = CachingMapper<T, T>(
-    classMapperBase: mapper(),
-    sharedPreferences: ref.watch(sharedPreferencesProvider),
-    storeWhen: (previous, next) => previous != next,
-    toState: (mapper) => mapper,
-  );
-
   T? cached({
     void Function(Object error, StackTrace stackTrace)? listenOnError,
   }) {
-    listenSelf(_store.listener(), onError: listenOnError);
-    final cache = _store.state();
+    late final store = CachingMapper<T, T>(
+      classMapperBase: mapper(),
+      sharedPreferences: ref.watch(sharedPreferencesProvider),
+      storeWhen: (previous, next) => previous != next,
+      toState: (mapper) => mapper,
+    );
+
+    listenSelf(store.listener(), onError: listenOnError);
+    final cache = store.state();
 
     if (cache != null) return cache;
     return null;
@@ -70,7 +69,7 @@ class CachingMapper<Mapper extends Object, State extends Object> {
   }
 
   final bool Function(State? previous, State next) storeWhen;
-  State Function(Mapper mapper) toState;
+  final State Function(Mapper mapper) toState;
 
   State? state() {
     final json = _sharedPreferences.getString(key);
