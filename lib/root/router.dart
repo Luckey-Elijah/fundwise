@@ -38,12 +38,12 @@ class FundwiseRoute extends CustomRoute<CustomRouteType> {
   FundwiseRoute(
     String path, {
     required super.page,
+    RouteTransitionsBuilder? transitionsBuilder,
     super.initial,
     super.children,
   }) : super(
          barrierDismissible: false,
-
          path: path,
-         transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+         transitionsBuilder: transitionsBuilder ?? TransitionsBuilders.noTransition,
        );
 }

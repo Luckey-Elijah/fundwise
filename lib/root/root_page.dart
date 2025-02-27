@@ -54,9 +54,7 @@ class _RootPageState extends ConsumerState<RootPage> {
                               return ShadButton.ghost(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 onPressed: () {
-                                  ref
-                                      .read(routerProvider)
-                                      .navigate(AccountDetailRoute(id: index));
+                                  ref.read(routerProvider).navigate(AccountDetailRoute(id: index));
                                 },
                                 leading: Icon(LucideIcons.piggyBank),
                                 child: Text('Account #$index'),
@@ -68,10 +66,7 @@ class _RootPageState extends ConsumerState<RootPage> {
                     ],
                   ),
                   if (wideEnough)
-                    _CollapseButton(
-                      onPressed: onCollapseButtonPressed,
-                      expanded: expanded,
-                    ),
+                    _CollapseButton(onPressed: onCollapseButtonPressed, expanded: expanded),
                 ],
               ),
             ),
@@ -93,15 +88,10 @@ class _CollapseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment:
-          expanded
-              ? AlignmentDirectional.bottomEnd
-              : AlignmentDirectional.bottomCenter,
+      alignment: expanded ? AlignmentDirectional.bottomEnd : AlignmentDirectional.bottomCenter,
       child: ShadIconButton.secondary(
         onPressed: onPressed,
-        icon: Icon(
-          expanded ? LucideIcons.arrowLeftToLine : LucideIcons.arrowRightToLine,
-        ),
+        icon: Icon(expanded ? LucideIcons.arrowLeftToLine : LucideIcons.arrowRightToLine),
       ),
     );
   }

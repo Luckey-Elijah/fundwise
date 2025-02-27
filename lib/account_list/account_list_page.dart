@@ -8,8 +8,6 @@ class AccountListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ShadButton(child: Text('account list'), onPressed: () {}),
-    );
+    return Center(child: ShadButton(child: Text('account list'), onPressed: () {}));
   }
 }

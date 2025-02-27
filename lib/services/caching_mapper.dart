@@ -3,14 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/services/shared_preferences.dart';
 
-mixin CachedAsyncNotifierState<T extends Object>
-    on AutoDisposeAsyncNotifier<T> {
+mixin CachedAsyncNotifierState<T extends Object> on AutoDisposeAsyncNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
 
-  AsyncValue<T>? cached({
-    void Function(Object error, StackTrace stackTrace)? listenOnError,
-  }) {
+  AsyncValue<T>? cached({void Function(Object error, StackTrace stackTrace)? listenOnError}) {
     late final store = CachingMapper<T, AsyncValue<T>>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
@@ -28,9 +25,7 @@ mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
 
-  T? cached({
-    void Function(Object error, StackTrace stackTrace)? listenOnError,
-  }) {
+  T? cached({void Function(Object error, StackTrace stackTrace)? listenOnError}) {
     late final store = CachingMapper<T, T>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),

@@ -37,9 +37,7 @@ class TableExample extends StatelessWidget {
           alignment: isLast ? Alignment.centerRight : null,
           child: ShadButton.link(
             padding: EdgeInsets.zero,
-            child: Flexible(
-              child: Text(headings[column], overflow: TextOverflow.ellipsis),
-            ),
+            child: Flexible(child: Text(headings[column], overflow: TextOverflow.ellipsis)),
           ),
         );
       },
@@ -47,28 +45,18 @@ class TableExample extends StatelessWidget {
       columnSpanExtent: (index) {
         return switch (index) {
           0 => FractionalSpanExtent(3 / 8),
-          _ => MaxSpanExtent(
-            FractionalSpanExtent(5 / 24),
-            FixedSpanExtent(110),
-          ),
+          _ => MaxSpanExtent(FractionalSpanExtent(5 / 24), FixedSpanExtent(110)),
         };
       },
       builder: (context, index) {
         final invoice = invoices[index.row];
         return ShadTableCell(
           alignment:
-              index.column == invoice.length - 1
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
+              index.column == invoice.length - 1 ? Alignment.centerRight : Alignment.centerLeft,
           padding: EdgeInsets.zero,
           child: ShadButton.link(
             padding: EdgeInsets.zero,
-            child: Flexible(
-              child: Text(
-                invoice[index.column],
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            child: Flexible(child: Text(invoice[index.column], overflow: TextOverflow.ellipsis)),
           ),
         );
       },

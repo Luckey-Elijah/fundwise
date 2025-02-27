@@ -21,10 +21,7 @@ class SettingsPage extends ConsumerWidget {
           for (final mode in ThemeMode.values)
             ShadButton.raw(
               onPressed: () => controller.useMode(mode),
-              variant:
-                  mode == state.mode
-                      ? ShadButtonVariant.primary
-                      : ShadButtonVariant.secondary,
+              variant: mode == state.mode ? ShadButtonVariant.primary : ShadButtonVariant.secondary,
               leading: Icon(switch (mode) {
                 ThemeMode.system => LucideIcons.sunMoon,
                 ThemeMode.light => LucideIcons.sun,

@@ -1,4 +1,7 @@
 include: package:very_good_analysis/analysis_options.yaml
+
+formatter: { page_width: 100 }
+
 linter:
   rules:
     public_member_api_docs: false
@@ -12,6 +15,7 @@ analyzer:
   plugins:
     - custom_lint
   errors:
+    lines_longer_than_80_chars: ignore
     omit_local_variable_types: ignore
     prefer_const_constructors: ignore
     prefer_const_constructors_in_immutables: ignore

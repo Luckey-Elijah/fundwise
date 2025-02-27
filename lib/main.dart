@@ -15,9 +15,7 @@ Future<void> main() async {
 
   return runApp(
     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ],
+      overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)],
       child: FundwiseApp(),
     ),
   );

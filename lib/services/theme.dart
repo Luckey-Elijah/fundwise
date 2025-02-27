@@ -30,8 +30,7 @@ class ThemeModel with ThemeModelMappable {
 }
 
 @riverpod
-class ThemeController extends _$ThemeController
-    with CachedNotifierState<ThemeModel> {
+class ThemeController extends _$ThemeController with CachedNotifierState<ThemeModel> {
   @override
   ThemeModel build() => cached() ?? ThemeModel(mode: ThemeMode.system);
 
