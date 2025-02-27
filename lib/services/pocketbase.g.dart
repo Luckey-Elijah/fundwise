@@ -13,7 +13,8 @@ String _$pocketbaseHash() => r'c7120d818236742d062ebcd8263134636dba02be';
 final pocketbaseProvider = AutoDisposeProvider<PocketBase>.internal(
   pocketbase,
   name: r'pocketbaseProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product') ? null : _$pocketbaseHash,
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$pocketbaseHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

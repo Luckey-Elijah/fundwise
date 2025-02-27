@@ -1,31 +1,34 @@
-name: fundwise
-version: 0.0.1
-publish_to: "none"
-description: Open source budgeting.
-environment: { sdk: 3.7.0-323.0.dev }
-
-dependencies:
-  auto_route: ^10.0.0
-  collection: ^1.19.1
-  dart_mappable: ^4.4.0
-  flutter: { sdk: flutter }
-  flutter_riverpod: ^2.6.1
-  http: ^1.3.0
-  intl: ^0.19.0
-  pocketbase: ^0.22.0
-  riverpod_annotation: ^2.6.1
-  shadcn_ui: ^0.21.0
-  shared_preferences: ^2.5.2
-  stack_trace: ^1.12.1
-
-dev_dependencies:
-  auto_route_generator: ^10.0.0
-  build_runner: ^2.4.15
-  custom_lint: ^0.7.3
-  dart_mappable_builder: ^4.4.0
-  flutter_test: { sdk: flutter }
-  riverpod_generator: ^2.6.4
-  riverpod_lint: ^2.6.4
-  very_good_analysis: ^7.0.0
-
-flutter: { uses-material-design: false }
+{
+  name: fundwise,
+  version: 0.0.1,
+  publish_to: none,
+  description: Open source budgeting.,
+  environment: { sdk: 3.7.0-323.0.dev },
+  flutter: { uses-material-design: false },
+  dependencies:
+    {
+      auto_route: ^10.0.0,
+      collection: ^1.19.1,
+      dart_mappable: ^4.4.0,
+      flutter: { sdk: flutter },
+      flutter_riverpod: ^2.6.1,
+      http: ^1.3.0,
+      intl: ^0.19.0,
+      pocketbase: ^0.22.0,
+      riverpod_annotation: ^2.6.1,
+      shadcn_ui: ^0.21.0,
+      shared_preferences: ^2.5.2,
+      stack_trace: ^1.12.1,
+    },
+  dev_dependencies:
+    {
+      auto_route_generator: ^10.0.0,
+      build_runner: ^2.4.15,
+      custom_lint: ^0.7.3,
+      dart_mappable_builder: ^4.4.0,
+      flutter_test: { sdk: flutter },
+      riverpod_generator: ^2.6.4,
+      riverpod_lint: ^2.6.4,
+      very_good_analysis: ^7.0.0,
+    },
+}
