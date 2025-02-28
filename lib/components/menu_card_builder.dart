@@ -16,8 +16,8 @@ class MenuCardBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, contraints) {
-        if (contraints.maxWidth < 80) {
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 80) {
           return ShadIconButton.outline(onPressed: onPressed, icon: Icon(icon));
         }
         return ShadButton.outline(

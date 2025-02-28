@@ -3,8 +3,8 @@ import 'package:fundwise/components/material.dart';
 import 'package:fundwise/services/caching_mapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'theme.g.dart';
-part 'theme.mapper.dart';
+part 'theme_controller.g.dart';
+part 'theme_controller.mapper.dart';
 
 class ThemeModeMapper extends SimpleMapper<ThemeMode> {
   const ThemeModeMapper();

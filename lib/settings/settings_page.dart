@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/components/material.dart';
-import 'package:fundwise/services/theme.dart';
+import 'package:fundwise/theme/theme_controller.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()

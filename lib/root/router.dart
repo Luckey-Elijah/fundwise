@@ -5,6 +5,7 @@ import 'package:fundwise/account_detail/account_detail_page.dart';
 import 'package:fundwise/account_list/account_list_page.dart';
 import 'package:fundwise/budget/budget_page.dart';
 import 'package:fundwise/reports/reports_page.dart';
+import 'package:fundwise/root/fundwise_route.dart';
 import 'package:fundwise/root/root_page.dart';
 import 'package:fundwise/settings/settings_page.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,18 +33,4 @@ class FundwiseRouter extends RootStackRouter {
       ],
     ),
   ];
-}
-
-class FundwiseRoute extends CustomRoute<CustomRouteType> {
-  FundwiseRoute(
-    String path, {
-    required super.page,
-    RouteTransitionsBuilder? transitionsBuilder,
-    super.initial,
-    super.children,
-  }) : super(
-         barrierDismissible: false,
-         path: path,
-         transitionsBuilder: transitionsBuilder ?? TransitionsBuilders.noTransition,
-       );
 }
