@@ -24,7 +24,7 @@ class _RootPageState extends ConsumerState<RootPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final wideEnough = constraints.maxWidth > 800 || true;
+        final wideEnough = constraints.maxWidth > 450;
         return Row(
           children: [
             SizedBox(

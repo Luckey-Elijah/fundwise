@@ -1,19 +1,30 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/services/auth.dart';
 import 'package:fundwise/services/shared_preferences.dart';
 
 mixin CachedAsyncNotifierState<T extends Object> on AutoDisposeAsyncNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
 
-  AsyncValue<T>? cached({void Function(Object error, StackTrace stackTrace)? listenOnError}) {
+  AsyncValue<T>? cached({
+    void Function(Object error, StackTrace stackTrace)? listenOnError,
+    bool clearOnAuth = true,
+  }) {
     late final store = CachingMapper<T, AsyncValue<T>>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
       toState: AsyncData.new,
       storeWhen: (prev, next) => prev?.value != next.value && next.hasValue,
     );
+
+    ref.listen(authenticationProvider, (previous, next) {
+      if (!clearOnAuth) return;
+      if (next is AsyncLoading) return;
+      if (next case AsyncData(:final value) when value != null) return;
+      store.clear();
+    });
     listenSelf(store.listener(), onError: listenOnError);
     final cache = store.state();
     if (cache != null) return cache;
@@ -25,14 +36,22 @@ mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
 
-  T? cached({void Function(Object error, StackTrace stackTrace)? listenOnError}) {
+  T? cached({
+    void Function(Object error, StackTrace stackTrace)? listenOnError,
+    bool clearOnAuth = true,
+  }) {
     late final store = CachingMapper<T, T>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
       storeWhen: (previous, next) => previous != next,
       toState: (mapper) => mapper,
     );
-
+    ref.listen(authenticationProvider, (previous, next) {
+      if (!clearOnAuth) return;
+      if (next is AsyncLoading) return;
+      if (next case AsyncData(:final value) when value != null) return;
+      store.clear();
+    });
     listenSelf(store.listener(), onError: listenOnError);
     final cache = store.state();
 
@@ -65,6 +84,8 @@ class CachingMapper<Mapper extends Object, State extends Object> {
 
   final bool Function(State? previous, State next) storeWhen;
   final State Function(Mapper mapper) toState;
+
+  void clear() => _sharedPreferences.remove(key);
 
   State? state() {
     final json = _sharedPreferences.getString(key);

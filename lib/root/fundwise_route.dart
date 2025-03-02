@@ -9,6 +9,7 @@ class FundwiseRoute extends CustomRoute<CustomRouteType> {
     RouteTransitionsBuilder? transitionsBuilder,
     super.initial,
     super.children,
+    super.guards,
   }) : super(
          barrierDismissible: false,
          path: path,

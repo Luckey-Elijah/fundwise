@@ -6,9 +6,9 @@ class FundwiseColorScheme extends ShadColorScheme {
   const FundwiseColorScheme.light({
     super.background = const Color(0xffffffff),
     super.foreground = const Color(0xff020817),
-    super.card = const Color(0xffdee8fc),
+    super.card = const Color(0xffffffff),
     super.cardForeground = const Color(0xff020817),
-    super.popover = const Color(0xffdee8fc),
+    super.popover = const Color(0xffffffff),
     super.popoverForeground = const Color(0xff020817),
     super.primary = const Color(0xff1e3a8a),
     super.primaryForeground = const Color(0xfff8fafc),

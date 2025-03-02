@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/root/router.dart';
+import 'package:fundwise/services/auth.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class SettingsMenuCard extends ConsumerWidget {
@@ -8,7 +9,7 @@ class SettingsMenuCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ShadTheme.of(context);
-
+    final data = ref.watch(authenticationProvider);
     void onPressed() {
       ref.read(routerProvider).navigate(SettingsRoute());
     }
@@ -33,8 +34,10 @@ class SettingsMenuCard extends ConsumerWidget {
           height: 64,
           mainAxisAlignment: MainAxisAlignment.start,
           leading: shadAvatar,
+          expands: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
             children: [
               Text(
                 'my budget',
@@ -43,7 +46,10 @@ class SettingsMenuCard extends ConsumerWidget {
                 style: theme.textTheme.large,
               ),
               Text(
-                'user@fundwise.dev',
+                switch (data) {
+                  AsyncData(value: final record) => record?.data['email']?.toString() ?? 'n/a',
+                  _ => '/null',
+                },
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.muted,

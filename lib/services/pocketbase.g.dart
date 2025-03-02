@@ -6,7 +6,7 @@ part of 'pocketbase.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$pocketbaseHash() => r'c7120d818236742d062ebcd8263134636dba02be';
+String _$pocketbaseHash() => r'e3418985987bfffcf74a5263947603e17065d14c';
 
 /// See also [pocketbase].
 @ProviderFor(pocketbase)
