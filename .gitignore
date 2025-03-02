@@ -47,7 +47,7 @@ app.*.map.json
 # pocketbase things
 pb_data/
 
-# code gen
+# Generated files
 **/*.g.dart
 **/*.gr.dart
 **/*.mapper.dart
