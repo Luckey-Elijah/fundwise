@@ -8,15 +8,20 @@ mixin CachedAsyncNotifierState<T extends Object> on AutoDisposeAsyncNotifier<T> 
   @protected
   ClassMapperBase<T> mapper();
 
-  AsyncValue<T>? cached({
+  T? cached({
     void Function(Object error, StackTrace stackTrace)? listenOnError,
+    bool Function(AsyncValue<T>? previous, AsyncValue<T> next)? storeWhen,
     bool clearOnAuth = true,
   }) {
     late final store = CachingMapper<T, AsyncValue<T>>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
       toState: AsyncData.new,
-      storeWhen: (prev, next) => prev?.value != next.value && next.hasValue,
+      storeWhen: (previous, next) {
+        final maybe = storeWhen?.call(previous, next);
+        late final fallback = previous?.value != next.value && next.hasValue;
+        return maybe ?? fallback;
+      },
     );
 
     ref.listen(authenticationProvider, (previous, next) {
@@ -25,9 +30,11 @@ mixin CachedAsyncNotifierState<T extends Object> on AutoDisposeAsyncNotifier<T> 
       if (next case AsyncData(:final value) when value != null) return;
       store.clear();
     });
+
     listenSelf(store.listener(), onError: listenOnError);
+
     final cache = store.state();
-    if (cache != null) return cache;
+    if (cache != null) return cache.valueOrNull;
     return null;
   }
 }
@@ -38,12 +45,14 @@ mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
 
   T? cached({
     void Function(Object error, StackTrace stackTrace)? listenOnError,
+    bool Function(T? previous, T next)? storeWhen,
+
     bool clearOnAuth = true,
   }) {
     late final store = CachingMapper<T, T>(
       classMapperBase: mapper(),
       sharedPreferences: ref.watch(sharedPreferencesProvider),
-      storeWhen: (previous, next) => previous != next,
+      storeWhen: (previous, next) => storeWhen?.call(previous, next) ?? previous != next,
       toState: (mapper) => mapper,
     );
     ref.listen(authenticationProvider, (previous, next) {
@@ -76,8 +85,13 @@ class CachingMapper<Mapper extends Object, State extends Object> {
   void Function(State?, State) listener() {
     return (prev, next) async {
       if (storeWhen(prev, next)) {
-        final json = _mapper.encodeJson(next);
-        await _sharedPreferences.setString(key, json);
+        if (next case AsyncValue<Mapper>(:final value)) {
+          final json = _mapper.encodeJson(value);
+          await _sharedPreferences.setString(key, json);
+        } else {
+          final json = _mapper.encodeJson(next);
+          await _sharedPreferences.setString(key, json);
+        }
       }
     };
   }
