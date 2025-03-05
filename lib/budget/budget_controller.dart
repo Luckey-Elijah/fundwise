@@ -1,5 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:fundwise/services/caching_mapper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/budget/budget_model.dart';
+import 'package:fundwise/budget/budgets_collection.dart';
 import 'package:fundwise/services/pocketbase.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,73 +19,44 @@ class UserModel with UserModelMappable {
   final DateTime updated;
 }
 
-@MappableClass(discriminatorKey: 'type', includeSubClasses: [EmptyBudgetModel, BudgetModel])
-sealed class BaseBudgetModel with BaseBudgetModelMappable {
-  const BaseBudgetModel();
-}
-
-@MappableClass(discriminatorKey: 'empty')
-class EmptyBudgetModel extends BaseBudgetModel with EmptyBudgetModelMappable {
-  const EmptyBudgetModel();
-}
-
-@MappableClass()
-class BudgetModel extends BaseBudgetModel with BudgetModelMappable {
-  const BudgetModel({
-    required this.id,
-    required this.name,
-    required this.admin,
-    required this.created,
-    required this.updated,
-  });
-
-  final String id;
-  final String name;
-  final UserModel admin;
-  final DateTime created;
-  final DateTime updated;
-}
-
 @riverpod
-class BudgetController extends _$BudgetController with CachedAsyncNotifierState<BaseBudgetModel> {
-  @override
-  Future<BaseBudgetModel> build() async {
-    final budgetsCollection = ref.watch(
-      pocketbaseProvider.select((pb) => pb.collection('budgets')),
-    );
+BudgetModel? currentBudget(Ref ref) {
+  final value = ref.watch(
+    budgetControllerProvider().select((value) {
+      if (value case AsyncData(value: final BudgetModel budget)) return budget;
+      return null;
+    }),
+  );
+  return value;
+}
 
-    final user = ref.watch(pocketbaseProvider.select((pb) => pb.authStore.record?.id));
+@Riverpod(keepAlive: true)
+class BudgetController extends _$BudgetController {
+  @override
+  Future<BaseBudgetModel> build([String? budgetId]) async {
+    final collection = ref.watch(budgetsCollectionProvider);
 
     try {
-      final result_ = await budgetsCollection.getList(
-        expand: 'admin',
-        sort: '-created',
-        perPage: 1,
-      );
-      final value = BudgetModelMapper.fromMap(result_.items.first.flattened);
-      return value;
+      if (budgetId != null && budgetId.isNotEmpty) {
+        final budget = await collection.getOne(budgetId);
+        return budget;
+      }
+      final results = await collection.getList(sort: '-created', perPage: 1);
+      final first = results.items.firstOrNull;
+      if (first == null) return EmptyBudgetModel();
+      return first;
     } on ClientException catch (e, s) {
+      print(e);
+      print(s);
       return EmptyBudgetModel();
     }
   }
 
-  bool _storeWhen(AsyncValue<BaseBudgetModel>? previous, AsyncValue<BaseBudgetModel> next) {
-    if (next case AsyncData(:final value)) return value is BudgetModel;
-    return false;
-  }
-
-  @override
-  ClassMapperBase<BaseBudgetModel> mapper() => BaseBudgetModelMapper.ensureInitialized();
-
   Future<void> createBudget(String name) async {
-    final budgetsCollection = ref.read(pocketbaseProvider.select((pb) => pb.collection('budgets')));
+    final collection = ref.watch(budgetsCollectionProvider.select((col) => col.collection));
     final user = ref.read(pocketbaseProvider.select((pb) => pb.authStore.record?.id));
-
     await update((_) async {
-      final result = await budgetsCollection.create(
-        body: {'name': name, 'admin': user},
-        expand: 'admin',
-      );
+      final result = await collection.create(body: {'name': name, 'admin': user});
       return BudgetModelMapper.fromMap(result.flattened);
     });
   }

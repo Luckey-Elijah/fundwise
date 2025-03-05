@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/components/coming_soon.dart';
 import 'package:fundwise/root/router.dart';
 import 'package:fundwise/services/auth.dart';
 import 'package:fundwise/services/pocketbase.dart';
@@ -66,7 +67,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       await authWithPassword(username.text, password.text);
                     },
                   ),
-                  ShadButton(enabled: false, child: Text('Register')),
+                  ComingSoon(
+                    feature: 'Register',
+                    child: ShadButton(enabled: false, child: Text('Register')),
+                  ),
                 ],
               ),
             ],

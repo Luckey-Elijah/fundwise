@@ -14,13 +14,13 @@ const dividerTheme = ShadDividerTheme(
 final lightTheme = ShadThemeData(
   brightness: Brightness.light,
   colorScheme: FundwiseColorScheme.light(),
-  dividerTheme: dividerTheme,
+  // dividerTheme: dividerTheme,
   cardTheme: cardTheme,
 );
 
 final darkTheme = ShadThemeData(
   brightness: Brightness.dark,
   colorScheme: FundwiseColorScheme.dark(),
-  dividerTheme: dividerTheme,
+  // dividerTheme: dividerTheme,
   cardTheme: cardTheme,
 );

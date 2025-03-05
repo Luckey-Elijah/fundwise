@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fundwise/budget/budget_controller.dart';
+import 'package:fundwise/budget/budget_model.dart';
 import 'package:fundwise/root/router.dart';
 import 'package:fundwise/services/auth.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
@@ -39,12 +41,7 @@ class SettingsMenuCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              Text(
-                'my budget',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.large,
-              ),
+              BudgetName(),
               Text(
                 switch (data) {
                   AsyncData(value: final record) => record?.data['email']?.toString() ?? 'n/a',
@@ -59,5 +56,24 @@ class SettingsMenuCard extends ConsumerWidget {
         );
       },
     );
+  }
+}
+
+class BudgetName extends ConsumerWidget {
+  const BudgetName({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ShadTheme.of(context);
+
+    final name = ref.watch(
+      budgetControllerProvider().select((budget) {
+        if (budget case AsyncData(:final BudgetModel value)) return value.name;
+        return null;
+      }),
+    );
+
+    if (name == null) return ShadProgress();
+    return Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.large);
   }
 }

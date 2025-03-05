@@ -39,7 +39,12 @@ class FundwiseRouter extends RootStackRouter {
         FundwiseRoute('accounts/', page: AccountListRoute.page),
         FundwiseRoute('accounts/:id', page: AccountDetailRoute.page),
         FundwiseRoute('reports/', page: ReportsRoute.page),
-        FundwiseRoute('budgets/', page: BudgetRoute.page, initial: true),
+        FundwiseRoute(
+          'budget/',
+          page: BudgetRoute.page,
+          initial: true,
+          children: [FundwiseRoute(':id', page: BudgetRoute.page)],
+        ),
         FundwiseRoute('settings/', page: SettingsRoute.page),
       ],
     ),

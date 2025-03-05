@@ -4,41 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/services/auth.dart';
 import 'package:fundwise/services/shared_preferences.dart';
 
-mixin CachedAsyncNotifierState<T extends Object> on AutoDisposeAsyncNotifier<T> {
-  @protected
-  ClassMapperBase<T> mapper();
-
-  T? cached({
-    void Function(Object error, StackTrace stackTrace)? listenOnError,
-    bool Function(AsyncValue<T>? previous, AsyncValue<T> next)? storeWhen,
-    bool clearOnAuth = true,
-  }) {
-    late final store = CachingMapper<T, AsyncValue<T>>(
-      classMapperBase: mapper(),
-      sharedPreferences: ref.watch(sharedPreferencesProvider),
-      toState: AsyncData.new,
-      storeWhen: (previous, next) {
-        final maybe = storeWhen?.call(previous, next);
-        late final fallback = previous?.value != next.value && next.hasValue;
-        return maybe ?? fallback;
-      },
-    );
-
-    ref.listen(authenticationProvider, (previous, next) {
-      if (!clearOnAuth) return;
-      if (next is AsyncLoading) return;
-      if (next case AsyncData(:final value) when value != null) return;
-      store.clear();
-    });
-
-    listenSelf(store.listener(), onError: listenOnError);
-
-    final cache = store.state();
-    if (cache != null) return cache.valueOrNull;
-    return null;
-  }
-}
-
 mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
   @protected
   ClassMapperBase<T> mapper();
@@ -61,9 +26,10 @@ mixin CachedNotifierState<T extends Object> on AutoDisposeNotifier<T> {
       if (next case AsyncData(:final value) when value != null) return;
       store.clear();
     });
-    listenSelf(store.listener(), onError: listenOnError);
-    final cache = store.state();
 
+    listenSelf(store.listener(), onError: listenOnError);
+
+    final cache = store.state();
     if (cache != null) return cache;
     return null;
   }
