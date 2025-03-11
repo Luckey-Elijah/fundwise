@@ -1,5 +1,4 @@
-import 'package:flutter/widgets.dart';
-import 'package:fundwise/components/material.dart';
+import 'package:flutter/material.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 
 class ComingSoon extends StatelessWidget {
@@ -21,9 +20,7 @@ class ComingSoon extends StatelessWidget {
           ),
         );
       },
-      // next shadcn_ui release
-      // reverseDuration: Durations.short2,
-      waitDuration: Durations.short2,
+      reverseDuration: Durations.short2,
       child: child,
     );
   }

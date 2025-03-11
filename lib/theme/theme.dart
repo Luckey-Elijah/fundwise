@@ -6,7 +6,7 @@ import 'package:shadcn_ui/shadcn_ui.dart';
 
 const cardTheme = ShadCardTheme(padding: EdgeInsets.all(2));
 
-const dividerTheme = ShadDividerTheme(
+const separatorTheme = ShadSeparatorTheme(
   verticalMargin: EdgeInsets.zero,
   horizontalMargin: EdgeInsets.zero,
 );
@@ -14,13 +14,13 @@ const dividerTheme = ShadDividerTheme(
 final lightTheme = ShadThemeData(
   brightness: Brightness.light,
   colorScheme: FundwiseColorScheme.light(),
-  // dividerTheme: dividerTheme,
+  separatorTheme: separatorTheme,
   cardTheme: cardTheme,
 );
 
 final darkTheme = ShadThemeData(
   brightness: Brightness.dark,
   colorScheme: FundwiseColorScheme.dark(),
-  // dividerTheme: dividerTheme,
+  separatorTheme: separatorTheme,
   cardTheme: cardTheme,
 );

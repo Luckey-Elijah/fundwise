@@ -12,90 +12,60 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: const [LogoutButton(), ThemePicker()]);
+    return Column(children: const [SettingsMenubar()]);
   }
 }
 
-class LogoutButton extends ConsumerWidget {
-  const LogoutButton({super.key});
+class SettingsMenubar extends ConsumerWidget {
+  const SettingsMenubar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ShadButton(
-      child: Text('Logout'),
-      onPressed: () {
-        ref.read(pocketbaseProvider).authStore.clear();
-      },
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: ShadMenubar(
+        items: const [
+          ShadMenubarItem(items: [ThemeModeContextMenuPicker()], child: Text('View')),
+          ShadMenubarItem(items: [LogoutContextMenuButton()], child: Text('Account')),
+        ],
+      ),
     );
   }
 }
 
-class ThemePicker extends ConsumerStatefulWidget {
-  const ThemePicker({super.key});
+class LogoutContextMenuButton extends ConsumerWidget {
+  const LogoutContextMenuButton({super.key});
 
   @override
-  ConsumerState<ThemePicker> createState() => _ThemePickerState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clear = ref.read(pocketbaseProvider).authStore.clear;
+    return ShadContextMenuItem(
+      trailing: Icon(LucideIcons.logOut),
+      onPressed: clear,
+      child: Text('Logout'),
+    );
+  }
 }
 
-class _ThemePickerState extends ConsumerState<ThemePicker> {
+class ThemeModeContextMenuPicker extends ConsumerWidget {
+  const ThemeModeContextMenuPicker({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    final initialValue = ref.watch(themeControllerProvider.select((i) => i.mode));
-    final iconColor = ShadTheme.of(context).colorScheme.foreground;
-    return ShadSelect<ThemeMode>(
-      initialValue: initialValue,
-      onChanged: (value) {
-        if (value != null) ref.read(themeControllerProvider.notifier).useMode(value);
-      },
-      options: [
-        ShadOption<ThemeMode>(
-          value: ThemeMode.system,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [Text('Auto'), Spacer(), Icon(LucideIcons.sunMoon, color: iconColor)],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeControllerProvider.select((i) => i.mode));
+
+    return ShadContextMenuItem(
+      items: [
+        for (final themeMode in ThemeMode.values)
+          ShadContextMenuItem(
+            leading: Icon(themeMode.icon),
+            trailing: themeMode == mode ? Icon(LucideIcons.check) : null,
+            child: Text(themeMode.label),
+            onPressed: () => ref.read(themeControllerProvider.notifier).useMode(themeMode),
           ),
-        ),
-        ShadOption<ThemeMode>(
-          value: ThemeMode.light,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Light'),
-              Spacer(),
-              Icon(LucideIcons.sun, color: ShadTheme.of(context).colorScheme.foreground),
-            ],
-          ),
-        ),
-        ShadOption<ThemeMode>(
-          value: ThemeMode.dark,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Dark'),
-              Spacer(),
-              Icon(LucideIcons.moon, color: ShadTheme.of(context).colorScheme.foreground),
-            ],
-          ),
-        ),
       ],
-      selectedOptionBuilder: (context, mode) {
-        return Row(
-          spacing: 8,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(switch (mode) {
-              ThemeMode.system => LucideIcons.sunMoon,
-              ThemeMode.light => LucideIcons.sun,
-              ThemeMode.dark => LucideIcons.moon,
-            }, color: ShadTheme.of(context).colorScheme.foreground),
-            Text(switch (mode) {
-              ThemeMode.system => 'Auto',
-              ThemeMode.light => 'Light',
-              ThemeMode.dark => 'Dark',
-            }),
-          ],
-        );
-      },
+      trailing: Icon(LucideIcons.chevronRight),
+      child: Text('Theme Mode'),
     );
   }
 }

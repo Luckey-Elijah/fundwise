@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/components/menu_card_builder.dart';
@@ -10,7 +11,7 @@ class ReportsMenuCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MenuCardBuilder(
-      onPressed: () => ref.read(routerProvider).navigate(ReportsRoute()),
+      onPressed: () => context.navigateTo(ReportsRoute()),
       icon: LucideIcons.chartArea,
       label: 'Reports',
     );

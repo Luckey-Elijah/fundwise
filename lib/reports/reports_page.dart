@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shadcn_ui/shadcn_ui.dart';
 
 @RoutePage()
 class ReportsPage extends ConsumerWidget {
@@ -9,6 +8,7 @@ class ReportsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(child: ShadProgress());
+    return CustomPaint(size: Size.square(100));
+    // return Align(alignment: AlignmentDirectional.bottomCenter, child: ShadProgress());
   }
 }

@@ -1,31 +1,27 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/account_detail/account_detail_page.dart';
 import 'package:fundwise/account_list/account_list_page.dart';
-import 'package:fundwise/budget/budget_page.dart';
+import 'package:fundwise/budget/budget_detail_page.dart';
+import 'package:fundwise/budget/budget_shell_page.dart';
+import 'package:fundwise/budget_new/budget_new_page.dart';
 import 'package:fundwise/login/login_page.dart';
 import 'package:fundwise/reports/reports_page.dart';
 import 'package:fundwise/root/fundwise_route.dart';
 import 'package:fundwise/root/root_page.dart';
-import 'package:fundwise/services/pocketbase.dart';
+import 'package:fundwise/services/shared_preferences.dart';
 import 'package:fundwise/settings/settings_page.dart';
 import 'package:pocketbase/pocketbase.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'router.g.dart';
 part 'router.gr.dart';
-
-@riverpod
-Raw<FundwiseRouter> router(Ref ref) {
-  return FundwiseRouter(pocketbase: ref.watch(pocketbaseProvider));
-}
 
 @AutoRouterConfig()
 class FundwiseRouter extends RootStackRouter {
-  FundwiseRouter({required this.pocketbase});
+  FundwiseRouter({required this.authStore, required this.preferences});
 
-  final PocketBase pocketbase;
+  final AuthStore authStore;
+  final SharedPreferencesWithCache preferences;
 
   @override
   List<AutoRoute> get routes => [
@@ -34,16 +30,18 @@ class FundwiseRouter extends RootStackRouter {
       '/',
       page: RootRoute.page,
       initial: true,
-      guards: [AuthGuard(pocketbase: pocketbase)],
+      guards: [AuthGuard(authStore: authStore)],
       children: [
         FundwiseRoute('accounts/', page: AccountListRoute.page),
         FundwiseRoute('accounts/:id', page: AccountDetailRoute.page),
         FundwiseRoute('reports/', page: ReportsRoute.page),
         FundwiseRoute(
           'budget/',
-          page: BudgetRoute.page,
-          initial: true,
-          children: [FundwiseRoute(':id', page: BudgetRoute.page)],
+          page: BudgetShellRoute.page,
+          children: [
+            FundwiseRoute(':id', page: BudgetDetailRoute.page),
+            FundwiseRoute('new', page: BudgetNewRoute.page),
+          ],
         ),
         FundwiseRoute('settings/', page: SettingsRoute.page),
       ],
@@ -52,13 +50,13 @@ class FundwiseRouter extends RootStackRouter {
 }
 
 class AuthGuard extends AutoRouteGuard {
-  AuthGuard({required this.pocketbase});
+  AuthGuard({required this.authStore});
 
-  final PocketBase pocketbase;
+  final AuthStore authStore;
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    final isAuthed = pocketbase.authStore.isValid;
+    final isAuthed = authStore.isValid;
 
     if (!isAuthed) {
       resolver.redirectUntil(LoginRoute());

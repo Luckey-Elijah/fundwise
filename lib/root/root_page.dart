@@ -54,7 +54,7 @@ class _RootPageState extends ConsumerState<RootPage> {
                               return ShadButton.ghost(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 onPressed: () {
-                                  ref.read(routerProvider).navigate(AccountDetailRoute(id: index));
+                                  context.navigateTo(AccountDetailRoute(id: index));
                                 },
                                 leading: Icon(LucideIcons.piggyBank),
                                 child: Text('Account #$index'),
@@ -70,7 +70,7 @@ class _RootPageState extends ConsumerState<RootPage> {
                 ],
               ),
             ),
-            ShadDivider.vertical(),
+            ShadSeparator.vertical(),
             Expanded(child: AutoRouter()),
           ],
         );

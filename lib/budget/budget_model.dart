@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:fundwise/budget/budget_controller.dart';
 import 'package:fundwise/services/collection.dart';
+import 'package:fundwise/user/user_model.dart';
 
 part 'budget_model.mapper.dart';
 

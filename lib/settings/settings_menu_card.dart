@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/budget/budget_controller.dart';
@@ -12,8 +13,9 @@ class SettingsMenuCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ShadTheme.of(context);
     final data = ref.watch(authenticationProvider);
+
     void onPressed() {
-      ref.read(routerProvider).navigate(SettingsRoute());
+      context.navigateTo(SettingsRoute());
     }
 
     return LayoutBuilder(
@@ -67,7 +69,7 @@ class BudgetName extends ConsumerWidget {
     final theme = ShadTheme.of(context);
 
     final name = ref.watch(
-      budgetControllerProvider().select((budget) {
+      budgetControllerProvider.select((budget) {
         if (budget case AsyncData(:final BudgetModel value)) return value.name;
         return null;
       }),
