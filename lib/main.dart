@@ -52,8 +52,6 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
       }
     });
 
-    ref.listen(authenticationProvider, (previous, next) {});
-
     return ShadApp.router(
       routerConfig: router.config(),
       theme: lightTheme,
