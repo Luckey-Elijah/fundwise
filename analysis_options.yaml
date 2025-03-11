@@ -1,6 +1,6 @@
 include: package:very_good_analysis/analysis_options.yaml
 
-formatter: { page_width: 100 }
+formatter: { page_width: 90 }
 
 linter:
   rules:
@@ -20,3 +20,4 @@ analyzer:
     prefer_const_constructors: ignore
     prefer_const_constructors_in_immutables: ignore
     require_trailing_commas: ignore
+    use_setters_to_change_properties: ignore
