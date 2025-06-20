@@ -11,7 +11,7 @@ class BudgetMenuCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MenuCardBuilder(
-      onPressed: () => context.navigateTo(BudgetShellRoute()),
+      onPressed: () => context.navigateTo(const BudgetShellRoute()),
       icon: LucideIcons.walletCards,
       label: 'Budget',
     );

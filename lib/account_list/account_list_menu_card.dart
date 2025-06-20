@@ -11,7 +11,7 @@ class AccountListMenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return MenuCardBuilder(
       icon: LucideIcons.landmark,
-      onPressed: () => context.navigateTo(AccountListRoute()),
+      onPressed: () => context.navigateTo(const AccountListRoute()),
       label: 'Accounts',
     );
   }

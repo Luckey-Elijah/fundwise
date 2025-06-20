@@ -29,14 +29,12 @@ class _BudgetNewViewState extends ConsumerState<BudgetNewView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('New Budget', style: ShadTheme.of(context).textTheme.large),
-            ShadInput(placeholder: Text('Budget Name'), controller: controller),
+            ShadInput(placeholder: const Text('Budget Name'), controller: controller),
             ShadButton(
               enabled: controller.text.isNotEmpty && !state.isLoading,
-              onPressed:
-                  () => ref
-                      .read(budgetNewProvider.notifier)
-                      .createBudget(name: controller.text),
-              child: Text('Create'),
+              onPressed: () =>
+                  ref.read(budgetNewProvider.notifier).createBudget(name: controller.text),
+              child: const Text('Create'),
             ),
           ],
         ),

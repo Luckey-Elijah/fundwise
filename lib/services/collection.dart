@@ -43,7 +43,7 @@ class Collection<T extends CollectionModel> {
       query: _query(query),
     );
 
-    return mapper.decodeMap(_recordModelToMap(model));
+    return mapper.decodeMap<T>(_recordModelToMap(model));
   }
 
   Future<void> delete(
@@ -70,7 +70,7 @@ class Collection<T extends CollectionModel> {
       headers: headers,
     );
 
-    return mapper.decodeMap(_recordModelToMap(model));
+    return mapper.decodeMap<T>(_recordModelToMap(model));
   }
 
   Future<List<T>> getFullList({
@@ -105,7 +105,7 @@ class Collection<T extends CollectionModel> {
     Map<String, dynamic> query = const {},
     Map<String, String> headers = const {},
   }) async {
-    final pb.ResultList<pb.RecordModel> results = await collection.getList(
+    final results = await collection.getList(
       page: page,
       perPage: perPage,
       skipTotal: skipTotal,
@@ -141,7 +141,9 @@ class Collection<T extends CollectionModel> {
       headers: headers,
     );
 
-    return mapper.decodeMap(_recordModelToMap(model));
+    final map = _recordModelToMap(model);
+    final data = mapper.decodeMap<T>(map);
+    return data;
   }
 
   Future<T> update(
@@ -163,13 +165,22 @@ class Collection<T extends CollectionModel> {
       headers: headers,
     );
 
-    return mapper.decodeMap(_recordModelToMap(model));
+    return mapper.decodeMap<T>(_recordModelToMap(model));
   }
 
   Map<String, dynamic> _recordModelToMap(pb.RecordModel model) => {
     ...model.flattened,
     'id': model.id,
   };
+}
+
+extension CollectionBuilder on pb.RecordService {
+  Collection<T> toCollection<T extends CollectionModel>(
+    mappable.ClassMapperBase<T> mapper, {
+    List<String> expand = const <String>[],
+  }) {
+    return Collection<T>(this, mapper: mapper, expand: expand);
+  }
 }
 
 extension on pb.RecordModel {

@@ -11,16 +11,24 @@ const separatorTheme = ShadSeparatorTheme(
   horizontalMargin: EdgeInsets.zero,
 );
 
+const zeroRadiusButtonTheme = ShadButtonTheme(
+  // decoration: ShadDecoration(border: ShadBorder(radius: BorderRadius.zero)),
+);
+
 final lightTheme = ShadThemeData(
+  ghostButtonTheme: zeroRadiusButtonTheme,
+  primaryButtonTheme: zeroRadiusButtonTheme,
   brightness: Brightness.light,
-  colorScheme: FundwiseColorScheme.light(),
+  colorScheme: const FundwiseColorScheme.light(),
   separatorTheme: separatorTheme,
   cardTheme: cardTheme,
 );
 
 final darkTheme = ShadThemeData(
+  outlineButtonTheme: zeroRadiusButtonTheme,
+  primaryButtonTheme: zeroRadiusButtonTheme,
   brightness: Brightness.dark,
-  colorScheme: FundwiseColorScheme.dark(),
+  colorScheme: const FundwiseColorScheme.dark(),
   separatorTheme: separatorTheme,
   cardTheme: cardTheme,
 );

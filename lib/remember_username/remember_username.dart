@@ -6,13 +6,15 @@ part 'remember_username.g.dart';
 @riverpod
 class RememberUsername extends _$RememberUsername {
   static const _key = 'remember-username';
+
   @override
   Future<String?> build() async {
     listenSelf((previous, next) {
+      final sharedPreferences = ref.read(sharedPreferencesProvider);
       if (next case AsyncData(:final value?)) {
-        ref.read(sharedPreferencesProvider.select((pref) => pref.setString(_key, value)));
+        sharedPreferences.setString(_key, value);
       } else {
-        ref.read(sharedPreferencesProvider.select((pref) => pref.remove(_key)));
+        sharedPreferences.remove(_key);
       }
     });
 
@@ -21,5 +23,5 @@ class RememberUsername extends _$RememberUsername {
     return remember;
   }
 
-  Future<void> updateUsername(String? value) async => state = AsyncData(value);
+  void updateUsername(String? value) => state = AsyncData(value);
 }

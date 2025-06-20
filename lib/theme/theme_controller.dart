@@ -39,7 +39,7 @@ class ThemeController extends _$ThemeController {
     final json = pref.getString(mapper.id);
     ThemeModel? cached;
     if (json != null) cached = ThemeModelMapper.fromJson(json);
-    return cached ?? ThemeModel(mode: ThemeMode.system);
+    return cached ?? const ThemeModel(mode: ThemeMode.system);
   }
 
   void useMode(ThemeMode mode) {

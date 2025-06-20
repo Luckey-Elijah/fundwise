@@ -19,6 +19,7 @@ class RootPage extends ConsumerStatefulWidget {
 class _RootPageState extends ConsumerState<RootPage> {
   bool expanded = true;
   void onCollapseButtonPressed() => setState(() => expanded = !expanded);
+  final routerKey = GlobalKey<AutoRouterState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,47 +33,65 @@ class _RootPageState extends ConsumerState<RootPage> {
               child: Stack(
                 children: [
                   CustomScrollView(
-                    scrollBehavior: ShadScrollBehavior(),
+                    scrollBehavior: const ShadScrollBehavior(),
                     slivers: [
                       SliverList.list(
                         children: const [
                           SettingsMenuCard(),
+                          ShadSeparator.horizontal(),
                           BudgetMenuCard(),
+                          ShadSeparator.horizontal(),
                           ReportsMenuCard(),
+                          ShadSeparator.horizontal(),
                           AccountListMenuCard(),
                         ],
                       ),
                       SliverLayoutBuilder(
                         builder: (context, constraints) {
                           if (constraints.crossAxisExtent < 80) {
-                            return SliverToBoxAdapter();
+                            return const SliverToBoxAdapter();
                           }
 
-                          return SliverList.builder(
-                            itemCount: 8,
-                            itemBuilder: (context, index) {
-                              return ShadButton.ghost(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                onPressed: () {
-                                  context.navigateTo(AccountDetailRoute(id: index));
-                                },
-                                leading: Icon(LucideIcons.piggyBank),
-                                child: Text('Account #$index'),
-                              );
-                            },
-                          );
+                          return const _AccountListNavigationItems();
                         },
                       ),
                     ],
                   ),
                   if (wideEnough)
-                    _CollapseButton(onPressed: onCollapseButtonPressed, expanded: expanded),
+                    _CollapseButton(
+                      onPressed: onCollapseButtonPressed,
+                      expanded: expanded,
+                    ),
                 ],
               ),
             ),
-            ShadSeparator.vertical(),
-            Expanded(child: AutoRouter()),
+            const ShadSeparator.vertical(),
+            Expanded(child: AutoRouter(key: routerKey)),
           ],
+        );
+      },
+    );
+  }
+}
+
+class _AccountListNavigationItems extends StatelessWidget {
+  const _AccountListNavigationItems();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList.builder(
+      itemCount: 8 + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) return const ShadSeparator.horizontal();
+
+        final i = index - 1;
+        return ShadButton.ghost(
+          mainAxisAlignment: MainAxisAlignment.start,
+          onPressed: () {
+            context.navigateTo(AccountDetailRoute(id: i));
+          },
+          leading: const Icon(LucideIcons.piggyBank),
+          child: Text('Account #$i'),
         );
       },
     );

@@ -12,7 +12,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: const [SettingsMenubar()]);
+    return const Column(children: [SettingsMenubar()]);
   }
 }
 
@@ -21,10 +21,10 @@ class SettingsMenubar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
+    return const Padding(
+      padding: EdgeInsets.only(top: 4),
       child: ShadMenubar(
-        items: const [
+        items: [
           ShadMenubarItem(items: [ThemeModeContextMenuPicker()], child: Text('View')),
           ShadMenubarItem(items: [LogoutContextMenuButton()], child: Text('Account')),
         ],
@@ -40,9 +40,9 @@ class LogoutContextMenuButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final clear = ref.read(pocketbaseProvider).authStore.clear;
     return ShadContextMenuItem(
-      trailing: Icon(LucideIcons.logOut),
+      trailing: const Icon(LucideIcons.logOut),
       onPressed: clear,
-      child: Text('Logout'),
+      child: const Text('Logout'),
     );
   }
 }
@@ -59,13 +59,13 @@ class ThemeModeContextMenuPicker extends ConsumerWidget {
         for (final themeMode in ThemeMode.values)
           ShadContextMenuItem(
             leading: Icon(themeMode.icon),
-            trailing: themeMode == mode ? Icon(LucideIcons.check) : null,
+            trailing: themeMode == mode ? const Icon(LucideIcons.check) : null,
             child: Text(themeMode.label),
             onPressed: () => ref.read(themeControllerProvider.notifier).useMode(themeMode),
           ),
       ],
-      trailing: Icon(LucideIcons.chevronRight),
-      child: Text('Theme Mode'),
+      trailing: const Icon(LucideIcons.chevronRight),
+      child: const Text('Theme Mode'),
     );
   }
 }

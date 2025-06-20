@@ -11,7 +11,7 @@ class ReportsMenuCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MenuCardBuilder(
-      onPressed: () => context.navigateTo(ReportsRoute()),
+      onPressed: () => context.navigateTo(const ReportsRoute()),
       icon: LucideIcons.chartArea,
       label: 'Reports',
     );

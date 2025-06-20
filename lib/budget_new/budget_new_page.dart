@@ -8,6 +8,6 @@ class BudgetNewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BudgetNewView();
+    return const BudgetNewView();
   }
 }

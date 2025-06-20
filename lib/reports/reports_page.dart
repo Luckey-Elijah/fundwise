@@ -8,7 +8,7 @@ class ReportsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CustomPaint(size: Size.square(100));
+    return const CustomPaint(size: Size.square(100));
     // return Align(alignment: AlignmentDirectional.bottomCenter, child: ShadProgress());
   }
 }

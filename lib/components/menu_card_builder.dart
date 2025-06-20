@@ -6,21 +6,32 @@ class MenuCardBuilder extends StatelessWidget {
     required this.icon,
     required this.onPressed,
     required this.label,
+    this.selected = false,
     super.key,
   });
 
-  final void Function() onPressed;
+  final void Function()? onPressed;
   final IconData icon;
   final String label;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 80) {
-          return ShadIconButton.outline(onPressed: onPressed, icon: Icon(icon));
+          return ShadIconButton.raw(
+            onPressed: onPressed,
+            variant: selected ? ShadButtonVariant.primary : ShadButtonVariant.ghost,
+            enabled: enabled,
+            icon: Icon(icon),
+          );
         }
-        return ShadButton.outline(
+        return ShadButton.raw(
+          variant: selected ? ShadButtonVariant.primary : ShadButtonVariant.ghost,
+          enabled: enabled,
           mainAxisAlignment: MainAxisAlignment.start,
           onPressed: onPressed,
           leading: Icon(icon),

@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fundwise/budget/budget_model.dart';
 import 'package:fundwise/services/collection.dart';
 import 'package:fundwise/services/pocketbase.dart';

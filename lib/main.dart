@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fundwise/components/builder_background.dart';
 import 'package:fundwise/root/router.dart';
 import 'package:fundwise/services/auth.dart';
 import 'package:fundwise/services/pocketbase.dart';
@@ -12,15 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final sharedPreferences = await SharedPreferencesWithCache.create(
-    cacheOptions: SharedPreferencesWithCacheOptions(),
+    cacheOptions: const SharedPreferencesWithCacheOptions(),
   );
 
   return runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)],
-      child: FundwiseApp(),
+      child: const FundwiseApp(),
     ),
   );
 }
@@ -47,8 +47,8 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
   @override
   Widget build(BuildContext context) {
     ref.listen(authenticationProvider, (previous, next) {
-      if (!ref.read(pocketbaseProvider).authStore.isValid) {
-        router.replaceAll([LoginRoute()]);
+      if (!ref.watch(pocketbaseProvider).authStore.isValid) {
+        router.replaceAll([const LoginRoute()]);
       }
     });
 
@@ -57,7 +57,6 @@ class _FundwiseAppState extends ConsumerState<FundwiseApp> {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ref.watch(themeControllerProvider.select((model) => model.mode)),
-      builder: (_, child) => BuilderBackground(child: child),
     );
   }
 }
