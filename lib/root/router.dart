@@ -30,7 +30,7 @@ class FundwiseRouter extends RootStackRouter {
       '/',
       page: RootRoute.page,
       initial: true,
-      guards: [AuthGuard(authStore: authStore)],
+      guards: [AuthGuard(isAuthenticated: () => authStore.isValid)],
       children: [
         FundwiseRoute('accounts/', page: AccountListRoute.page),
         FundwiseRoute('accounts/:id', page: AccountDetailRoute.page),
@@ -50,15 +50,13 @@ class FundwiseRouter extends RootStackRouter {
 }
 
 class AuthGuard extends AutoRouteGuard {
-  AuthGuard({required this.authStore});
+  AuthGuard({required this.isAuthenticated});
 
-  final AuthStore authStore;
+  final ValueGetter<bool> isAuthenticated;
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    final isAuthed = authStore.isValid;
-
-    if (!isAuthed) {
+    if (!isAuthenticated()) {
       resolver.redirectUntil(const LoginRoute());
       return;
     }

@@ -5,6 +5,8 @@ formatter: { page_width: 100, trailing_commas: preserve }
 linter:
   rules:
     public_member_api_docs: false
+    specify_nonobvious_local_variable_types: true
+    specify_nonobvious_property_types: true
 
 analyzer:
   exclude: ["**.g.dart", "**.mapper.dart"]

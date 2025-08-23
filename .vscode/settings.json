@@ -17,6 +17,7 @@
     "Jsonable",
     "Lucide",
     "pocketbase",
-    "riverpod"
+    "riverpod",
+    "shadcn"
   ]
 }
